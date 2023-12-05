@@ -178,6 +178,9 @@ const Form = styled.div`
 const GoogleButton = styled.div`
   margin-top: 2rem;
   width: 100%;
+  @media screen and (max-width: 480px) {
+    margin-top: 1rem;
+  }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     margin-top: 1rem;
   }
@@ -188,6 +191,9 @@ const OrDiv = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 2rem;
+  @media screen and (max-width: 480px) {
+    margin-top: 1rem;
+  }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     margin-top: 1rem;
   }

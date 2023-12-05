@@ -31,7 +31,6 @@ export const ButtonContainer = styled.button<IButtonProps>`
   all: unset;
   display: flex;
   justify-content: center;
-
   align-items: center;
   width: 100%;
   box-sizing: border-box;
@@ -42,6 +41,9 @@ export const ButtonContainer = styled.button<IButtonProps>`
   color: ${(props) => (props.variant ? "white" : "black")};
   border: ${(props) => props.variant && `1px solid white`};
   transition: all ease 0.1s;
+  @media screen and (max-width: 480px) {
+    padding: 1rem;
+  }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     padding: 0.8rem 1rem;
   }

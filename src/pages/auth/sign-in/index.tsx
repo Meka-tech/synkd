@@ -163,8 +163,11 @@ const Forgot = styled.h2`
   font-weight: 400;
 `;
 const GoogleButton = styled.div`
-  margin-top: 2rem !important;
+  margin-top: 2rem;
   width: 100%;
+  @media screen and (max-width: 480px) {
+    margin-top: 1rem;
+  }
 `;
 
 const OrDiv = styled.div`
@@ -172,6 +175,9 @@ const OrDiv = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 2rem;
+  @media screen and (max-width: 480px) {
+    margin-top: 1rem;
+  }
   div {
     height: 0.1rem;
     width: 45%;
