@@ -89,7 +89,7 @@ function SignIn() {
         </GoogleButton>
         <FormFooter>
           <NewAccount>
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <span>
               <Link href={"/auth/sign-up"}> Sign Up</Link>
             </span>
