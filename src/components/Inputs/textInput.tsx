@@ -123,6 +123,12 @@ export const StyledInput = styled.input`
     color: #d9d9d99b;
     font-weight: 600;
   }
+
+  &:-webkit-autofill {
+    background-color: transparent !important;
+    box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0) inset; /* Override background color */
+    background-clip: text;
+  }
 `;
 
 export const ErrorContainer = styled.div`
