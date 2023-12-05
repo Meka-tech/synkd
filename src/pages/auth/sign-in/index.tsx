@@ -7,7 +7,7 @@ import styled from "@emotion/styled";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { SignInValidation } from "../authValidationSchema";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -29,7 +29,7 @@ function SignIn() {
 
         localStorage.setItem("token", data?.data.token);
         router.push("/");
-      } catch (e) {
+      } catch (e: any) {
         let error = e.response.data;
         setServerErrorMessage(error.message);
       }

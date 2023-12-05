@@ -28,12 +28,12 @@ export const ButtonWithIcon: FC<IProps> = ({
     </IconButtonContainer>
   );
 };
-
-const IconButtonContainer = styled(
-  (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
-    <ButtonContainer {...props} variant={props.variant} />
-  )
-)``;
+interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: boolean;
+}
+const IconButtonContainer = styled((props: IButtonProps) => (
+  <ButtonContainer {...props} />
+))``;
 
 const Icon = styled.div`
   margin-left: 0.5rem;

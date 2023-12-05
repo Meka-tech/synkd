@@ -37,7 +37,7 @@ function SignUp() {
       try {
         const data = await axios.post("/api/auth/sign-up", values);
         router.push("/api/auth/sign-in");
-      } catch (e) {
+      } catch (e: any) {
         let error = e.response.data;
         setServerErrorMessage((prevState) => ({
           ...prevState,
