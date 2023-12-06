@@ -164,7 +164,7 @@ const Form = styled.div`
   width: 35%;
   border: ${(props) => `1px solid ${props.theme.colors.border}`};
   padding: 2rem 3rem;
-  border-radius: 20px;
+  border-radius: 10px;
   @media screen and (max-width: 480px) {
     border: none;
     width: 100%;

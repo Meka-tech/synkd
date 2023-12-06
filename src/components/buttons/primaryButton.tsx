@@ -35,14 +35,14 @@ export const ButtonContainer = styled.button<IButtonProps>`
   width: 100%;
   box-sizing: border-box;
   cursor: pointer;
-  background-color: ${(props) => (props.variant ? " " : "white")};
+  background-color: ${(props) => (props.variant ? " " : "#F2F1F2")};
   border-radius: 8px;
   padding: 1.1rem 1rem;
   color: ${(props) => (props.variant ? "white" : "black")};
   border: ${(props) => props.variant && `1px solid white`};
   transition: all ease 0.1s;
   @media screen and (max-width: 480px) {
-    padding: 1rem;
+    padding: 0.8rem 1rem;
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     padding: 0.8rem 1rem;

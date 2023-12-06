@@ -10,6 +10,7 @@ import { SignInValidation } from "../../../../utils/authValidationSchema";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 function SignIn() {
   const router = useRouter();
@@ -26,8 +27,8 @@ function SignIn() {
       setServerErrorMessage("");
       try {
         let data = await axios.post("/api/auth/sign-in", values);
-
-        localStorage.setItem("token", data?.data.token);
+        const token = data?.data.token;
+        Cookies.set("authToken", token);
         router.push("/");
       } catch (e: any) {
         let error = e.response.data;
@@ -139,7 +140,7 @@ const Form = styled.div`
   width: 35%;
   border: ${(props) => `1px solid ${props.theme.colors.border}`};
   padding: 3rem;
-  border-radius: 20px;
+  border-radius: 10px;
   @media screen and (max-width: 480px) {
     border: none;
     width: 100%;

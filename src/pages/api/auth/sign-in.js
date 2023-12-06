@@ -32,7 +32,9 @@ export default async function handler(req, res) {
       { expiresIn: "24h" }
     );
 
-    res.status(200).json({ token: token, message: "authenticated" });
+    res
+      .status(200)
+      .json({ token: token, userId: user._id, message: "authenticated" });
   } catch (err) {
     res.status(500).json({ data: err });
   }

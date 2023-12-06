@@ -22,7 +22,8 @@
     "**/*.ts",
     "**/*.tsx",
     "src/pages/api/auth/sign-up.js",
-    "src/pages/api/auth/sign-in.js"
+    "src/pages/api/auth/sign-in.js",
+    "utils/middleware.js"
   ],
   "exclude": ["node_modules"]
 }
