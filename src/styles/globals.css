@@ -88,7 +88,7 @@ body {
 
 body {
   color: white;
-  background-color: #151515;
+  background-color: #121111;
 }
 
 a {
@@ -101,3 +101,23 @@ a {
     color-scheme: dark;
   }
 }
+
+/* For Webkit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #000;
+}
+
+/* For Firefox */
+/* You might need to use a custom scrollbar add-on for Firefox to style it */
+/* For example, the 'Simple Scroll Bar X' add-on */
+/* https://addons.mozilla.org/en-US/firefox/addon/simple-scrollbar-x/ */
+
+/* For Edge and Internet Explorer */
+/* You might need to use a custom scrollbar library for these browsers */
+
+/* For all browsers (fallback) */
+/* This style will be applied if none of the browser-specific styles are supported */

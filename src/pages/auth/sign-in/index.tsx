@@ -114,7 +114,7 @@ const Body = styled.div`
   align-items: center;
   justify-content: center;
   color: ${(props) => props.theme.colors.primary};
-  height: 100vh;
+  height: 100dvh;
 `;
 const Header = styled.h1`
   color: white;

@@ -46,7 +46,14 @@ export async function GetSpotifyToken() {
   }
 }
 
-export async function searchArtistsByGenre(genre: string, limit: number = 20) {
+export async function searchArtistsByGenre(
+  genre: string,
+  limit: number = 20,
+  offset: number = 0
+) {
+  if (!token) {
+    await GetSpotifyToken();
+  }
   const searchEndpoint = "https://api.spotify.com/v1/search";
   const type = "artist";
 
@@ -58,7 +65,8 @@ export async function searchArtistsByGenre(genre: string, limit: number = 20) {
       params: {
         q: `genre:"${genre}"`,
         type,
-        limit
+        limit,
+        offset
       }
     });
 
