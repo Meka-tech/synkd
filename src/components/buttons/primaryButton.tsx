@@ -35,7 +35,7 @@ export const ButtonContainer = styled.button<IButtonProps>`
   width: 100%;
   box-sizing: border-box;
   cursor: pointer;
-  background-color: ${(props) => (props.variant ? " " : "#F2F1F2")};
+  background-color: ${(props) => (props.variant ? " " : `white`)};
   border-radius: 8px;
   padding: 1.1rem 1rem;
   color: ${(props) => (props.variant ? "white" : "black")};
@@ -48,8 +48,8 @@ export const ButtonContainer = styled.button<IButtonProps>`
     padding: 0.8rem 1rem;
   }
   :disabled {
-    color: #838383;
-    background-color: #d1d1d1;
+    color: #3a3939;
+    background-color: #adadad;
   }
   :active {
     transform: scale(0.98);
