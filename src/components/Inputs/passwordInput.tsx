@@ -41,6 +41,7 @@ export const PasswordInput: FC<IProps> = ({
       <StyledInputElementContainer focused={focused} error={error}>
         <ExtendInput
           type={showPassword ? "text" : "password"}
+          autoComplete="on"
           {...rest}
           onFocus={() => {
             setFocused(true);

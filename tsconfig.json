@@ -21,8 +21,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/pages/api/auth/sign-up.js",
-    "src/pages/api/auth/sign-in.js",
+    "src/pages/api/auth/[...nextauth]/sign-up.js",
+    "src/pages/api/auth/[...nextauth]/sign-in.js",
     "utils/middleware.js"
   ],
   "exclude": ["node_modules"]

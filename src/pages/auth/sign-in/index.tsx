@@ -12,6 +12,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
+import { useSession, signIn, signOut } from "next-auth/react";
+
 function SignIn() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -86,7 +88,12 @@ function SignIn() {
           <div /> <h3>or</h3> <div />
         </OrDiv>
         <GoogleButton>
-          <ButtonWithIcon text="Google" variant icon={<Google size={20} />} />
+          <ButtonWithIcon
+            text="Google"
+            onClick={() => signIn("google")}
+            variant
+            icon={<Google size={20} />}
+          />
         </GoogleButton>
         <FormFooter>
           <NewAccount>

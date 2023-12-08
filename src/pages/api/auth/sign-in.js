@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { mongooseConnect } from "../../../../lib/mongoose";
 import User from "../../../../models/User";
 import bcrypt from "bcrypt";

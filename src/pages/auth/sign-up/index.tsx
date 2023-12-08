@@ -10,6 +10,7 @@ import { SignUpValidation } from "../../../../utils/authValidationSchema";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 function SignUp() {
   const [loading, setLoading] = useState(false);
@@ -105,7 +106,14 @@ function SignUp() {
           <div /> <h3>or</h3> <div />
         </OrDiv>
         <GoogleButton>
-          <ButtonWithIcon text="Google" variant icon={<Google size={20} />} />
+          <ButtonWithIcon
+            text="Google"
+            onClick={() => {
+              signIn("google");
+            }}
+            variant
+            icon={<Google size={20} />}
+          />
         </GoogleButton>
         <FormFooter>
           <NewAccount>

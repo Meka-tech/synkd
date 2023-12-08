@@ -1,35 +1,57 @@
-import Head from "next/head";
-import Image from "next/image";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+  const { data: sessionData, status } = useSession();
   const router = useRouter();
+
+  const session = sessionData as any;
 
   let authToken = Cookies.get("authToken") || "";
   const [user, setUser] = useState({});
 
   const GetUser = async (token: string | null) => {
     try {
-      const data = await axios.get("/api/user/get-user", {
-        headers: {
-          Authorization: `Bearer ${token}`
+      if (token) {
+        const data = await axios.get("/api/user/get-user", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        let res = data.data.user;
+        setUser(res);
+        if (res.interests.music.length < 1) {
+          router.push("/sync/interests");
         }
-      });
-      let res = data.data.user;
-      setUser(res);
-      if (res.interests.music.length < 1) {
-        router.push("/sync/interests");
+        return true;
       }
+      return false;
     } catch (e) {
       router.push("/auth/sign-in");
     }
   };
 
-  GetUser(authToken);
+  const IsAuthenticated = () => {
+    if (status === "authenticated" && authToken === "") {
+      let token;
+      if (session?.accessToken) {
+        token = session?.accessToken;
+        Cookies.set("authToken", token);
+        GetUser(token);
+      }
+    }
+    if (authToken) {
+      console.log("danger");
+      GetUser(authToken);
+    }
+  };
+
+  IsAuthenticated();
+
   return <Body></Body>;
 }
 
