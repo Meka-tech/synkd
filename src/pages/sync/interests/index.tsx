@@ -1,14 +1,15 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import {
-  GetSpotifyToken,
-  searchArtistsByGenre
-} from "../../../../utils/spotifyApi";
+import { useState, useRef } from "react";
+import { searchArtistsByGenre } from "@/utils/spotifyApi";
 import GenreItem from "@/components/music-Items/genre-item";
 import styled from "@emotion/styled";
 import { Music } from "@emotion-icons/boxicons-regular";
 import ArtistItem from "@/components/music-Items/artist-item";
 import { PrimaryButton } from "@/components/buttons/primaryButton";
+import useClickOutside from "../../../hooks/useClickOutside";
+import { genreList } from "../../../../lib/genreData";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 interface ArtistsState {
   [genre: string]: {
@@ -20,6 +21,19 @@ interface ArtistsState {
 const Interests = () => {
   const [artists, setArtists] = useState<ArtistsState>({});
   const [loading, setLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState("");
+  const ModalRef = useRef(null);
+  const [chosenArtists, setChosenArtists] = useState<string[]>([]);
+  let token = Cookies.get("authToken") || "";
+
+  const router = useRouter();
+
+  useClickOutside(ModalRef, () => {
+    setOpen(false);
+    setSelectedGenre("");
+  });
 
   const GetArtists = async (genre: string, more: boolean = false) => {
     setLoading(true);
@@ -45,89 +59,130 @@ const Interests = () => {
     setLoading(false);
   };
 
-  const RemoveGenre = (genre: string) => {
-    setArtists((prevState) => {
-      const { [genre]: omittedGenre, ...newState } = prevState;
-      return newState;
-    });
+  const handleAddArtist = (artist: any) => {
+    const picked = chosenArtists.includes(artist);
+    if (picked) {
+      const newArray = chosenArtists.filter((item) => item !== artist);
+      setChosenArtists(newArray);
+    } else {
+      setChosenArtists((prevArray) => [...prevArray, artist]);
+    }
   };
 
-  const genreList = [
-    "afrobeats",
-    "Pop",
-    "Rap",
-    "Hip-hop",
-    "pop rock",
-    "classical",
-    "rock",
-    "R&B",
-    "punk rock",
-    "metal",
-    "folk",
-    "jazz",
-    "blues",
-    "highlife",
-    "juju",
-    "alté",
-    "k-pop"
-  ];
+  const SaveArtists = async () => {
+    setIsSaving(true);
+    try {
+      const requestBody = { interest: "music", data: chosenArtists };
+      if (token) {
+        const data = await axios.post(
+          "/api/interests/post-interest",
+          requestBody,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        router.push("/match");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setIsSaving(false);
+  };
 
   return (
     <Main>
-      <Title>
-        Who do you listen to ?{" "}
-        <span>
-          <Music size={34} style={{ marginLeft: "1rem" }} />
-        </span>
-      </Title>
+      <Header>
+        <div>
+          <SubTitle>This will just take a moment</SubTitle>
+          <Title>
+            Who do you listen to ?{" "}
+            <span>
+              <Music size={34} style={{ marginLeft: "1rem" }} />
+            </span>
+          </Title>
+        </div>
+        <Info>Please pick at least 10 artists</Info>
+      </Header>
+
       <Body>
         <GenreBody>
           <GenreList>
             {genreList.map((genre, i) => (
               <GenreItem
-                name={genre}
+                name={genre.name}
+                bgImage={genre.image}
                 key={i}
                 onClick={() => {
-                  if (artists[genre]?.artists) {
-                    RemoveGenre(genre);
+                  setOpen(true);
+                  setSelectedGenre(genre.name);
+                  if (artists[genre.name]?.artists) {
                     return;
                   }
-                  GetArtists(genre);
+                  GetArtists(genre.name);
                 }}
               />
             ))}
           </GenreList>
         </GenreBody>
-        <ArtistBody>
-          {genreList.map((genre, id) => {
-            if (!artists[genre]?.artists) {
-              return;
-            }
-            return (
-              <ArtistList key={id}>
-                {artists[genre]?.artists && <GenreHeader>{genre}</GenreHeader>}
-                <ArtistsDiv>
-                  {artists[genre]?.artists?.map((artist, i) => {
-                    return <ArtistItem name={artist.name} key={i} />;
-                  })}
-                </ArtistsDiv>
-                {artists[genre]?.artists && (
-                  <LoadMoreButton>
-                    <PrimaryButton
-                      text="More"
-                      variant
-                      loading={loading}
-                      onClick={() => {
-                        GetArtists(genre, true);
-                      }}
-                    />{" "}
-                  </LoadMoreButton>
-                )}
-              </ArtistList>
-            );
-          })}
-        </ArtistBody>
       </Body>
+      {open && (
+        <PseudoBackdrop>
+          <PseudoModal ref={ModalRef}>
+            <PseudoModalBody>
+              <GenreHeader>{selectedGenre}</GenreHeader>
+              {genreList.map((genre, id) => {
+                if (!artists[genre.name]?.artists) {
+                  return;
+                }
+                if (selectedGenre === genre.name) {
+                  return (
+                    <ArtistsDiv key={id}>
+                      <ArtistList>
+                        {artists[selectedGenre]?.artists?.map((artist, i) => {
+                          return (
+                            <ArtistItem
+                              onClick={() => {
+                                handleAddArtist(artist.name);
+                              }}
+                              selected={chosenArtists.includes(artist.name)}
+                              name={artist.name}
+                              key={i}
+                            />
+                          );
+                        })}
+                      </ArtistList>
+                    </ArtistsDiv>
+                  );
+                }
+              })}
+              <LoadMoreButton>
+                <PrimaryButton
+                  text="Load more"
+                  variant
+                  loading={loading}
+                  onClick={() => {
+                    GetArtists(selectedGenre, true);
+                  }}
+                />
+              </LoadMoreButton>
+            </PseudoModalBody>
+          </PseudoModal>
+        </PseudoBackdrop>
+      )}
+      <Footer>
+        <FooterInfo> {chosenArtists.length} artist(s) picked</FooterInfo>
+        <FooterButton>
+          {" "}
+          <PrimaryButton
+            text="Save"
+            disabled={chosenArtists.length < 10}
+            onClick={() => SaveArtists()}
+            loading={isSaving}
+          />
+        </FooterButton>
+      </Footer>
     </Main>
   );
 };
@@ -136,11 +191,33 @@ export default Interests;
 
 const Main = styled.div`
   width: 100%;
-  height: 100dvh;
+  min-height: 100dvh;
+  max-height: fit-content;
+
   padding: 2rem;
+
   padding-left: 5rem;
   padding-top: 5rem;
-  background-color: #313030;
+  position: relative;
+  @media screen and (max-width: 480px) {
+    padding: 2rem;
+    padding-top: 3rem;
+  }
+`;
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @media screen and (max-width: 480px) {
+    flex-direction: column;
+  }
+`;
+const SubTitle = styled.h3`
+  font-size: 1.6rem;
+  font-weight: 600;
+  @media screen and (max-width: 480px) {
+    font-size: 1rem;
+  }
 `;
 const Title = styled.h2`
   font-size: 4rem;
@@ -148,55 +225,101 @@ const Title = styled.h2`
   margin-bottom: 3rem;
   display: inline-flex;
   align-items: center;
+  @media screen and (max-width: 480px) {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+  }
+`;
+
+const Info = styled.h3`
+  font-size: 1.6rem;
+  @media screen and (max-width: 480px) {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const Body = styled.div`
-  display: flex;
-  justify-content: space-between;
+  margin-bottom: 4rem;
 `;
 const GenreBody = styled.div`
   padding: 1rem;
   overflow: hidden;
-  width: 50rem;
 `;
 const GenreList = styled.div`
   display: flex;
   grid-gap: 10px;
   flex-wrap: wrap;
+  @media screen and (max-width: 480px) {
+    grid-gap: 7px;
+  }
 `;
-
-const ArtistBody = styled.div`
-  width: 60%;
-  height: fit-content;
-  max-height: 70dvh;
-  overflow-y: scroll;
-`;
-const ArtistsDiv = styled.div`
+const PseudoBackdrop = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  backdrop-filter: blur(2px);
+  z-index: 100;
   display: flex;
-  grid-gap: 5px;
-  justify-content: space-between;
-  /* flex-wrap: wrap; */
-  overflow-x: scroll;
+  justify-content: center;
+  align-items: center;
+`;
+const PseudoModal = styled.div`
+  width: 50rem;
+  background-color: #252525;
+  padding: 2rem 2rem;
+  border-radius: 10px;
+  @media screen and (max-width: 480px) {
+    width: 90%;
+  }
+`;
+const PseudoModalBody = styled.div``;
 
-  height: 5rem;
+const ArtistsDiv = styled.div`
+  padding: 1rem;
+  height: 30rem;
+  overflow-y: scroll;
+  margin-bottom: 1rem;
 `;
 const ArtistList = styled.div`
-  background-color: black;
-  max-height: 40dvh;
-  max-width: 100%;
-  margin-bottom: 2rem;
-  border-radius: 10px;
-  padding: 1rem;
+  height: 100%;
 `;
+
 const GenreHeader = styled.h1`
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 600;
   text-transform: capitalize;
-  text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 `;
 const LoadMoreButton = styled.div`
-  width: 8rem;
+  width: fit-content;
   margin-left: auto;
-  margin-right: auto;
+`;
+
+const Footer = styled.div`
+  padding: 1rem 5rem;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  @media screen and (max-width: 480px) {
+    padding: 1rem 2rem;
+  }
+`;
+
+const FooterInfo = styled.h2`
+  font-size: 1.6rem;
+  @media screen and (max-width: 480px) {
+    font-size: 1.4rem;
+  }
+`;
+
+const FooterButton = styled.div`
+  width: 8rem;
 `;

@@ -6,7 +6,7 @@ import { Google } from "@emotion-icons/boxicons-logos/Google";
 import styled from "@emotion/styled";
 import { useFormik } from "formik";
 import Link from "next/link";
-import { SignInValidation } from "../../../../utils/authValidationSchema";
+import { SignInValidation } from "@/utils/authValidationSchema";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

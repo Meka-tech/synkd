@@ -7,12 +7,12 @@ const clientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET || "";
 let token = Cookies.get("spotifyAccessToken") || "";
 let tokenExpirationTime = Cookies.get("spotifyTokenExpirationTime") || 0;
 
-export async function GetSpotifyToken() {
-  const expirationTime = tokenExpirationTime
-    ? parseInt(tokenExpirationTime.toString(), 10)
-    : 0;
+const expirationTime = tokenExpirationTime
+  ? parseInt(tokenExpirationTime.toString(), 10)
+  : 0;
 
-  if (token && Date.now() < (expirationTime as number)) {
+export async function GetSpotifyToken() {
+  if (Date.now() < (expirationTime as number)) {
     return token;
   }
 
@@ -51,7 +51,7 @@ export async function searchArtistsByGenre(
   limit: number = 20,
   offset: number = 0
 ) {
-  if (!token) {
+  if (!token || Date.now() > (expirationTime as number)) {
     await GetSpotifyToken();
   }
   const searchEndpoint = "https://api.spotify.com/v1/search";

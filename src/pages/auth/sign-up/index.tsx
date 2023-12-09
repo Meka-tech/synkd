@@ -6,7 +6,7 @@ import { PrimaryButton } from "@/components/buttons/primaryButton";
 import { Google } from "@emotion-icons/boxicons-logos/Google";
 import styled from "@emotion/styled";
 import Link from "next/link";
-import { SignUpValidation } from "../../../../utils/authValidationSchema";
+import { SignUpValidation } from "@/utils/authValidationSchema";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useRouter } from "next/navigation";

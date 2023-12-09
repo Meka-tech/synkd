@@ -45,7 +45,6 @@ export default function Home() {
       }
     }
     if (authToken) {
-      console.log("danger");
       GetUser(authToken);
     }
   };

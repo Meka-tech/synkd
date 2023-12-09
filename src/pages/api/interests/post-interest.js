@@ -6,13 +6,26 @@ async function handler(req, res, next) {
   await mongooseConnect();
   let userId = authenticateJWT(req, res, next);
 
+  const { interest, data } = req.body;
+
   if (!userId) {
-    return res.status(401).json({ message: "unauthorized" });
+    return res.status(404).json({ message: "unauthorized", userId: userId });
+  }
+  if (!data || data.length === 0) {
+    return res.status(401).json({ message: "empty data" });
+  }
+  if (interest !== "music") {
+    return res.status(401).json({ message: "invalid interest" });
   }
 
   try {
     const user = await User.findOne({ _id: userId });
-    return res.status(200).json({ user: user });
+
+    user.interests[interest] = data;
+
+    const newUser = await user.save();
+
+    return res.status(200).json({ user: newUser });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -20,7 +33,7 @@ async function handler(req, res, next) {
 
 export const config = {
   api: {
-    bodyParser: false
+    // bodyParser: false
   }
 };
 

@@ -1,5 +1,5 @@
 import { mongooseConnect } from "../../../../lib/mongoose";
-import User from "../../../../models/User";
+import User from "@/models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 

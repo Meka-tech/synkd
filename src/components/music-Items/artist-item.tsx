@@ -1,48 +1,47 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { CheckCircle } from "@emotion-icons/octicons";
 
 interface IProps {
   name: string;
+  selected?: boolean;
+  onClick: () => void;
 }
 
-const ArtistItem = ({ name }: IProps) => {
+const ArtistItem = ({ name, selected, onClick }: IProps) => {
+  const HandleClick = () => {
+    setActive(!active);
+    onClick();
+  };
   const [active, setActive] = useState(false);
   return (
-    <Body active={active} onClick={() => setActive(!active)}>
+    <Body onClick={HandleClick}>
       <Text>{name}</Text>
+      {selected && <CheckCircle size={20} />}
     </Body>
   );
 };
 
 export default ArtistItem;
 
-interface IButtonProps {
-  active: boolean;
-}
-const Body = styled.div<IButtonProps>`
-  padding: 1rem 1.2rem;
-  border-radius: 10px;
-
+const Body = styled.div`
+  width: 100%;
+  height: 4.5rem;
+  padding: 1rem;
   cursor: pointer;
   transition: all ease-in 0.1s;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  max-height: 3rem;
-  min-width: fit-content;
-  max-width: fit-content;
-  background-color: ${(props) =>
-    props.active ? `${props.theme.colors.primary}` : `#4b4b4b83`};
+  border-bottom: 1px solid gray;
   color: white;
   :hover {
     color: white;
   }
-  margin-left: auto;
-  margin-right: auto;
 `;
 
 const Text = styled.h2`
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 500;
   text-transform: capitalize;
 `;
