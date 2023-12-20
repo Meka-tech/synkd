@@ -281,8 +281,8 @@ const UsersContainer = styled.div<SynkDetails>`
   transition: all 0.5s ease;
   @media screen and (max-width: 480px) {
     width: 100%;
-    height: 50rem;
-    margin-bottom: 3rem;
+    height: 48rem;
+    margin-bottom: 1rem;
   }
 `;
 
