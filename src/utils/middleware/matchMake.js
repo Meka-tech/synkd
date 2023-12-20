@@ -10,7 +10,8 @@ export const MatchMake = (user, otherUsers, interest) => {
   for (let other of otherUsers) {
     const otherInterest = other.interests[interest];
     const similarity = jaccardSimilarity(userInterests, otherInterest);
-    array.push({ user: other, percent: similarity });
+
+    array.push({ user: other, percent: Math.ceil(similarity) });
   }
 
   const sortedArray = array.sort((a, b) => b.percent - a.percent);

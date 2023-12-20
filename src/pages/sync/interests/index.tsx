@@ -41,11 +41,12 @@ const Interests = () => {
     setLoading(true);
     try {
       let offset = 0;
+      let data: string[] = [];
       if (more) {
         offset = artists[genre]?.offset * 20;
       }
 
-      const data = await searchArtistsByGenre(genre, 20, offset);
+      data = await searchArtistsByGenre(genre, 20, offset);
 
       setArtists((prevState) => ({
         ...prevState,
@@ -85,7 +86,7 @@ const Interests = () => {
             }
           }
         );
-        router.push("/match");
+        router.push("/sync/match");
       }
     } catch (e) {
       console.log(e);
@@ -211,12 +212,11 @@ const Main = styled.div`
   width: 100%;
   min-height: 100dvh;
   max-height: fit-content;
-
   padding: 2rem;
-
   padding-left: 5rem;
   padding-top: 5rem;
   position: relative;
+  overflow: hidden;
   @media screen and (max-width: 480px) {
     padding: 2rem;
     padding-top: 3rem;
@@ -277,7 +277,7 @@ const PseudoBackdrop = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   backdrop-filter: blur(2px);
   z-index: 100;
   display: flex;

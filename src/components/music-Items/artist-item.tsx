@@ -36,7 +36,7 @@ const Body = styled.div`
   border-bottom: 1px solid gray;
   color: white;
   :hover {
-    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
   }
 `;
 
