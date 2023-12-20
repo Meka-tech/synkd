@@ -10,6 +10,8 @@ import useClickOutside from "../../../hooks/useClickOutside";
 import { genreList } from "../../../../lib/genreData";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { Spotify } from "@emotion-icons/boxicons-logos";
+import { ButtonWithIcon } from "@/components/buttons/buttonWithIcon";
 
 interface ArtistsState {
   [genre: string]: {
@@ -91,6 +93,14 @@ const Interests = () => {
     setIsSaving(false);
   };
 
+  const UseSpotify = async () => {
+    try {
+      await axios.get("/api/spotify/spotify-login");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Main>
       <Header>
@@ -126,6 +136,14 @@ const Interests = () => {
             ))}
           </GenreList>
         </GenreBody>
+        <SpotifyButton>
+          <ButtonWithIcon
+            icon={<Spotify size={20} color="#1db954" />}
+            variant
+            text="Use Spotify"
+            onClick={() => UseSpotify()}
+          />
+        </SpotifyButton>
       </Body>
       {open && (
         <PseudoBackdrop>
@@ -226,8 +244,8 @@ const Title = styled.h2`
   display: inline-flex;
   align-items: center;
   @media screen and (max-width: 480px) {
-    font-size: 2.4rem;
-    margin-bottom: 1rem;
+    font-size: 2.6rem;
+    margin-bottom: 0.5rem;
   }
 `;
 
@@ -296,6 +314,13 @@ const GenreHeader = styled.h1`
 const LoadMoreButton = styled.div`
   width: fit-content;
   margin-left: auto;
+`;
+
+const SpotifyButton = styled.div`
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
 `;
 
 const Footer = styled.div`

@@ -49,7 +49,9 @@ export default function Home() {
     }
   };
 
-  IsAuthenticated();
+  useEffect(() => {
+    IsAuthenticated();
+  }, []);
 
   return <Body></Body>;
 }

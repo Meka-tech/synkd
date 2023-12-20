@@ -51,13 +51,13 @@ export async function searchArtistsByGenre(
   limit: number = 20,
   offset: number = 0
 ) {
-  if (!token || Date.now() > (expirationTime as number)) {
-    await GetSpotifyToken();
-  }
   const searchEndpoint = "https://api.spotify.com/v1/search";
   const type = "artist";
 
   try {
+    if (!token || Date.now() > (expirationTime as number)) {
+      await GetSpotifyToken();
+    }
     const response = await axios.get(searchEndpoint, {
       headers: {
         Authorization: `Bearer ${token}`

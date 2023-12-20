@@ -19,7 +19,7 @@ const GenreItem = ({ name, onClick, bgImage }: IProps) => {
   return (
     <Body onClick={HandleClick}>
       <Image
-        layout="fill"
+        fill={true}
         objectFit="cover"
         objectPosition="center"
         src={bgImage}
