@@ -160,6 +160,11 @@ const Match = () => {
             return <MatchedUser key={index} user={user} percent={percent} />;
           })}
         </UsersContainer>
+        {!coordinates && (
+          <Information>
+            Give Location Permission and refresh to Synk
+          </Information>
+        )}
       </Body>
     </Main>
   );
@@ -187,13 +192,13 @@ const HeaderText = styled.h1`
   font-size: 3rem;
   color: ${(props) => props.theme.colors.primary};
   @media screen and (max-width: 480px) {
-    font-size: 1.8rem;
+    font-size: 2.5rem;
   }
   span {
     color: white;
     font-size: 3rem;
     @media screen and (max-width: 480px) {
-      font-size: 1.8rem;
+      font-size: 2.5rem;
     }
   }
 `;
@@ -209,13 +214,13 @@ const DropdownDescription = styled.h2`
   font-size: 1.4rem;
   margin-bottom: 1rem;
   @media screen and (max-width: 480px) {
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
   span {
     color: ${(props) => props.theme.colors.primary};
     font-size: 1.4rem;
     @media screen and (max-width: 480px) {
-      font-size: 0.8rem;
+      font-size: 1rem;
     }
   }
 `;
@@ -279,4 +284,12 @@ const UsersContainer = styled.div<SynkDetails>`
     height: 50rem;
     margin-bottom: 3rem;
   }
+`;
+
+const Information = styled.h2`
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
 `;
