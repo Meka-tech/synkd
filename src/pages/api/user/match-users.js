@@ -7,7 +7,7 @@ async function handler(req, res, next) {
   await mongooseConnect();
   let userId = authenticateJWT(req, res, next);
 
-  const { interest, coordinates } = req.body;
+  const { interest, coordinates, excludedIds } = req.body;
 
   if (!userId) {
     return res.status(401).json({ message: "unauthorized" });
@@ -16,11 +16,11 @@ async function handler(req, res, next) {
   try {
     let user = await User.findOne({ _id: userId });
 
-    const GetNearbyUsers = async () => {
-      let retrievedUserIds = [];
+    console.log(excludedIds);
 
+    const GetNearbyUsers = async () => {
       const nearbyUsers = await User.find({
-        _id: { $nin: [userId] },
+        _id: { $nin: [...excludedIds, userId] },
         location: {
           $near: {
             $geometry: {

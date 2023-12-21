@@ -17,7 +17,10 @@ const Match = () => {
   const [coordinates, setCoordinates] = useState<coord>();
   const [interest, setInterest] = useState("music");
   const [matchingType, setMatchingType] = useState("proximity");
-  const [matchedUsers, setMatchedUsers] = useState([]);
+  const [matchedUsers, setMatchedUsers] = useState<
+    { user: { username: string }; percent: number }[]
+  >([]);
+  const [excludedIdList, setExcludedIdList] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const MatchOptions = {
     all: ["music", "movies", "sports", "video-games"],
@@ -69,7 +72,8 @@ const Match = () => {
         "/api/user/match-users",
         {
           interest,
-          coordinates: [coordinates?.longitude, coordinates?.latitude]
+          coordinates: [coordinates?.longitude, coordinates?.latitude],
+          excludedIds: excludedIdList
         },
         {
           headers: {
@@ -77,8 +81,13 @@ const Match = () => {
           }
         }
       );
+      const data = res.data.data;
       setLoading(false);
-      setMatchedUsers(res.data.data);
+      setMatchedUsers((prev) => [...prev, ...data]);
+
+      //so the same users won't be returned
+      const ids = data.map((item: { user: { _id: any } }) => item.user._id);
+      setExcludedIdList((prev) => [...prev, ...ids]);
     } catch (e) {
       setLoading(false);
       console.error(e);
