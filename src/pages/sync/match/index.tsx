@@ -267,6 +267,9 @@ const SyncButton = styled.div<SynkDetails>`
 
 const SyncText = styled.h2<SynkDetails>`
   font-size: ${(props) => (props.hasSynkd ? "2rem" : "2.5rem")};
+  @media screen and (max-width: 480px) {
+    font-size: ${(props) => (props.hasSynkd ? "1.8rem" : "2.2rem")};
+  }
 `;
 
 const UsersContainer = styled.div<SynkDetails>`
@@ -281,7 +284,7 @@ const UsersContainer = styled.div<SynkDetails>`
   transition: all 0.5s ease;
   @media screen and (max-width: 480px) {
     width: 100%;
-    height: 48rem;
+    height: 60%;
     margin-bottom: 1rem;
   }
 `;
