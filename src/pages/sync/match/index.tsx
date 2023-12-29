@@ -259,7 +259,6 @@ const SyncButton = styled.div<SynkDetails>`
   box-shadow: 0px 0px 42px -36px rgb(0, 150, 255);
   border-radius: 50%;
   cursor: pointer;
-  background-color: #121111;
   display: flex;
   justify-content: center;
   align-items: center;

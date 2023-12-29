@@ -35,7 +35,8 @@ export const ButtonContainer = styled.button<IButtonProps>`
   width: 100%;
   box-sizing: border-box;
   cursor: pointer;
-  background-color: ${(props) => (props.variant ? " " : `white`)};
+  background-color: ${(props) =>
+    props.variant ? " " : props.theme.colors.snow};
   border-radius: 8px;
   padding: 1.1rem 1rem;
   color: ${(props) => (props.variant ? "white" : "black")};
@@ -55,8 +56,9 @@ export const ButtonContainer = styled.button<IButtonProps>`
     transform: scale(0.98);
   }
   :hover {
-    background-color: ${(props) =>
-      props.variant ? "rgba(255, 255, 255, 0.05)" : "#d1d1d1"};
+    /* background-color: ${(props) =>
+      props.variant ? "rgba(255, 255, 255, 0.05)" : "#d1d1d1"}; */
+    opacity: 0.7;
   }
 `;
 

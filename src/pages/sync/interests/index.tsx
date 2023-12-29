@@ -77,15 +77,11 @@ const Interests = () => {
     try {
       const requestBody = { interest: "music", data: chosenArtists };
       if (token) {
-        const data = await axios.post(
-          "/api/interests/post-interest",
-          requestBody,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+        const data = await axios.post("/api/user/post-interest", requestBody, {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        );
+        });
         router.push("/sync/match");
       }
     } catch (e) {

@@ -7,6 +7,11 @@ declare module "@emotion/react" {
       secondary: string;
       danger: string;
       border: string;
+      snow: string;
+      void: string;
+      dusty: string;
+      slate: string;
+      gluton: string;
     };
     bgColors: {
       dangerFade: string;

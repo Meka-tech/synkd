@@ -24,7 +24,7 @@
     "src/pages/api/auth/[...nextauth]/sign-up.js",
     "src/pages/api/auth/[...nextauth]/sign-in.js",
     "src/utils/middleware/middleware.js",
-    "src/pages/api/interests/post-interest.js"
+    "src/pages/api/user/post-interest.js"
   ],
   "exclude": ["node_modules"]
 }

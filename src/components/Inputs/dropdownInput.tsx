@@ -96,9 +96,10 @@ const Body = styled.div`
   border-radius: 10px;
   width: 100%;
   padding: 1rem 2rem;
-  background-color: #1a1919;
+  /* background-color: #1a1919; */
+  background-color: rgb(38, 38, 38);
   cursor: pointer;
-  box-shadow: inset 4px 38px 28px -25px #292828;
+  /* box-shadow: inset 4px 38px 28px -25px #292828; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -133,7 +134,7 @@ const OptionsDiv = styled.div<Drop>`
   z-index: 10;
   display: ${(props) => (props.open ? "block" : "none")};
   border-radius: 10px;
-  background-color: #1a1919;
+  background-color: rgb(38, 38, 38);
   box-shadow: 0px 17px 57px -40px #000000;
   padding: 1rem 0;
 `;

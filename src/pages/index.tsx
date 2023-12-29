@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useSession } from "next-auth/react";
+import ChatLayout from "@/components/chat/layout";
 
 export default function Home() {
   const { data: sessionData, status } = useSession();
@@ -53,7 +54,11 @@ export default function Home() {
     IsAuthenticated();
   }, []);
 
-  return <Body></Body>;
+  return (
+    <Body>
+      <ChatLayout />
+    </Body>
+  );
 }
 
 const Body = styled.div``;
