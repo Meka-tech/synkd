@@ -13,7 +13,7 @@ export default function Home() {
   const session = sessionData as any;
 
   let authToken = Cookies.get("authToken") || "";
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<{ username: string }>({});
 
   const GetUser = async (token: string | null) => {
     try {
@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <Body>
-      <ChatLayout />
+      <ChatLayout user={user} />
     </Body>
   );
 }

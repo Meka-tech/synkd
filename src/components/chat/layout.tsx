@@ -1,13 +1,17 @@
 import styled from "@emotion/styled";
 import ChatSideBar from "./chatSidebar";
 import ChatArea from "./chatArea";
+import { IUserType } from "@/types/userType";
 
-const ChatLayout = () => {
+interface IProps {
+  user: IUserType;
+}
+const ChatLayout = ({ user }: IProps) => {
   return (
     <Body>
       {" "}
-      <ChatSideBar />
-      <ChatArea />
+      <ChatSideBar user={user} />
+      <ChatArea user={user} />
     </Body>
   );
 };

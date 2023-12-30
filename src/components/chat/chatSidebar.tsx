@@ -1,14 +1,18 @@
 import styled from "@emotion/styled";
 import { DotsVerticalRounded, Bell } from "@emotion-icons/boxicons-regular";
 import ChatSidebarBox from "./chatSiderbarBox";
+import { IUserType } from "@/types/userType";
 
-const ChatSideBar = () => {
+interface IProps {
+  user: IUserType;
+}
+const ChatSideBar = ({ user }: IProps) => {
   return (
     <Body>
       <TopBar>
         <UserDetails>
           <UserImage />
-          <UserName>Nnaemeka</UserName>
+          <UserName>{user.username}</UserName>
         </UserDetails>
         <Utitilites>
           <BellIcon>

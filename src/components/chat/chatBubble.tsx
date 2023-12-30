@@ -1,22 +1,30 @@
 import styled from "@emotion/styled";
 import { Check } from "@emotion-icons/octicons";
+import firebase from "firebase/compat/app";
 
 interface IProps {
   text: string;
   partner?: boolean;
-  time?: string;
+  time: firebase.firestore.Timestamp;
   sent?: boolean;
 }
 
 const ChatBubble = ({ text, partner = false, sent, time }: IProps) => {
+  const formattedTime = time?.toDate().toLocaleTimeString([], {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit"
+  });
   return (
     <Body partner={partner}>
       <Text>{text}</Text>
       <Bottom>
-        <Time>21:03</Time>
-        <CheckIcon>
-          <Check size={10} />
-        </CheckIcon>
+        <Time>{formattedTime}</Time>
+        {!partner && (
+          <CheckIcon>
+            <Check size={10} />
+          </CheckIcon>
+        )}
       </Bottom>
     </Body>
   );
