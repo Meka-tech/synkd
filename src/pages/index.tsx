@@ -5,6 +5,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useSession } from "next-auth/react";
 import ChatLayout from "@/components/chat/layout";
+import { IUserType } from "@/types/userType";
 
 export default function Home() {
   const { data: sessionData, status } = useSession();
@@ -13,7 +14,7 @@ export default function Home() {
   const session = sessionData as any;
 
   let authToken = Cookies.get("authToken") || "";
-  const [user, setUser] = useState<{ username: string }>({});
+  const [user, setUser] = useState<IUserType>({});
 
   const GetUser = async (token: string | null) => {
     try {

@@ -1,28 +1,23 @@
 import styled from "@emotion/styled";
 import ChatBubble from "./chatBubble";
 import ChatInput from "./chatInput";
-import firebase from "firebase/compat/app";
+
 import { Send } from "@emotion-icons/boxicons-solid";
 import { DotsVerticalRounded, Bell } from "@emotion-icons/boxicons-regular";
 import { useEffect, useState } from "react";
-import {
-  addDoc,
-  collection,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-  where
-} from "firebase/firestore";
-import { fireStoreDb } from "@/firebase-config";
+
 import { IUserType } from "@/types/userType";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 interface Imsg {
   text: string;
-  user: string;
+  user: IUserType;
+  partner: IUserType;
   room: string;
-  createdAt: firebase.firestore.Timestamp;
-  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  _id: string;
 }
 
 interface IProps {
@@ -32,47 +27,48 @@ interface IProps {
 const ChatArea = ({ user }: IProps) => {
   const [newMessage, setNewMessage] = useState("");
   const room = "001";
+  let authToken = Cookies.get("authToken") || "";
 
-  const messagesRef = collection(fireStoreDb, "messages");
   const [roomMessages, setRoomMessages] = useState<Imsg[]>([]);
-  const queryMessages = query(
-    messagesRef,
-    where("room", "==", room),
-    orderBy("createdAt")
-  );
-
-  useEffect(() => {
-    const unSubscrbe = onSnapshot(queryMessages, (snapshot) => {
-      let messages: Imsg[] = [];
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const message: Imsg = {
-          text: data.text,
-          user: data.user,
-          room: data.room,
-          createdAt: data.createdAt,
-          id: doc.id
-        };
-        messages.push(message);
-      });
-      setRoomMessages(messages);
-    });
-
-    return () => unSubscrbe();
-  }, []);
 
   const SendMessage = async () => {
     if (/\S/.test(newMessage)) {
-      await addDoc(messagesRef, {
-        text: newMessage,
-        createdAt: serverTimestamp(),
-        user: user.username,
-        room
-      });
+      await axios.post(
+        "/api/chat/post-message",
+        {
+          partnerId: user._id,
+          text: newMessage,
+          room: room
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        }
+      );
+
       setNewMessage("");
     }
     return;
   };
+
+  const GetMessages = async () => {
+    const res = await axios.post(
+      "/api/chat/get-room-message",
+      {
+        room
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      }
+    );
+    setRoomMessages(res.data.data);
+  };
+  useEffect(() => {
+    GetMessages();
+  }, []);
 
   return (
     <Body>
@@ -84,11 +80,11 @@ const ChatArea = ({ user }: IProps) => {
       </TopBar>
       <Chats>
         {roomMessages?.map((msg) => {
-          const isPartner = msg.user !== user.username;
+          const isPartner = msg.user.username !== user.username;
           return (
             <ChatBubble
               text={msg.text}
-              key={msg.id}
+              key={msg._id}
               time={msg.createdAt}
               partner={isPartner}
             />

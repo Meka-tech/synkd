@@ -16,18 +16,28 @@ async function handler(req, res, next) {
   try {
     let user = await User.findOne({ _id: userId });
 
-    console.log(excludedIds);
+    let sentRequests = [];
+    let friendsList = [];
+
+    if (user.notifications?.sentRequests) {
+      sentRequests = user.notifications?.sentRequests;
+    }
+    if (user.friendsList) {
+      friendsList = user.friendsList;
+    }
 
     const GetNearbyUsers = async () => {
       const nearbyUsers = await User.find({
-        _id: { $nin: [...excludedIds, userId] },
+        _id: {
+          $nin: [...excludedIds, userId, ...sentRequests, ...friendsList]
+        },
         location: {
           $near: {
             $geometry: {
               type: "Point",
               coordinates: [...coordinates]
             },
-            $maxDistance: 10000
+            $maxDistance: 100000
           }
         }
       });

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import DropdownInput from "@/components/Inputs/dropdownInput";
 import { SyncLottie } from "../../../../animation/syncLottie";
 import MatchedUser from "@/components/match/matched-user";
+import { IUserType } from "@/types/userType";
 
 interface coord {
   longitude: number;
@@ -18,7 +19,7 @@ const Match = () => {
   const [interest, setInterest] = useState("music");
   const [matchingType, setMatchingType] = useState("proximity");
   const [matchedUsers, setMatchedUsers] = useState<
-    { user: { username: string }; percent: number }[]
+    { user: IUserType; percent: number }[]
   >([]);
   const [excludedIdList, setExcludedIdList] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -166,7 +167,14 @@ const Match = () => {
         </SyncButton>
         <UsersContainer hasSynkd={matchedUsers.length > 0}>
           {matchedUsers?.map(({ user, percent }, index) => {
-            return <MatchedUser key={index} user={user} percent={percent} />;
+            return (
+              <MatchedUser
+                key={index}
+                user={user}
+                percent={percent}
+                interest={interest}
+              />
+            );
           })}
         </UsersContainer>
         {!coordinates && (

@@ -2,16 +2,44 @@ import styled from "@emotion/styled";
 import Image from "next/image";
 import DefaultPfp from "../../images/pfp/pfp1.jpeg";
 import React, { FC, useState } from "react";
-import { Send } from "@emotion-icons/boxicons-solid";
+import { Sync } from "@emotion-icons/boxicons-regular";
+import { CheckCircle } from "@emotion-icons/boxicons-solid";
+import axios from "axios";
+import { IUserType } from "@/types/userType";
+import Cookies from "js-cookie";
+import { css, keyframes } from "@emotion/react";
 
 interface IProps {
-  user: {
-    username: string;
-  };
+  user: IUserType;
   percent: number;
+  interest: string;
 }
-const MatchedUser = ({ user, percent }: IProps) => {
+const MatchedUser = ({ user, percent, interest }: IProps) => {
   const [hover, setHover] = useState(false);
+  const [requestSent, setSendRequest] = useState(false);
+  const [loading, setLoading] = useState(false);
+  let authToken = Cookies.get("authToken") || "";
+
+  const SendFriendRequest = async () => {
+    setLoading(true);
+    if (!requestSent) {
+      const res = await axios.post(
+        "/api/user-requests/send-friend-request",
+        {
+          RequestId: user._id,
+          matchCategory: interest,
+          percent: `${percent}`
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        }
+      );
+      setLoading(false);
+      setSendRequest(true);
+    }
+  };
   return (
     <Main
       onMouseOver={() => {
@@ -20,6 +48,7 @@ const MatchedUser = ({ user, percent }: IProps) => {
       onMouseLeave={() => {
         setHover(false);
       }}
+      onClick={SendFriendRequest}
     >
       <UserDetails>
         <UserImage>
@@ -33,13 +62,25 @@ const MatchedUser = ({ user, percent }: IProps) => {
         </NamePercent>
       </UserDetails>
       <Right hover={hover}>
-        <PlaneSection hover={hover}>
-          <Send size={20} />
-        </PlaneSection>
-        <h3>
-          {" "}
-          <span>Synk</span> with {user?.username}
-        </h3>
+        {requestSent ? (
+          <CheckSection>
+            <CheckCircle size={25} />
+          </CheckSection>
+        ) : (
+          <IconSection hover={hover} loading={loading}>
+            <Sync size={20} />
+          </IconSection>
+        )}
+
+        <SyncTextDiv hover={hover}>
+          {requestSent ? (
+            <h3>Request Sent</h3>
+          ) : (
+            <h3>
+              <span>Synk{loading ? "ing" : ""}</span> with {user?.username}
+            </h3>
+          )}
+        </SyncTextDiv>
       </Right>
     </Main>
   );
@@ -123,23 +164,22 @@ const PercentText = styled.h2`
 `;
 interface HoverPlane {
   hover: boolean;
+  loading?: boolean;
 }
 const Right = styled.div<HoverPlane>`
   height: 100%;
   display: flex;
   align-items: end;
-  justify-content: ${(props) => (props.hover ? "space-between" : "center")};
+  justify-content: center;
   flex-direction: column;
   color: ${(props) => props.theme.colors.primary};
   transition: all ease-in 0.1s;
+
   span,
   h3 {
-    transition: all ease-in 0.1s;
-    position: ${(props) => (props.hover ? "relative" : "absolute")};
-    opacity: ${(props) => (props.hover ? "1" : "0")};
-    margin-top: 1rem;
     font-size: 1.4rem;
     color: white;
+
     @media screen and (max-width: 480px) {
       font-size: 1.2rem;
     }
@@ -148,7 +188,21 @@ const Right = styled.div<HoverPlane>`
     color: ${(props) => props.theme.colors.primary};
   }
 `;
-const PlaneSection = styled.div<HoverPlane>`
+const SyncTextDiv = styled.div<HoverPlane>`
+  transform: ${(props) => (props.hover ? "translateX(-4rem)" : "")};
+  transition: all ease-in 0.1s;
+  position: absolute;
+  opacity: ${(props) => (props.hover ? "1" : "0")};
+`;
+const rotateAnimation = keyframes`
+  from {
+    transform: rotate(-360deg);
+  }
+  to {
+    transform: rotate(0);
+  }
+`;
+const IconSection = styled.div<HoverPlane>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -156,8 +210,19 @@ const PlaneSection = styled.div<HoverPlane>`
   height: 3rem;
   border-radius: 50%;
   background-color: ${(props) =>
-    props.hover ? props.theme.colors.primary : "white"};
-  color: ${(props) => (props.hover ? "white" : props.theme.colors.primary)};
+    props.hover || props.loading ? props.theme.colors.primary : "white"};
+  color: ${(props) =>
+    props.hover || props.loading ? "white" : props.theme.colors.primary};
   transition: all ease-in-out 0.2s;
   transform: ${(props) => (props.hover ? "rotate(0)" : "rotate(-90deg)")};
+  animation: ${(props) =>
+    props.loading
+      ? css`
+          ${rotateAnimation} 1s linear infinite
+        `
+      : "none"};
+`;
+
+const CheckSection = styled.div`
+  color: ${(props) => props.theme.colors.primary};
 `;

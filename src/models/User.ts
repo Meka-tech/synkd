@@ -1,4 +1,4 @@
-import { model, Schema, models } from "mongoose";
+import mongoose, { model, Schema, models } from "mongoose";
 
 const UserSchema = new Schema({
   email: {
@@ -23,6 +23,25 @@ const UserSchema = new Schema({
   },
   interests: {
     music: [String]
+  },
+  friendsList: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+  notifications: {
+    receivedRequests: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        matchCategory: String,
+        percent: String,
+        createdAt: { type: Date, default: Date.now },
+        notificationType: { type: String, default: "receivedRequest" }
+      }
+    ],
+    sentRequests: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+        createdAt: { type: Date, default: Date.now },
+        notificationType: { type: String, default: "sentRequest" }
+      }
+    ]
   }
 });
 

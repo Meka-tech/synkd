@@ -2,11 +2,30 @@ import styled from "@emotion/styled";
 import { DotsVerticalRounded, Bell } from "@emotion-icons/boxicons-regular";
 import ChatSidebarBox from "./chatSiderbarBox";
 import { IUserType } from "@/types/userType";
+import { useRef, useState } from "react";
+import Notification from "./notification";
+import useClickOutside from "@/hooks/useClickOutside";
 
 interface IProps {
   user: IUserType;
 }
+
+type SlideType = {
+  [key: string]: React.ReactNode;
+};
 const ChatSideBar = ({ user }: IProps) => {
+  const [slideInActive, setSlideInActive] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(""); //options //notifications //profile
+  const SlideRef = useRef(null);
+
+  useClickOutside(SlideRef, () => {
+    setSlideInActive(false);
+    setActiveSlide("");
+  });
+
+  const Slides: SlideType = {
+    notifications: <Notification />
+  };
   return (
     <Body>
       <TopBar>
@@ -15,7 +34,12 @@ const ChatSideBar = ({ user }: IProps) => {
           <UserName>{user.username}</UserName>
         </UserDetails>
         <Utitilites>
-          <BellIcon>
+          <BellIcon
+            onClick={() => {
+              setActiveSlide("notifications");
+              setSlideInActive(true);
+            }}
+          >
             <Bell size={20} />
           </BellIcon>
           <OptionIcon>
@@ -26,6 +50,9 @@ const ChatSideBar = ({ user }: IProps) => {
       <Texts>
         <ChatSidebarBox />
       </Texts>
+      <SlideInDiv active={slideInActive} ref={SlideRef}>
+        {slideInActive && Slides[activeSlide]}
+      </SlideInDiv>
     </Body>
   );
 };
@@ -36,6 +63,7 @@ const Body = styled.div`
   width: 30%;
   height: 100%;
   background-color: ${(props) => props.theme.colors.gluton};
+  position: relative;
 `;
 
 const TopBar = styled.div`
@@ -87,4 +115,17 @@ const Texts = styled.div`
   height: 80%;
   overflow-y: scroll;
   width: 100%;
+`;
+
+const SlideInDiv = styled.div<{ active: boolean }>`
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: ${(props) => props.theme.colors.gluton};
+  transform: ${(props) =>
+    props.active ? "translateX(0)" : "translateX(-100%)"};
+  transition: all ease 0.2s;
 `;

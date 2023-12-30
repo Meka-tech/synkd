@@ -1,20 +1,21 @@
 import styled from "@emotion/styled";
 import { Check } from "@emotion-icons/octicons";
-import firebase from "firebase/compat/app";
 
 interface IProps {
   text: string;
   partner?: boolean;
-  time: firebase.firestore.Timestamp;
+  time: Date;
   sent?: boolean;
 }
 
 const ChatBubble = ({ text, partner = false, sent, time }: IProps) => {
-  const formattedTime = time?.toDate().toLocaleTimeString([], {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+  const inputDate = new Date(time);
+  const formattedTime = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false // Use 24-hour format
+  }).format(inputDate);
+
   return (
     <Body partner={partner}>
       <Text>{text}</Text>
