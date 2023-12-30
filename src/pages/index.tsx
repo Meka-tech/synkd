@@ -14,7 +14,17 @@ export default function Home() {
   const session = sessionData as any;
 
   let authToken = Cookies.get("authToken") || "";
-  const [user, setUser] = useState<IUserType>({});
+  const [user, setUser] = useState<IUserType>({
+    email: "",
+    password: "",
+    username: "",
+    location: [],
+    serachPreferences: "",
+    interests: {
+      music: []
+    },
+    _id: ""
+  });
 
   const GetUser = async (token: string | null) => {
     try {
