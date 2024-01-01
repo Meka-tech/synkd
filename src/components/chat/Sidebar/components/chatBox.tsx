@@ -7,7 +7,7 @@ interface IProps {
   unReadMsg?: string;
   recentMsgTime?: string;
 }
-const ChatSidebarBox = ({}: IProps) => {
+const ChatBox = ({}: IProps) => {
   return (
     <Body>
       <PictureImage />
@@ -27,7 +27,7 @@ const ChatSidebarBox = ({}: IProps) => {
   );
 };
 
-export default ChatSidebarBox;
+export default ChatBox;
 
 const Body = styled.div`
   width: 100%;

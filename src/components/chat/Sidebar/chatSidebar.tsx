@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import { DotsVerticalRounded, Bell } from "@emotion-icons/boxicons-regular";
-import ChatSidebarBox from "./chatSiderbarBox";
+import ChatBox from "./components/chatBox";
 import { IUserType } from "@/types/userType";
 import { useRef, useState } from "react";
-import Notification from "./notification";
+import Notification from "./slides/notification";
 import useClickOutside from "@/hooks/useClickOutside";
 
 interface IProps {
@@ -48,7 +48,7 @@ const ChatSideBar = ({ user }: IProps) => {
         </Utitilites>
       </TopBar>
       <Texts>
-        <ChatSidebarBox />
+        <ChatBox />
       </Texts>
       <SlideInDiv active={slideInActive} ref={SlideRef}>
         {slideInActive && Slides[activeSlide]}

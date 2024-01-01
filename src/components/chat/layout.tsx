@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import ChatSideBar from "./chatSidebar";
+import ChatSideBar from "./Sidebar/chatSidebar";
 import ChatArea from "./chatArea";
 import { IUserType } from "@/types/userType";
 

@@ -6,22 +6,48 @@ async function handler(req, res, next) {
   await mongooseConnect();
   let userId = authenticateJWT(req, res, next);
 
-  const { RequestId } = req.body;
+  const { requestId } = req.body;
 
   if (!userId) {
     return res.status(401).json({ message: "unauthorized" });
   }
 
   try {
-    await User.updateOne(
-      { _id: userId },
-      {
-        $pull: { "notifications.receivedRequests": RequestId },
-        $addToSet: { friendsList: RequestId }
-      }
+    const user = await User.findById(userId);
+    const requestUser = await User.findById(requestId);
+
+    // Find the received request by ID
+    const receivedRequest = user.notifications.sentRequests.find(
+      (request) => request.user.toString() === requestId
+    );
+    const sentRequest = user.notifications.sentRequests.find(
+      (request) => request.user.toString() === userId
     );
 
-    res.status(200).json({ success: "friend request sent sucessfully" });
+    if (!receivedRequest) {
+      return res.status(404).json({ error: "Received request not found" });
+    }
+    if (!sentRequest) {
+      return res.status(404).json({ error: "Received request not found" });
+    }
+
+    user.notifications.receivedRequests =
+      user.notifications.receivedRequests.filter(
+        (request) => request.user.toString() !== requestId
+      );
+
+    requestUser.notifications.sentRequests =
+      user.notifications.sentRequest.filter(
+        (request) => request.user.toString() !== userId
+      );
+
+    user.friendsList.push(requestId);
+
+    // Save the updated user document
+    await user.save();
+    await requestUser.save();
+
+    res.status(200).json({ success: "friend request accepted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
