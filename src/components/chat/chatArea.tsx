@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { IUserType } from "@/types/userType";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Loading from "../loading";
 
 interface Imsg {
   text: string;
@@ -79,6 +80,7 @@ const ChatArea = ({ user }: IProps) => {
         </PartnerDetails>
       </TopBar>
       <Chats>
+        {roomMessages.length === 0 && <Loading />}
         {roomMessages?.map((msg) => {
           const isPartner = msg.user.username !== user.username;
           return (

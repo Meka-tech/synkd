@@ -11,6 +11,7 @@ export const theme = {
     gluton: "rgb(27,27,30)"
   },
   bgColors: {
-    dangerFade: "rgba(255,14,14,0.05)"
+    dangerFade: "rgba(255,14,14,0.05)",
+    primaryFade: "rgb(0, 150, 255,0.05)"
   }
 };

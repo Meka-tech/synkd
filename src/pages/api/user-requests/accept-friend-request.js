@@ -17,10 +17,11 @@ async function handler(req, res, next) {
     const requestUser = await User.findById(requestId);
 
     // Find the received request by ID
-    const receivedRequest = user.notifications.sentRequests.find(
+
+    const receivedRequest = user.notifications.receivedRequests.find(
       (request) => request.user.toString() === requestId
     );
-    const sentRequest = user.notifications.sentRequests.find(
+    const sentRequest = requestUser.notifications.sentRequests.find(
       (request) => request.user.toString() === userId
     );
 
@@ -28,7 +29,7 @@ async function handler(req, res, next) {
       return res.status(404).json({ error: "Received request not found" });
     }
     if (!sentRequest) {
-      return res.status(404).json({ error: "Received request not found" });
+      return res.status(404).json({ error: "Sent request not found" });
     }
 
     user.notifications.receivedRequests =
@@ -37,11 +38,12 @@ async function handler(req, res, next) {
       );
 
     requestUser.notifications.sentRequests =
-      user.notifications.sentRequest.filter(
+      requestUser.notifications.sentRequests.filter(
         (request) => request.user.toString() !== userId
       );
 
     user.friendsList.push(requestId);
+    requestUser.friendsList.push(userId);
 
     // Save the updated user document
     await user.save();

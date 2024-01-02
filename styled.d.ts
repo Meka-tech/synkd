@@ -15,6 +15,7 @@ declare module "@emotion/react" {
     };
     bgColors: {
       dangerFade: string;
+      primaryFade: string;
     };
   }
 }

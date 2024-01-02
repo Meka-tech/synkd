@@ -4,9 +4,11 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { ReceivedFriendRequest } from "../components/friendRequest";
 import { IUserType } from "@/types/userType";
+import Loading from "@/components/loading";
 
 const Notification = () => {
   let token = Cookies.get("authToken") || "";
+
   const [notifications, setNotifications] = useState<
     | [
         {
@@ -19,12 +21,16 @@ const Notification = () => {
       ]
     | null
   >(null);
+
+  const [getNotif, setGetNotif] = useState(false);
   const GetNotifications = async () => {
+    setGetNotif(true);
     const data = await axios.get("/api/user/get-notifications", {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    setGetNotif(false);
     setNotifications(data.data.notifications);
   };
 
@@ -35,6 +41,8 @@ const Notification = () => {
   return (
     <Main>
       <Title>Notifications</Title>
+      {getNotif && <Loading size={20} />}
+
       <Body>
         {notifications?.map((item) => {
           if (item.notificationType === "receivedRequest") {
@@ -44,6 +52,7 @@ const Notification = () => {
                 key={item._id}
                 matchCategory={item.matchCategory}
                 percent={item.percent}
+                refresh={GetNotifications}
               />
             );
           } else {
