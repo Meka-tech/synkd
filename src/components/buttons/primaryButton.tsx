@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import styled from "@emotion/styled";
 import { LoadingLottie, LoadingVariantLottie } from "../../../animation";
+import Loading from "../loading";
 
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -15,11 +16,7 @@ export const PrimaryButton: FC<IProps> = ({
 }) => {
   return (
     <ButtonContainer {...rest} variant={variant}>
-      {loading ? (
-        <div>{variant ? <LoadingVariantLottie /> : <LoadingLottie />}</div>
-      ) : (
-        <ButtonText>{text}</ButtonText>
-      )}
+      {loading ? <Loading /> : <ButtonText>{text}</ButtonText>}
     </ButtonContainer>
   );
 };

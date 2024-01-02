@@ -46,7 +46,7 @@ const ChatTextArea = ({
   let authToken = Cookies.get("authToken") || "";
 
   const GetMessages = async () => {
-    if (room && sync) {
+    if (room || sync) {
       const res = await axios.post(
         "/api/chat/get-room-message",
         {
@@ -71,14 +71,16 @@ const ChatTextArea = ({
       {roomMessages.length === 0 && <Loading />}
       {roomMessages?.map((msg) => {
         const isPartner = msg.user.username !== user.username;
-        return (
-          <ChatBubble
-            text={msg.text}
-            key={msg._id}
-            time={msg.createdAt}
-            partner={isPartner}
-          />
-        );
+        if (room === msg.room) {
+          return (
+            <ChatBubble
+              text={msg.text}
+              key={msg._id}
+              time={msg.createdAt}
+              partner={isPartner}
+            />
+          );
+        }
       })}
       {unSentMessages?.map((msg, i) => {
         return (

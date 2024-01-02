@@ -17,7 +17,11 @@ async function handler(req, res, next) {
       .sort({
         createdAt: 1
       })
-      .populate("user partner");
+      .populate({
+        path: "user partner",
+        model: "user",
+        select: "username"
+      });
     return res
       .status(200)
       .json({ message: "Message Sent", data: RoomMessages });
