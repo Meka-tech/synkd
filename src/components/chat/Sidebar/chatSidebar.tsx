@@ -72,14 +72,8 @@ const ChatSideBar = ({ user, setActiveChat }: IProps) => {
         </Utitilites>
       </TopBar>
       <Texts>
-        {friends?.map((friend) => {
-          return (
-            <ChatBox
-              selectChat={setActiveChat}
-              user={friend}
-              key={friend._id}
-            />
-          );
+        {friends?.map((friend, i) => {
+          return <ChatBox selectChat={setActiveChat} user={friend} key={i} />;
         })}
       </Texts>
     </Body>
