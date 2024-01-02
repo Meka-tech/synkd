@@ -1,19 +1,22 @@
+import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 
 interface IProps {
-  usernames?: string;
+  username?: string;
   profileImage?: string;
   recentMsg?: string;
   unReadMsg?: string;
   recentMsgTime?: string;
+  user: IUserType;
+  selectChat: Function;
 }
-const ChatBox = ({}: IProps) => {
+const ChatBox = ({ user, selectChat }: IProps) => {
   return (
-    <Body>
+    <Body onClick={() => selectChat(user)}>
       <PictureImage />
       <TextContainer>
         <Top>
-          <Name>Meka</Name>
+          <Name>{user.username}</Name>
           <Time>21:08</Time>
         </Top>
         <Bottom>

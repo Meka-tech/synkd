@@ -1,15 +1,21 @@
 import styled from "@emotion/styled";
 import { Check } from "@emotion-icons/octicons";
+import Loading from "../../../loading";
 
 interface IProps {
   text: string;
   partner?: boolean;
-  time: Date;
+  time?: Date;
   sent?: boolean;
 }
 
-const ChatBubble = ({ text, partner = false, sent, time }: IProps) => {
-  const inputDate = new Date(time);
+const ChatBubble = ({ text, partner = false, sent = true, time }: IProps) => {
+  let inputDate;
+
+  if (time) {
+    inputDate = new Date(time);
+  }
+
   const formattedTime = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "numeric",
@@ -17,15 +23,16 @@ const ChatBubble = ({ text, partner = false, sent, time }: IProps) => {
   }).format(inputDate);
 
   return (
-    <Body partner={partner}>
+    <Body partner={partner} sent={sent}>
       <Text>{text}</Text>
       <Bottom>
-        <Time>{formattedTime}</Time>
-        {!partner && (
+        <Time>{time && formattedTime}</Time>
+        {!partner && sent && (
           <CheckIcon>
             <Check size={10} />
           </CheckIcon>
         )}
+        {!sent && <Loading size={10} />}
       </Bottom>
     </Body>
   );
@@ -35,6 +42,7 @@ export default ChatBubble;
 
 interface BodyProp {
   partner: boolean;
+  sent: boolean;
 }
 const Body = styled.div<BodyProp>`
   background-color: ${(props) =>
@@ -53,6 +61,7 @@ const Body = styled.div<BodyProp>`
   margin-bottom: 1rem;
   overflow-wrap: break-word;
   max-width: 40%;
+  opacity: ${(props) => (props.sent ? "1" : "0.5")};
 `;
 
 const Text = styled.h2`

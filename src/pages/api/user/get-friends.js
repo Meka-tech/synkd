@@ -10,12 +10,21 @@ async function handler(req, res, next) {
     return res.status(401).json({ message: "unauthorized" });
   }
 
-  let friends = [];
   try {
-    const user = await User.findOne({ _id: userId });
-    friends.push(user.friendsList);
+    const user = await User.findOne({ _id: userId }).populate({
+      path: "friendsList",
+      model: "user"
+    });
 
-    return res.status(200).json({ user: user.friends });
+    const friends = user.friendsList;
+
+    const sortedList = friends
+      .slice()
+      .sort((a, b) => a.username.localeCompare(b.username));
+
+    return res
+      .status(200)
+      .json({ friends: sortedList, message: "Fetched friends" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

@@ -2,21 +2,26 @@ import styled from "@emotion/styled";
 import { DotsVerticalRounded, Bell } from "@emotion-icons/boxicons-regular";
 import ChatBox from "./components/chatBox";
 import { IUserType } from "@/types/userType";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Notification from "./slides/notification";
 import useClickOutside from "@/hooks/useClickOutside";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 interface IProps {
   user: IUserType;
+  setActiveChat: Function;
 }
 
 type SlideType = {
   [key: string]: React.ReactNode;
 };
-const ChatSideBar = ({ user }: IProps) => {
+const ChatSideBar = ({ user, setActiveChat }: IProps) => {
+  let authToken = Cookies.get("authToken") || "";
   const [slideInActive, setSlideInActive] = useState(false);
   const [activeSlide, setActiveSlide] = useState(""); //options //notifications //profile
   const SlideRef = useRef(null);
+  const [friends, setFriends] = useState([]);
 
   useClickOutside(SlideRef, () => {
     setSlideInActive(false);
@@ -26,8 +31,27 @@ const ChatSideBar = ({ user }: IProps) => {
   const Slides: SlideType = {
     notifications: <Notification />
   };
+  const GetFriends = async () => {
+    try {
+      const res = await axios.get("/api/user/get-friends", {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      setFriends(res.data.friends);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    GetFriends();
+  }, []);
   return (
     <Body>
+      <SlideInDiv active={slideInActive} ref={SlideRef}>
+        {slideInActive && Slides[activeSlide]}
+      </SlideInDiv>
       <TopBar>
         <UserDetails>
           <UserImage />
@@ -48,11 +72,16 @@ const ChatSideBar = ({ user }: IProps) => {
         </Utitilites>
       </TopBar>
       <Texts>
-        <ChatBox />
+        {friends?.map((friend) => {
+          return (
+            <ChatBox
+              selectChat={setActiveChat}
+              user={friend}
+              key={friend._id}
+            />
+          );
+        })}
       </Texts>
-      <SlideInDiv active={slideInActive} ref={SlideRef}>
-        {slideInActive && Slides[activeSlide]}
-      </SlideInDiv>
     </Body>
   );
 };
