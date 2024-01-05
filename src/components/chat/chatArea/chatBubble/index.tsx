@@ -46,7 +46,7 @@ interface BodyProp {
 }
 const Body = styled.div<BodyProp>`
   background-color: ${(props) =>
-    props.partner ? props.theme.colors.secondary : props.theme.colors.slate};
+    props.partner ? props.theme.colors.slate : props.theme.colors.primary};
   height: fit-content;
   width: fit-content;
   color: ${(props) => props.theme.colors.snow};

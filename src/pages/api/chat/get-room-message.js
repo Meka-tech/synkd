@@ -24,7 +24,7 @@ async function handler(req, res, next) {
       });
     return res
       .status(200)
-      .json({ message: "Message Sent", data: RoomMessages });
+      .json({ message: "Room Messages fetched", data: RoomMessages });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

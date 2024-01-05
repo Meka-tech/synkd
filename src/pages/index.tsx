@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useSession } from "next-auth/react";
 import ChatLayout from "@/components/chat/layout";
 import { IUserType } from "@/types/userType";
+import { MessageDb } from "@/MessageLocalDb";
 
 export default function Home() {
   const { data: sessionData, status } = useSession();
@@ -36,6 +37,7 @@ export default function Home() {
         });
         let res = data.data.user;
         setUser(res);
+        await GetUserMessages(token);
         if (res.interests.music.length < 1) {
           router.push("/sync/interests");
         }
@@ -44,6 +46,28 @@ export default function Home() {
       return false;
     } catch (e) {
       router.push("/auth/sign-in");
+    }
+  };
+
+  const GetUserMessages = async (token: string | null) => {
+    try {
+      if (token) {
+        const data = await axios.get("/api/chat/get-user-messages", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const UserMessages = data.data.messages;
+        await AddToLocalDb(UserMessages);
+      }
+    } catch (e) {}
+  };
+
+  const AddToLocalDb = async (data: []) => {
+    try {
+      await MessageDb.messages.bulkPut(data);
+    } catch (e) {
+      console.log(e);
     }
   };
 

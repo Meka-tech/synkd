@@ -3,9 +3,10 @@ import { GetChatId } from "@/utils/GetChatId";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import Cookies from "js-cookie";
+
 import ChatBubble from "../chatBubble";
 import Loading from "@/components/loading";
+import { ImsgType } from "@/types/messageType";
 
 interface Imsg {
   text: string;
@@ -21,21 +22,17 @@ interface IProps {
   user: IUserType;
   chatPartner: IUserType | null;
   unSentMessages: { text: string; id: number }[];
-  sync: boolean;
-  setSync: Function;
+  messages: ImsgType[];
 }
 
 const ChatTextArea = ({
   chatPartner,
   user,
   unSentMessages,
-  sync,
-  setSync
+  messages
 }: IProps) => {
   const [room, setRoom] = useState("");
   const scrollRef = useRef<null | HTMLDivElement>(null);
-
-  const [roomMessages, setRoomMessages] = useState<Imsg[]>([]);
 
   useEffect(() => {
     if (chatPartner) {
@@ -43,33 +40,17 @@ const ChatTextArea = ({
       setRoom(chatId);
     }
   }, [chatPartner, user._id]);
-  let authToken = Cookies.get("authToken") || "";
 
-  const GetMessages = async () => {
-    if (room || sync) {
-      const res = await axios.post(
-        "/api/chat/get-room-message",
-        {
-          room
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
-        }
-      );
-      setRoomMessages(res.data.data);
-      setSync(false);
-    }
-  };
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    GetMessages();
-  }, [room, sync]);
+  }, [messages]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
   return (
     <Chats>
-      {roomMessages.length === 0 && <Loading />}
-      {roomMessages?.map((msg) => {
+      {messages?.map((msg) => {
         const isPartner = msg.user.username !== user.username;
         if (room === msg.room) {
           return (

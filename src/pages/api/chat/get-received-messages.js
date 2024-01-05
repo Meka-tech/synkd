@@ -6,31 +6,30 @@ async function handler(req, res, next) {
   await mongooseConnect();
   let userId = authenticateJWT(req, res, next);
 
-  const { partnerId, text, room } = req.body;
+  const { createdAt } = req.body;
+
+  const timestamp = new Date(createdAt);
 
   if (!userId) {
     return res.status(401).json({ message: "unauthorized" });
   }
 
   try {
-    const message = new Message({
-      user: userId,
-      partner: partnerId,
-      text: text,
-      room: room
-    });
-
-    const NewMessage = await message.save();
-
-    const returnMessage = await NewMessage.populate({
-      path: "user partner",
-      model: "user",
-      select: "username"
-    });
-
+    const ReceivedMessages = await Message.find({
+      createdAt: { $gte: timestamp, $ne: timestamp },
+      partner: userId
+    })
+      .sort({
+        createdAt: 1
+      })
+      .populate({
+        path: "user partner",
+        model: "user",
+        select: "username"
+      });
     return res
       .status(200)
-      .json({ message: "Message Sent", message: returnMessage });
+      .json({ message: "User Messages Fetched ", messages: ReceivedMessages });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

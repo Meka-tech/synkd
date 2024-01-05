@@ -11,20 +11,26 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import ChatHeader from "./ChatHeader";
 import ChatTextArea from "./ChatTextArea";
+import { ImsgType } from "@/types/messageType";
+import { MessageDb } from "@/MessageLocalDb";
+import io, { Socket } from "socket.io-client";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
 
 interface IProps {
   user: IUserType;
   activeChat: IUserType | null;
+  messages: ImsgType[];
 }
 
-const ChatArea = ({ user, activeChat }: IProps) => {
+let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+const ChatArea = ({ user, activeChat, messages }: IProps) => {
   const [newMessage, setNewMessage] = useState("");
   const [room, setRoom] = useState("");
+  let authToken = Cookies.get("authToken") || "";
+
   const [unSentMessages, setUnsentMessages] = useState<
     { text: string; id: number }[]
   >([]);
-
-  const [syncMessages, setSyncMessages] = useState(true);
 
   useEffect(() => {
     if (activeChat) {
@@ -32,7 +38,19 @@ const ChatArea = ({ user, activeChat }: IProps) => {
       setRoom(chatId);
     }
   }, [activeChat, user._id]);
-  let authToken = Cookies.get("authToken") || "";
+
+  useEffect(() => {
+    socketInitializer();
+  }, []);
+
+  const socketInitializer = async (): Promise<void> => {
+    await fetch("/api/socket");
+    socket = io();
+
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+  };
 
   const SendMessage = async () => {
     if (/\S/.test(newMessage)) {
@@ -42,11 +60,10 @@ const ChatArea = ({ user, activeChat }: IProps) => {
       const UMessage = { text: Message, id: Math.random() };
       setUnsentMessages((prev) => [...prev, UMessage]);
 
-      setSyncMessages(true);
-      await axios.post(
+      const response = await axios.post(
         "/api/chat/post-message",
         {
-          partnerId: user._id,
+          partnerId: activeChat?._id,
           text: Message,
           room: room
         },
@@ -56,6 +73,15 @@ const ChatArea = ({ user, activeChat }: IProps) => {
           }
         }
       );
+
+      const ResponseMessage = response.data.message;
+
+      socket?.emit("send-message", {
+        toUserId: activeChat?._id,
+        message: "received a message"
+      });
+
+      await MessageDb.messages.add(ResponseMessage);
 
       //get id if message has sent from socket.io, /(uuid would be create for each text)
       //compare uuid and delete from unsent array
@@ -74,11 +100,15 @@ const ChatArea = ({ user, activeChat }: IProps) => {
         unSentMessages={unSentMessages}
         chatPartner={activeChat}
         user={user}
-        sync={syncMessages}
-        setSync={setSyncMessages}
+        messages={messages}
       />
       <BottomBar>
         <ChatInput
+          handleKeyPress={(e) => {
+            if (e.key === "Enter" && /\S/.test(newMessage)) {
+              SendMessage();
+            }
+          }}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
         />

@@ -1,10 +1,23 @@
 import styled from "@emotion/styled";
+import { KeyboardEventHandler, useEffect, useRef } from "react";
 
-interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {}
-const ChatInput = ({ ...rest }: IProps) => {
+interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  handleKeyPress: KeyboardEventHandler<HTMLInputElement>;
+}
+const ChatInput = ({ handleKeyPress, ...rest }: IProps) => {
+  const inputRef = useRef<null | HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  });
   return (
     <Body>
-      <Input {...rest} placeholder="Send a Text..." />
+      <Input
+        ref={inputRef}
+        {...rest}
+        placeholder="Send a Text..."
+        onKeyDown={handleKeyPress}
+      />
     </Body>
   );
 };
