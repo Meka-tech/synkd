@@ -8,21 +8,29 @@ const SocketHandler = (req, res) => {
     const io = new Server(res.socket.server);
     res.socket.server.io = io;
 
+    const socketIdMap = {};
     io.on("connection", (socket) => {
-      //   socket.on("input-change", (msg) => {
-      //     socket.broadcast.emit("update-input", msg);
-      //   });
+      socket.on("user-online", (userId) => {
+        socketIdMap[userId] = socket.id;
+        console.log(socketIdMap);
+      });
 
-      socket.on("send-message", ({ toUserId, message }) => {
-        // console.log(toUserId, message);
-        // io.to(toUserId).emit("receive-message", {
-        //   fromUserId: toUserId,
-        //   message
-        // });
-        socket.broadcast.emit("receive-message", {
-          fromUserId: toUserId,
-          message
-        });
+      socket.on("post-message", ({ userId, message }) => {
+        const targetSocketId = socketIdMap[userId];
+
+        if (targetSocketId) {
+          io.to(targetSocketId).emit("get-message", message);
+        }
+      });
+
+      socket.on("disconnect", () => {
+        const disconnectedUserId = Object.keys(socketIdMap).find(
+          (key) => socketIdMap[key].id === socket.id
+        );
+
+        if (disconnectedUserId) {
+          delete socketIdMap[disconnectedUserId];
+        }
       });
     });
   }

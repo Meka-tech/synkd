@@ -17,7 +17,7 @@ import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 
 interface IProps {
-  user: IUserType;
+  user: IUserType | null;
   activeChat: IUserType | null;
   messages: ImsgType[];
 }
@@ -34,10 +34,10 @@ const ChatArea = ({ user, activeChat, messages }: IProps) => {
 
   useEffect(() => {
     if (activeChat) {
-      const chatId = GetChatId(user._id, activeChat?._id);
+      const chatId = GetChatId(user?._id, activeChat?._id);
       setRoom(chatId);
     }
-  }, [activeChat, user._id]);
+  }, [activeChat, user?._id]);
 
   useEffect(() => {
     socketInitializer();
@@ -47,9 +47,9 @@ const ChatArea = ({ user, activeChat, messages }: IProps) => {
     await fetch("/api/socket");
     socket = io();
 
-    socket.on("connect", () => {
-      console.log("connected");
-    });
+    // socket.on("connect", () => {
+    //   console.log("connected");
+    // });
   };
 
   const SendMessage = async () => {
@@ -76,8 +76,8 @@ const ChatArea = ({ user, activeChat, messages }: IProps) => {
 
       const ResponseMessage = response.data.message;
 
-      socket?.emit("send-message", {
-        toUserId: activeChat?._id,
+      socket?.emit("post-message", {
+        userId: activeChat?._id,
         message: "received a message"
       });
 

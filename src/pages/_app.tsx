@@ -7,18 +7,25 @@ import { SessionProvider } from "next-auth/react";
 const OpenSans = Open_Sans({ subsets: ["latin"] });
 import type { AppProps } from "next/app";
 import { theme } from "@/styles/globalTheme";
+import { persistor, store } from "@/Redux/app/store";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps }
 }: AppProps) {
   return (
-    <main className={OpenSans.className}>
-      <ThemeProvider theme={theme}>
-        <SessionProvider session={session}>
-          <Component {...pageProps} />
-        </SessionProvider>
-      </ThemeProvider>
-    </main>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <main className={OpenSans.className}>
+          <ThemeProvider theme={theme}>
+            <SessionProvider session={session}>
+              <Component {...pageProps} />
+            </SessionProvider>
+          </ThemeProvider>
+        </main>
+      </PersistGate>
+    </Provider>
   );
 }

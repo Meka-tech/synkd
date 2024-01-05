@@ -19,7 +19,7 @@ interface Imsg {
 }
 
 interface IProps {
-  user: IUserType;
+  user: IUserType | null;
   chatPartner: IUserType | null;
   unSentMessages: { text: string; id: number }[];
   messages: ImsgType[];
@@ -36,22 +36,23 @@ const ChatTextArea = ({
 
   useEffect(() => {
     if (chatPartner) {
-      const chatId = GetChatId(user._id, chatPartner?._id);
+      const chatId = GetChatId(user?._id, chatPartner?._id);
       setRoom(chatId);
     }
-  }, [chatPartner, user._id]);
+  }, [chatPartner, user?._id]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  });
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
   return (
     <Chats>
       {messages?.map((msg) => {
-        const isPartner = msg.user.username !== user.username;
+        const isPartner = msg.user.username !== user?.username;
         if (room === msg.room) {
           return (
             <ChatBubble

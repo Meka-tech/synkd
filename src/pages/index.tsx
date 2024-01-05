@@ -7,10 +7,13 @@ import { useSession } from "next-auth/react";
 import ChatLayout from "@/components/chat/layout";
 import { IUserType } from "@/types/userType";
 import { MessageDb } from "@/MessageLocalDb";
+import { updateUser } from "@/Redux/features/user/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function Home() {
   const { data: sessionData, status } = useSession();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const session = sessionData as any;
 
@@ -36,6 +39,7 @@ export default function Home() {
           }
         });
         let res = data.data.user;
+        dispatch(updateUser(res));
         setUser(res);
         await GetUserMessages(token);
         if (res.interests.music.length < 1) {
@@ -91,7 +95,7 @@ export default function Home() {
 
   return (
     <Body>
-      <ChatLayout user={user} />
+      <ChatLayout />
     </Body>
   );
 }

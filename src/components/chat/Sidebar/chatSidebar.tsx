@@ -9,7 +9,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 interface IProps {
-  user: IUserType;
+  user: IUserType | null;
   setActiveChat: Function;
 }
 
@@ -55,7 +55,7 @@ const ChatSideBar = ({ user, setActiveChat }: IProps) => {
       <TopBar>
         <UserDetails>
           <UserImage />
-          <UserName>{user.username}</UserName>
+          <UserName>{user?.username}</UserName>
         </UserDetails>
         <Utitilites>
           <BellIcon
