@@ -60,7 +60,6 @@ export default function Home() {
       );
       const messages = response.data.messages;
 
-      console.log(messages.length);
       if (messages.length > 1) {
         await MessageDb.messages.bulkAdd(messages);
       } else if (messages.length === 1) {

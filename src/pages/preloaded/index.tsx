@@ -9,10 +9,25 @@ import ChatLayout from "@/components/chat/layout";
 import { IUserType } from "@/types/userType";
 import { MessageDb } from "@/MessageLocalDb";
 import { updateUser } from "@/Redux/features/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useLiveQuery } from "dexie-react-hooks";
+import { ImsgType } from "@/types/messageType";
+import { RootState } from "@/Redux/app/store";
+import { getMostRecentReceivedMessageForUser } from "@/utils/GetRecentMessage";
 
 export default function Preloaded() {
   const { data: sessionData, status } = useSession();
+  const user: IUserType | null = useSelector(
+    (state: RootState) => state.user.user
+  );
+
+  const [localMessages, setLocalMessages] = useState<ImsgType[]>();
+
+  useLiveQuery(async () => {
+    const messages = await MessageDb.messages.toArray();
+    setLocalMessages(messages);
+  });
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -31,7 +46,7 @@ export default function Preloaded() {
         let res = data.data.user;
         dispatch(updateUser(res));
         if (res.interests.music.length < 1) {
-          //new user
+          //new user should start by adding interest
           router.push("/sync/interests");
         }
 
@@ -45,14 +60,42 @@ export default function Preloaded() {
   const GetUserMessages = async (token: string | null) => {
     try {
       if (token) {
-        const data = await axios.get("/api/chat/get-user-messages", {
-          headers: {
-            Authorization: `Bearer ${token}`
+        if (localMessages?.length == 0) {
+          const data = await axios.get("/api/chat/get-user-messages", {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          const UserMessages = data.data.messages;
+          await AddToLocalDb(UserMessages);
+          router.push("/");
+          console.log("load all messages");
+        }
+        if (localMessages && localMessages?.length > 0) {
+          let recentMessage: ImsgType | any;
+
+          recentMessage = await getMostRecentReceivedMessageForUser(user?._id);
+          const response = await axios.post(
+            "/api/chat/get-received-messages",
+            {
+              createdAt: recentMessage.createdAt
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`
+              }
+            }
+          );
+          const messages = response.data.messages;
+
+          if (messages.length > 1) {
+            await MessageDb.messages.bulkAdd(messages);
+          } else if (messages.length === 1) {
+            await MessageDb.messages.add(messages[0]);
           }
-        });
-        const UserMessages = data.data.messages;
-        await AddToLocalDb(UserMessages);
-        router.push("/");
+          console.log("extra messages");
+          router.push("/");
+        }
       }
     } catch (e) {}
   };
@@ -88,7 +131,7 @@ export default function Preloaded() {
       <Body>
         <WelcomeText>Synking , Please wait...</WelcomeText>
         <LoadingIcon>
-          <Loading size={80} />
+          <Loading size={70} />
         </LoadingIcon>
       </Body>
     </Main>
@@ -106,6 +149,9 @@ const Body = styled.div``;
 const WelcomeText = styled.h1`
   font-size: 4rem;
   font-weight: 800;
+  @media screen and (max-width: 480px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const LoadingIcon = styled.div`

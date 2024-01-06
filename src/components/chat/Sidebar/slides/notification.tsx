@@ -59,7 +59,7 @@ const Notification = ({ close }: INotif) => {
           <Icon>
             <Bell size={200} />
           </Icon>
-          <NoText>You have no notifications!</NoText>
+          <NoText>You have no notifications.</NoText>
         </NoNotifications>
       )}
 
