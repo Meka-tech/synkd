@@ -62,6 +62,7 @@ const Body = styled.div<BodyProp>`
   overflow-wrap: break-word;
   max-width: 40%;
   opacity: ${(props) => (props.sent ? "1" : "0.5")};
+  word-wrap: break-word;
 `;
 
 const Text = styled.h2`
