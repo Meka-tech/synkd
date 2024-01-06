@@ -1,5 +1,4 @@
 import Dexie, { Table } from "dexie";
-import { IUserType } from "./types/userType";
 import { ImsgType } from "./types/messageType";
 
 export class MySubClassedDexie extends Dexie {

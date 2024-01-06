@@ -1,5 +1,9 @@
 import styled from "@emotion/styled";
-import { DotsVerticalRounded, Bell } from "@emotion-icons/boxicons-regular";
+import {
+  DotsVerticalRounded,
+  Bell,
+  Plus
+} from "@emotion-icons/boxicons-regular";
 import ChatBox from "./components/chatBox";
 import { IUserType } from "@/types/userType";
 import { useEffect, useRef, useState } from "react";
@@ -7,6 +11,11 @@ import Notification from "./slides/notification";
 import useClickOutside from "@/hooks/useClickOutside";
 import axios from "axios";
 import Cookies from "js-cookie";
+import SearchInput from "./components/searchInput";
+import { User } from "@emotion-icons/boxicons-regular";
+
+import NewChat from "./slides/newChat";
+import ActiveChats from "./components/activeChats";
 
 interface IProps {
   user: IUserType | null;
@@ -17,36 +26,27 @@ type SlideType = {
   [key: string]: React.ReactNode;
 };
 const ChatSideBar = ({ user, setActiveChat }: IProps) => {
-  let authToken = Cookies.get("authToken") || "";
   const [slideInActive, setSlideInActive] = useState(false);
   const [activeSlide, setActiveSlide] = useState(""); //options //notifications //profile
   const SlideRef = useRef(null);
-  const [friends, setFriends] = useState([]);
 
-  useClickOutside(SlideRef, () => {
+  const RemoveSlide = () => {
     setSlideInActive(false);
     setActiveSlide("");
-  });
+  };
+
+  useClickOutside(SlideRef, () => RemoveSlide());
 
   const Slides: SlideType = {
-    notifications: <Notification />
-  };
-  const GetFriends = async () => {
-    try {
-      const res = await axios.get("/api/user/get-friends", {
-        headers: {
-          Authorization: `Bearer ${authToken}`
-        }
-      });
-      setFriends(res.data.friends);
-    } catch (e) {
-      console.log(e);
-    }
+    notifications: <Notification close={RemoveSlide} />,
+    newChat: <NewChat selectChat={setActiveChat} close={RemoveSlide} />
   };
 
-  useEffect(() => {
-    GetFriends();
-  }, []);
+  const ActivativeSlide = (slide: string) => {
+    setActiveSlide(slide);
+    setSlideInActive(true);
+  };
+
   return (
     <Body>
       <SlideInDiv active={slideInActive} ref={SlideRef}>
@@ -54,16 +54,16 @@ const ChatSideBar = ({ user, setActiveChat }: IProps) => {
       </SlideInDiv>
       <TopBar>
         <UserDetails>
-          <UserImage />
-          <UserName>{user?.username}</UserName>
+          <UserImage>
+            <User size={30} />
+          </UserImage>
+          {/* <UserName>{user?.username}</UserName> */}
         </UserDetails>
         <Utitilites>
-          <BellIcon
-            onClick={() => {
-              setActiveSlide("notifications");
-              setSlideInActive(true);
-            }}
-          >
+          <AddIcon onClick={() => ActivativeSlide("newChat")}>
+            <Plus size={20} />
+          </AddIcon>
+          <BellIcon onClick={() => ActivativeSlide("notifications")}>
             <Bell size={20} />
           </BellIcon>
           <OptionIcon>
@@ -71,10 +71,11 @@ const ChatSideBar = ({ user, setActiveChat }: IProps) => {
           </OptionIcon>
         </Utitilites>
       </TopBar>
+      <SearchArea>
+        <SearchInput />
+      </SearchArea>
       <Texts>
-        {friends?.map((friend, i) => {
-          return <ChatBox selectChat={setActiveChat} user={friend} key={i} />;
-        })}
+        <ActiveChats selectChat={setActiveChat} />
       </Texts>
     </Body>
   );
@@ -108,6 +109,10 @@ const UserImage = styled.div`
   height: 4rem;
   border-radius: 50%;
   background-color: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const UserName = styled.h2`
   color: white;
@@ -119,20 +124,35 @@ const UserName = styled.h2`
 const Utitilites = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 10rem;
 `;
 
+const AddIcon = styled.div`
+  cursor: pointer;
+  background-color: ${(props) => props.theme.colors.primary};
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const BellIcon = styled.div`
   cursor: pointer;
   transition: all ease 0.1s;
+
   :hover {
     scale: 1.05;
   }
 `;
 
-const OptionIcon = styled(BellIcon)`
-  margin-left: 1rem;
-`;
+const OptionIcon = styled(BellIcon)``;
 
+const SearchArea = styled.div`
+  padding: 1rem;
+  background-color: ${(props) => props.theme.colors.slate};
+`;
 const Texts = styled.div`
   padding-top: 1rem;
   height: 80%;

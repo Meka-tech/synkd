@@ -1,26 +1,62 @@
+import { RootState } from "@/Redux/app/store";
 import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
+import { useSelector } from "react-redux";
+import { Check } from "@emotion-icons/boxicons-regular";
 
 interface IProps {
-  username?: string;
+  user: IUserType;
   profileImage?: string;
   recentMsg?: string;
   unReadMsg?: string;
-  recentMsgTime?: string;
-  user: IUserType;
+  recentMsgTime?: Date;
+  partner: IUserType;
   selectChat: Function;
+  userSent: boolean;
 }
-const ChatBox = ({ user, selectChat }: IProps) => {
+const ChatBox = ({
+  user,
+  partner,
+  selectChat,
+  recentMsg,
+  recentMsgTime,
+  userSent
+}: IProps) => {
+  const userDetails: IUserType | null = useSelector(
+    (state: RootState) => state.user.user
+  );
+
+  let msgTime;
+
+  if (recentMsgTime) {
+    msgTime = new Date(recentMsgTime);
+  }
+
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false // Use 24-hour format
+  }).format(msgTime);
+
   return (
-    <Body onClick={() => selectChat(user)}>
+    <Body onClick={() => selectChat(partner)}>
       <PictureImage />
       <TextContainer>
         <Top>
-          <Name>{user.username}</Name>
-          <Time>21:08</Time>
+          <Name>{partner.username}</Name>
+          <Time>{time}</Time>
         </Top>
         <Bottom>
-          <RecentText>Hello World</RecentText>
+          <Message>
+            {userSent && (
+              <Tick>
+                {" "}
+                <Check size={15} />
+              </Tick>
+            )}
+
+            <RecentText>{recentMsg}</RecentText>
+          </Message>
           <UnReadMsg>
             <h3>1</h3>
           </UnReadMsg>
@@ -79,9 +115,14 @@ const Bottom = styled.div`
   align-items: center;
 `;
 
+const Message = styled.div`
+  display: flex;
+  align-items: center;
+`;
 const RecentText = styled.h2`
   font-weight: 400;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  color: ${(props) => props.theme.colors.dusty};
 `;
 
 const UnReadMsg = styled.div`
@@ -98,4 +139,9 @@ const UnReadMsg = styled.div`
     font-weight: 600;
     font-size: 1rem;
   }
+`;
+
+const Tick = styled.div`
+  margin-right: 0.1rem;
+  color: ${(props) => props.theme.colors.dusty};
 `;

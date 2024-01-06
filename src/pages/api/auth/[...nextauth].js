@@ -66,7 +66,7 @@ export const authOptions = {
       return session;
     },
     async redirect({}) {
-      return "/";
+      return "/preloaded";
     }
   }
 };

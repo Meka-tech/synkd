@@ -46,10 +46,6 @@ const ChatArea = ({ user, activeChat, messages }: IProps) => {
   const socketInitializer = async (): Promise<void> => {
     await fetch("/api/socket");
     socket = io();
-
-    // socket.on("connect", () => {
-    //   console.log("connected");
-    // });
   };
 
   const SendMessage = async () => {

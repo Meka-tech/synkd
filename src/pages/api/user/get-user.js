@@ -11,7 +11,7 @@ async function handler(req, res, next) {
   }
 
   try {
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findOne({ _id: userId }).populate("friendsList");
     return res.status(200).json({ user: user });
   } catch (err) {
     return res.status(500).json({ message: err.message });

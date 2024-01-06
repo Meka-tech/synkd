@@ -5,18 +5,13 @@ const SocketHandler = (req, res) => {
     // console.log("Socket is already running");
   } else {
     // console.log("Socket is initializing");
-    const io = new Server(res.socket.server.httpServer, {
-      cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-      }
-    });
+    const io = new Server(res.socket.server);
     res.socket.server.io = io;
+
     const socketIdMap = {};
     io.on("connection", (socket) => {
       socket.on("user-online", (userId) => {
         socketIdMap[userId] = socket.id;
-        console.log(socketIdMap);
       });
 
       socket.on("post-message", ({ userId, message }) => {

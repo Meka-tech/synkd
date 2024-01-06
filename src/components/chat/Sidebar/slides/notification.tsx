@@ -3,10 +3,16 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { ReceivedFriendRequest } from "../components/friendRequest";
+import { Bell } from "@emotion-icons/boxicons-solid";
 import { IUserType } from "@/types/userType";
 import Loading from "@/components/loading";
+import { BackDiv, Body, Main, Title, TopBar } from "./styles";
+import { ArrowBack } from "@emotion-icons/boxicons-regular";
 
-const Notification = () => {
+interface INotif {
+  close: Function;
+}
+const Notification = ({ close }: INotif) => {
   let token = Cookies.get("authToken") || "";
 
   const [notifications, setNotifications] = useState<
@@ -19,8 +25,8 @@ const Notification = () => {
           notificationType: string;
         }
       ]
-    | null
-  >(null);
+    | []
+  >([]);
 
   const [getNotif, setGetNotif] = useState(false);
   const GetNotifications = async () => {
@@ -40,8 +46,22 @@ const Notification = () => {
 
   return (
     <Main>
-      <Title>Notifications</Title>
-      {getNotif && <Loading size={20} />}
+      <TopBar>
+        <Title>Notifications</Title>
+        <BackDiv onClick={() => close()}>
+          <ArrowBack size={30} />
+        </BackDiv>
+      </TopBar>
+
+      {getNotif && <Loading size={30} />}
+      {!getNotif && notifications?.length === 0 && (
+        <NoNotifications>
+          <Icon>
+            <Bell size={200} />
+          </Icon>
+          <NoText>You have no notifications!</NoText>
+        </NoNotifications>
+      )}
 
       <Body>
         {notifications?.map((item) => {
@@ -66,16 +86,19 @@ const Notification = () => {
 
 export default Notification;
 
-const Main = styled.div`
-  height: 100%;
-  width: 100%;
-  padding: 1rem;
+const NoNotifications = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 2rem;
+  height: 80%;
 `;
-const Title = styled.h2`
-  font-size: 2.5rem;
-  margin-left: 1rem;
-  margin-top: 1rem;
+const Icon = styled.div`
+  color: ${(props) => props.theme.bgColors.primaryFade};
 `;
-const Body = styled.div`
+
+const NoText = styled.h2`
   margin-top: 1rem;
+  font-size: 2rem;
 `;

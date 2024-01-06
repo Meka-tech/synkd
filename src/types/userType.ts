@@ -4,6 +4,7 @@ export type IUserType = {
   username: string;
   location: string[];
   serachPreferences: string;
+  friendsList: IUserType[];
   interests: {
     music: string[];
   };

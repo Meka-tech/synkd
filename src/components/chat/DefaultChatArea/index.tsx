@@ -55,5 +55,9 @@ const Button = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 800;
+  transition: all ease-in 0.2s;
+  :hover {
+    transform: scale(1.05);
+  }
 `;

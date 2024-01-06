@@ -31,7 +31,7 @@ function SignIn() {
         let data = await axios.post("/api/auth/sign-in", values);
         const token = data?.data.token;
         Cookies.set("authToken", token);
-        router.push("/");
+        router.push("/preloaded");
       } catch (e: any) {
         let error = e.response.data;
         setServerErrorMessage(error.message);
