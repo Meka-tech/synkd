@@ -5,9 +5,12 @@ const SocketHandler = (req, res) => {
     // console.log("Socket is already running");
   } else {
     // console.log("Socket is initializing");
-    const io = new Server(res.socket.server);
+    const io = new Server(res.socket.server.httpServer, {
+      cors: {
+        origin: "*"
+      }
+    });
     res.socket.server.io = io;
-
     const socketIdMap = {};
     io.on("connection", (socket) => {
       socket.on("user-online", (userId) => {
