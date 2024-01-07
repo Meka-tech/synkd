@@ -22,6 +22,14 @@ const SocketHandler = (req, res) => {
         }
       });
 
+      socket.on("read-message", ({ userId, messageId }) => {
+        const targetSocketId = socketIdMap[userId];
+
+        if (targetSocketId) {
+          io.to(targetSocketId).emit("message-was-read", messageId);
+        }
+      });
+
       socket.on("disconnect", () => {
         const disconnectedUserId = Object.keys(socketIdMap).find(
           (key) => socketIdMap[key].id === socket.id

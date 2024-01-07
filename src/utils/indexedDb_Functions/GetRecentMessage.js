@@ -1,8 +1,7 @@
-import { MessageDb } from "../MessageLocalDb";
+import { MessageDb } from "../../MessageLocalDb";
 
 export const getMostRecentReceivedMessageForUser = async (userIdToExclude) => {
   try {
-    // Open the database
     await MessageDb.open();
 
     // Get all messages where user.id is not equal to a certain string

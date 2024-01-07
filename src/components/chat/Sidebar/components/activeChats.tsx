@@ -8,50 +8,27 @@ import { useState } from "react";
 
 import ChatBox from "./chatBox";
 import { useSelector } from "react-redux";
+import { getMostRecentMessagesAndUnreadCount } from "@/utils/indexedDb_Functions/getMostRecentMessages";
 
 interface INewChat {
   selectChat: Function;
 }
 const ActiveChats = ({ selectChat }: INewChat) => {
-  const [activeChats, setActiveChats] = useState<ImsgType[]>();
+  const [activeChats, setActiveChats] =
+    useState<{ recentMessage: ImsgType; unreadCount: number }[]>();
   const userDetails: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
-  const [messages, setMessages] = useState<ImsgType[]>();
-
-  async function getMostRecentMessages() {
-    const mostRecentMessages: Record<string, ImsgType> = {};
-
-    // Get all messages ordered by room and createdAt in descending order
-    const allMessages = await MessageDb.messages
-      .orderBy("room")
-      .reverse()
-      .sortBy("createdAt");
-
-    // Iterate through each message and keep track of the most recent message for each room
-    allMessages.forEach((message) => {
-      const { room } = message;
-      if (!mostRecentMessages[room]) {
-        mostRecentMessages[room] = message;
-      }
-    });
-
-    const result: ImsgType[] = Object.values(mostRecentMessages);
-
-    return result;
-  }
 
   useLiveQuery(async () => {
-    const messages = await MessageDb.messages.toArray();
-    setMessages(messages);
-
-    const recentChats = await getMostRecentMessages();
-    setActiveChats(recentChats);
+    const Data = await getMostRecentMessagesAndUnreadCount(userDetails?._id);
+    setActiveChats(Data);
   });
 
   return (
     <Main>
-      {activeChats?.map((chat, i) => {
+      {activeChats?.map((item, i) => {
+        const chat = item.recentMessage;
         let partner;
         let user;
         let userSent = false;
@@ -70,8 +47,10 @@ const ActiveChats = ({ selectChat }: INewChat) => {
             selectChat={selectChat}
             partner={partner}
             recentMsg={chat.text}
+            readMsg={chat.readStatus}
             key={i}
             recentMsgTime={chat.createdAt}
+            unReadMsg={item.unreadCount}
           />
         );
       })}

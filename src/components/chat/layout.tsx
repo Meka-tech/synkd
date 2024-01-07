@@ -9,7 +9,6 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { ImsgType } from "@/types/messageType";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { getMostRecentReceivedMessageForUser } from "@/utils/GetRecentMessage";
 import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { useSelector } from "react-redux";

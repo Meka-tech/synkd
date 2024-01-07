@@ -15,6 +15,8 @@ import { ImsgType } from "@/types/messageType";
 import { MessageDb } from "@/MessageLocalDb";
 import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/app/store";
 
 interface IProps {
   user: IUserType | null;
@@ -22,8 +24,8 @@ interface IProps {
   messages: ImsgType[];
 }
 
-let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 const ChatArea = ({ user, activeChat, messages }: IProps) => {
+  const socket = useSelector((state: RootState) => state.socket.socket);
   const [newMessage, setNewMessage] = useState("");
   const [room, setRoom] = useState("");
   let authToken = Cookies.get("authToken") || "";
@@ -38,15 +40,6 @@ const ChatArea = ({ user, activeChat, messages }: IProps) => {
       setRoom(chatId);
     }
   }, [activeChat, user?._id]);
-
-  useEffect(() => {
-    socketInitializer();
-  }, []);
-
-  const socketInitializer = async (): Promise<void> => {
-    await fetch("/api/socket");
-    socket = io();
-  };
 
   const SendMessage = async () => {
     if (/\S/.test(newMessage)) {
@@ -74,7 +67,7 @@ const ChatArea = ({ user, activeChat, messages }: IProps) => {
 
       socket?.emit("post-message", {
         userId: activeChat?._id,
-        message: "received a message"
+        message: ResponseMessage
       });
 
       await MessageDb.messages.add(ResponseMessage);

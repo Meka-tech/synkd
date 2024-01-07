@@ -3,22 +3,26 @@ import ChatLayout from "@/components/chat/layout";
 import { MessageDb } from "@/MessageLocalDb";
 import { ImsgType } from "@/types/messageType";
 import axios from "axios";
-import { getMostRecentReceivedMessageForUser } from "@/utils/GetRecentMessage";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IUserType } from "@/types/userType";
 import { RootState } from "@/Redux/app/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import io, { Socket } from "socket.io-client";
 import Cookies from "js-cookie";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { ReadDBMessage } from "@/utils/indexedDb_Functions/readDBMessage";
+import { getOldestUnreadMessage } from "@/utils/indexedDb_Functions/getOldestUnreadMessage";
+import { updateSocket } from "@/Redux/features/socket/socketSlice";
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default function Home() {
   let authToken = Cookies.get("authToken") || "";
+
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     socketInitializer();
@@ -28,45 +32,77 @@ export default function Home() {
     await fetch("/api/socket");
     socket = io();
 
+    dispatch(updateSocket(socket));
+
     socket.on("connect", () => {
       if (user?._id) {
         socket.emit("user-online", user?._id);
       }
     });
 
-    socket.on("get-message", (message) => {
-      console.log(message);
-      GetRecievedMessages();
+    socket.on("get-message", async (message) => {
+      await MessageDb.messages.add(message);
+    });
+
+    socket.on("message-was-read", async (messageId) => {
+      await ReadDBMessage(messageId);
     });
     socket.on("disconnect", () => {
       console.log("Disconnected");
     });
   };
 
-  const GetRecievedMessages = async () => {
+  useEffect(() => {
+    GetUserMessages();
+  });
+
+  const GetUserMessages = useCallback(async () => {
     try {
       let recentMessage: ImsgType | any;
-      recentMessage = await getMostRecentReceivedMessageForUser(user?._id);
-      const response = await axios.post(
-        "/api/chat/get-received-messages",
-        {
-          createdAt: recentMessage.createdAt
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`
+      recentMessage = await getOldestUnreadMessage(user?._id);
+      if (recentMessage) {
+        const response = await axios.post(
+          "/api/chat/get-received-messages",
+          {
+            updatedAt: recentMessage.updatedAt
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            }
+          }
+        );
+        const messages: ImsgType[] = response.data.messages;
+
+        for (const message of messages) {
+          let existingMessage = await MessageDb.messages.get({
+            _id: message._id
+          });
+
+          if (existingMessage) {
+            existingMessage = message;
+            MessageDb.messages.put(existingMessage);
+          } else {
+            MessageDb.messages.put(message);
           }
         }
-      );
-      const messages = response.data.messages;
-
-      if (messages.length > 1) {
-        await MessageDb.messages.bulkAdd(messages);
-      } else if (messages.length === 1) {
-        await MessageDb.messages.add(messages[0]);
       }
     } catch (err) {}
-  };
+  }, []);
+
+  const handleVisibilityChange = useCallback(() => {
+    if (!document.hidden) {
+      GetUserMessages();
+    }
+  }, [GetUserMessages]);
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [handleVisibilityChange, GetUserMessages]);
 
   return (
     <Body>
@@ -75,4 +111,6 @@ export default function Home() {
   );
 }
 
-const Body = styled.div``;
+const Body = styled.div`
+  position: relative;
+`;

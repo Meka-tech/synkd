@@ -10,7 +10,7 @@ const FriendBox = ({ user, selectChat, close }: IProps) => {
   return (
     <Body
       onClick={() => {
-        selectChat(user), close();
+        selectChat(user);
       }}
     >
       <PictureImage />

@@ -8,15 +8,6 @@ import ChatBubble from "../chatBubble";
 import Loading from "@/components/loading";
 import { ImsgType } from "@/types/messageType";
 
-interface Imsg {
-  text: string;
-  user: IUserType;
-  partner: IUserType;
-  room: string;
-  createdAt: Date;
-  updatedAt: Date;
-  _id: string;
-}
 
 interface IProps {
   user: IUserType | null;
@@ -52,14 +43,21 @@ const ChatTextArea = ({
   return (
     <Chats>
       {messages?.map((msg) => {
+        let partnerId;
         const isPartner = msg.user.username !== user?.username;
+        if (isPartner) {
+          partnerId = msg.user._id;
+        }
         if (room === msg.room) {
           return (
             <ChatBubble
               text={msg.text}
               key={msg._id}
+              id={msg._id}
               time={msg.createdAt}
               partner={isPartner}
+              readStatus={msg.readStatus}
+              partnerId={partnerId}
             />
           );
         }

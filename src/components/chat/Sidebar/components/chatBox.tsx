@@ -2,17 +2,18 @@ import { RootState } from "@/Redux/app/store";
 import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
-import { Check } from "@emotion-icons/boxicons-regular";
+import { Check, CheckDouble } from "@emotion-icons/boxicons-regular";
 
 interface IProps {
   user: IUserType;
   profileImage?: string;
   recentMsg?: string;
-  unReadMsg?: string;
+  unReadMsg: number;
   recentMsgTime?: Date;
   partner: IUserType;
   selectChat: Function;
   userSent: boolean;
+  readMsg: boolean;
 }
 const ChatBox = ({
   user,
@@ -20,7 +21,9 @@ const ChatBox = ({
   selectChat,
   recentMsg,
   recentMsgTime,
-  userSent
+  userSent,
+  unReadMsg,
+  readMsg
 }: IProps) => {
   const userDetails: IUserType | null = useSelector(
     (state: RootState) => state.user.user
@@ -44,22 +47,27 @@ const ChatBox = ({
       <TextContainer>
         <Top>
           <Name>{partner.username}</Name>
-          <Time>{time}</Time>
+          <Time unRead={unReadMsg > 0}>{time}</Time>
         </Top>
         <Bottom>
           <Message>
-            {userSent && (
+            {readMsg && userSent ? (
               <Tick>
-                {" "}
+                <CheckDouble size={15} />
+              </Tick>
+            ) : userSent ? (
+              <Tick>
                 <Check size={15} />
               </Tick>
-            )}
+            ) : null}
 
             <RecentText>{recentMsg}</RecentText>
           </Message>
-          <UnReadMsg>
-            <h3>1</h3>
-          </UnReadMsg>
+          {unReadMsg > 0 && (
+            <UnReadMsgDiv>
+              <h3>{unReadMsg}</h3>
+            </UnReadMsgDiv>
+          )}
         </Bottom>
       </TextContainer>
     </Body>
@@ -75,10 +83,11 @@ const Body = styled.div`
   cursor: pointer;
   padding: 1.5rem 1rem;
   justify-content: space-between;
-  border-bottom: 1px solid ${(props) => props.theme.colors.slate};
+  border-bottom: 1px solid ${(props) => props.theme.bgColors.primaryFade};
   transition: all ease-in-out 0.1s;
   :hover {
-    background-color: ${(props) => props.theme.colors.slate};
+    /* background-color: ${(props) => props.theme.bgColors.primaryFade}; */
+    background-color: rgba(255, 255, 255, 0.05);
   }
 `;
 
@@ -97,16 +106,21 @@ const Top = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const Name = styled.h2`
-  font-size: 1.4rem;
+  font-size: 1.6rem;
+  font-weight: 600;
 `;
+interface BlueText {
+  unRead: boolean;
+}
 
-const Time = styled.h3`
+const Time = styled.h3<BlueText>`
   font-size: 1rem;
-  color: ${(props) => props.theme.colors.dusty};
+  color: ${(props) =>
+    props.unRead ? props.theme.colors.primary : props.theme.colors.dusty};
 `;
 
 const Bottom = styled.div`
@@ -125,7 +139,7 @@ const RecentText = styled.h2`
   color: ${(props) => props.theme.colors.dusty};
 `;
 
-const UnReadMsg = styled.div`
+const UnReadMsgDiv = styled.div`
   min-width: 2rem;
   height: 2rem;
   border-radius: 50px;

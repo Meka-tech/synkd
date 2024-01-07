@@ -24,7 +24,8 @@
     "src/pages/api/auth/[...nextauth]/sign-up.js",
     "src/pages/api/auth/[...nextauth]/sign-in.js",
     "src/utils/middleware/middleware.js",
-    "src/pages/api/user/post-interest.js"
+    "src/pages/api/user/post-interest.js",
+    "src/utils/indexedDb_Functions/GetRecentMessage.js"
   ],
   "exclude": ["node_modules"]
 }

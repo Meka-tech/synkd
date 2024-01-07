@@ -13,10 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ImsgType } from "@/types/messageType";
 import { RootState } from "@/Redux/app/store";
-import { getMostRecentReceivedMessageForUser } from "@/utils/GetRecentMessage";
+import { getMostRecentReceivedMessageForUser } from "@/utils/indexedDb_Functions/GetRecentMessage";
 
 export default function Preloaded() {
   const { data: sessionData, status } = useSession();
+
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
@@ -44,13 +45,13 @@ export default function Preloaded() {
           }
         });
         let res = data.data.user;
+
         dispatch(updateUser(res));
+        await GetUserMessages(token);
+
         if (res.interests.music.length < 1) {
-          //new user should start by adding interest
           router.push("/sync/interests");
         }
-
-        await GetUserMessages(token);
       }
     } catch (e) {
       router.push("/auth/sign-in");
@@ -60,7 +61,7 @@ export default function Preloaded() {
   const GetUserMessages = async (token: string | null) => {
     try {
       if (token) {
-        if (localMessages?.length == 0) {
+        if (localMessages?.length === 0) {
           const data = await axios.get("/api/chat/get-user-messages", {
             headers: {
               Authorization: `Bearer ${token}`
@@ -69,7 +70,6 @@ export default function Preloaded() {
           const UserMessages = data.data.messages;
           await AddToLocalDb(UserMessages);
           router.push("/");
-          console.log("load all messages");
         }
         if (localMessages && localMessages?.length > 0) {
           let recentMessage: ImsgType | any;
