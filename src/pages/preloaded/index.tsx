@@ -22,12 +22,12 @@ export default function Preloaded() {
     (state: RootState) => state.user.user
   );
 
-  const [localMessages, setLocalMessages] = useState<ImsgType[]>();
+  // const [localMessages, setLocalMessages] = useState<ImsgType[]>([]);
 
-  useLiveQuery(async () => {
-    const messages = await MessageDb.messages.toArray();
-    setLocalMessages(messages);
-  });
+  // useLiveQuery(async () => {
+  //   const messages = await MessageDb.messages.toArray();
+  //   setLocalMessages(messages);
+  // });
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -59,6 +59,7 @@ export default function Preloaded() {
   };
 
   const GetUserMessages = async (token: string | null) => {
+    const localMessages = await MessageDb.messages.toArray();
     try {
       if (token) {
         if (localMessages?.length === 0) {
@@ -71,14 +72,14 @@ export default function Preloaded() {
           await AddToLocalDb(UserMessages);
           router.push("/");
         }
-        if (localMessages && localMessages?.length > 0) {
+        if (localMessages?.length > 0) {
           let recentMessage: ImsgType | any;
 
           recentMessage = await getMostRecentReceivedMessageForUser(user?._id);
           const response = await axios.post(
             "/api/chat/get-received-messages",
             {
-              createdAt: recentMessage.createdAt
+              updatedAt: recentMessage.updatedAt
             },
             {
               headers: {
@@ -89,11 +90,14 @@ export default function Preloaded() {
           const messages = response.data.messages;
 
           if (messages.length > 1) {
-            await MessageDb.messages.bulkAdd(messages);
-          } else if (messages.length === 1) {
-            await MessageDb.messages.add(messages[0]);
+            console.log("hello world");
+            await MessageDb.messages.bulkPut(messages);
+            console.log("added");
           }
-          console.log("extra messages");
+          if (messages.length === 1) {
+            await MessageDb.messages.put(messages[0]);
+            console.log("here");
+          }
           router.push("/");
         }
       }
