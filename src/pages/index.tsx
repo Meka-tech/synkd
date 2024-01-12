@@ -36,7 +36,7 @@ export default function Home() {
         "Access-Control-Allow-Origin": "*" // Adjust based on your needs
       }
     });
-    socket = io();
+    socket = io("https://synkd.netlify.app");
 
     dispatch(updateSocket(socket));
 
