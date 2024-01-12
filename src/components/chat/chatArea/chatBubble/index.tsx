@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import Loading from "../../../loading";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import io, { Socket } from "socket.io-client";
 import Cookies from "js-cookie";
@@ -19,6 +19,7 @@ interface IProps {
   readStatus?: boolean;
   id?: string;
   partnerId?: string;
+  userSndNxtMsg: boolean;
 }
 
 const ChatBubble = ({
@@ -28,7 +29,8 @@ const ChatBubble = ({
   time,
   id,
   readStatus,
-  partnerId
+  partnerId,
+  userSndNxtMsg = false
 }: IProps) => {
   let authToken = Cookies.get("authToken") || "";
   let inputDate;
@@ -45,9 +47,8 @@ const ChatBubble = ({
     hour12: false // Use 24-hour format
   }).format(inputDate);
 
-  const ReadMessage = async () => {
+  const ReadMessage = useCallback(async () => {
     if (!readStatus && id && partner) {
-      console.log("txt read");
       try {
         const response = await axios.post(
           "/api/chat/read-message",
@@ -61,6 +62,7 @@ const ChatBubble = ({
           }
         );
         const ResponseMessage = response.data.message;
+
         socket?.emit("read-message", {
           userId: partnerId,
           messageId: ResponseMessage._id
@@ -69,7 +71,7 @@ const ChatBubble = ({
         await ReadDBMessage(ResponseMessage._id);
       } catch (e) {}
     }
-  };
+  }, []);
 
   useEffect(() => {
     ReadMessage();
@@ -77,7 +79,7 @@ const ChatBubble = ({
 
   return (
     <Main>
-      <Body partner={partner} sent={sent}>
+      <Body partner={partner} sent={sent} userSndNxtMsg={userSndNxtMsg}>
         <Text>{text}</Text>
         <Bottom>
           <Time>{time && formattedTime}</Time>
@@ -106,6 +108,7 @@ const Main = styled.div`
 interface BodyProp {
   partner: boolean;
   sent: boolean;
+  userSndNxtMsg: boolean;
 }
 const Body = styled.div<BodyProp>`
   cursor: pointer;
@@ -114,17 +117,22 @@ const Body = styled.div<BodyProp>`
   height: fit-content;
   width: fit-content;
   color: ${(props) => props.theme.colors.snow};
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: ${(props) => (props.partner ? "" : "8px")};
-  border-bottom-right-radius: ${(props) => (props.partner ? "8px" : "")};
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: ${(props) =>
+    props.userSndNxtMsg ? "15px" : props.partner ? "" : "15px"};
+  border-bottom-right-radius: ${(props) =>
+    props.userSndNxtMsg ? "15px" : props.partner ? "15px" : ""};
   padding: 0.5rem 1rem;
   display: flex;
   align-items: end;
   margin-left: ${(props) => (props.partner ? "" : "auto")};
   overflow-wrap: break-word;
-  max-width: 40%;
+  max-width: 60%;
   opacity: ${(props) => (props.sent ? "1" : "0.5")};
+  @media screen and (max-width: 480px) {
+    max-width: 70%;
+  }
 `;
 
 const Text = styled.h2`

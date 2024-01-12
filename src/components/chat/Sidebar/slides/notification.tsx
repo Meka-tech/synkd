@@ -6,8 +6,8 @@ import { ReceivedFriendRequest } from "../components/friendRequest";
 import { Bell } from "@emotion-icons/boxicons-solid";
 import { IUserType } from "@/types/userType";
 import Loading from "@/components/loading";
-import { BackDiv, Body, Main, Title, TopBar } from "./styles";
-import { ArrowBack } from "@emotion-icons/boxicons-regular";
+import { BackDiv, Body, HeaderDiv, Main, Title, TopBar } from "./styles";
+import { ArrowIosBack } from "@emotion-icons/evaicons-solid";
 
 interface INotif {
   close: Function;
@@ -47,10 +47,12 @@ const Notification = ({ close }: INotif) => {
   return (
     <Main>
       <TopBar>
-        <Title>Notifications</Title>
-        <BackDiv onClick={() => close()}>
-          <ArrowBack size={30} />
-        </BackDiv>
+        <HeaderDiv>
+          <BackDiv onClick={() => close()}>
+            <ArrowIosBack size={30} />
+          </BackDiv>
+          <Title>Notifications</Title>
+        </HeaderDiv>
       </TopBar>
 
       {getNotif && <Loading size={30} />}

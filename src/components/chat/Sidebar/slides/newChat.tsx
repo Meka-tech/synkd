@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
 import { IUserType } from "@/types/userType";
 import { ArrowBack } from "@emotion-icons/boxicons-regular";
-import { BackDiv, Body, Main, Title, TopBar } from "./styles";
+import { BackDiv, Body, HeaderDiv, Main, Title, TopBar } from "./styles";
 import { RootState } from "@/Redux/app/store";
 import { useSelector } from "react-redux";
 import FriendBox from "../components/friendBox";
 import Link from "next/link";
+import { ArrowIosBack } from "@emotion-icons/evaicons-solid";
 
 interface INewChat {
   selectChat: Function;
@@ -19,10 +20,12 @@ const NewChat = ({ selectChat, close }: INewChat) => {
   return (
     <Main>
       <TopBar>
-        <Title>New Chat</Title>
-        <BackDiv onClick={() => close()}>
-          <ArrowBack size={30} />
-        </BackDiv>
+        <HeaderDiv>
+          <BackDiv onClick={() => close()}>
+            <ArrowIosBack size={30} />
+          </BackDiv>
+          <Title>New Chat</Title>
+        </HeaderDiv>
       </TopBar>
 
       <Body>
@@ -30,8 +33,8 @@ const NewChat = ({ selectChat, close }: INewChat) => {
           return (
             <FriendBox
               user={item}
-              key={i}
               selectChat={selectChat}
+              key={i}
               close={close}
             />
           );

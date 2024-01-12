@@ -16,16 +16,17 @@ import { User } from "@emotion-icons/boxicons-regular";
 
 import NewChat from "./slides/newChat";
 import ActiveChats from "./components/activeChats";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/app/store";
 
 interface IProps {
-  user: IUserType | null;
   setActiveChat: Function;
 }
 
 type SlideType = {
   [key: string]: React.ReactNode;
 };
-const ChatSideBar = ({ user, setActiveChat }: IProps) => {
+const ChatSideBar = ({ setActiveChat }: IProps) => {
   const [slideInActive, setSlideInActive] = useState(false);
   const [activeSlide, setActiveSlide] = useState(""); //options //notifications //profile
   const SlideRef = useRef(null);
@@ -47,8 +48,11 @@ const ChatSideBar = ({ user, setActiveChat }: IProps) => {
     setSlideInActive(true);
   };
 
+  const openChat: boolean = useSelector(
+    (state: RootState) => state.openChat.openChat
+  );
   return (
-    <Body>
+    <Body openChat={openChat}>
       <SlideInDiv active={slideInActive} ref={SlideRef}>
         {slideInActive && Slides[activeSlide]}
       </SlideInDiv>
@@ -83,11 +87,23 @@ const ChatSideBar = ({ user, setActiveChat }: IProps) => {
 
 export default ChatSideBar;
 
-const Body = styled.div`
+interface BodyProps {
+  openChat: boolean;
+}
+
+const Body = styled.div<BodyProps>`
   width: 30%;
   height: 100%;
   background-color: ${(props) => props.theme.colors.gluton};
   position: relative;
+  transition: 0.15s ease-in-out;
+  @media screen and (max-width: 480px) {
+    width: 100vw;
+    z-index: 100;
+    position: absolute;
+    transform: ${(props) =>
+      props.openChat ? "translateX(-100%)" : "translateX(0)"};
+  }
 `;
 
 const TopBar = styled.div`
@@ -98,6 +114,9 @@ const TopBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @media screen and (max-width: 480px) {
+    height: 8%;
+  }
 `;
 const UserDetails = styled.div`
   display: flex;
@@ -113,6 +132,10 @@ const UserImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media screen and (max-width: 480px) {
+    height: 3rem;
+    width: 3rem;
+  }
 `;
 const UserName = styled.h2`
   color: white;
@@ -158,6 +181,9 @@ const Texts = styled.div`
   height: 80%;
   overflow-y: scroll;
   width: 100%;
+  @media screen and (max-width: 480px) {
+    height: 82%;
+  }
 `;
 
 const SlideInDiv = styled.div<{ active: boolean }>`

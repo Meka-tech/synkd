@@ -12,8 +12,12 @@ export const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+export const HeaderDiv = styled.div`
+  display: flex;
+`
 export const BackDiv = styled.div`
   cursor: pointer;
+  margin-right: 1rem;
 `;
 export const Title = styled.h2`
   font-size: 2.5rem;

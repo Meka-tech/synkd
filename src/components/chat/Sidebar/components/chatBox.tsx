@@ -1,8 +1,9 @@
 import { RootState } from "@/Redux/app/store";
 import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Check, CheckDouble } from "@emotion-icons/boxicons-regular";
+import { updateOpenChat } from "@/Redux/features/openChat/openChatSlice";
 
 interface IProps {
   user: IUserType;
@@ -41,8 +42,19 @@ const ChatBox = ({
     hour12: false // Use 24-hour format
   }).format(msgTime);
 
+  const dispatch = useDispatch();
+
+  const OpenUserChat = () => {
+    dispatch(updateOpenChat(true));
+  };
+
   return (
-    <Body onClick={() => selectChat(partner)}>
+    <Body
+      onClick={() => {
+        selectChat(partner);
+        OpenUserChat();
+      }}
+    >
       <PictureImage />
       <TextContainer>
         <Top>
@@ -131,7 +143,8 @@ const Bottom = styled.div`
 
 const Message = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
+  max-width: 90%;
 `;
 const RecentText = styled.h2`
   font-weight: 400;

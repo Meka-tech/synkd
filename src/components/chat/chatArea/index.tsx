@@ -22,9 +22,10 @@ interface IProps {
   user: IUserType | null;
   activeChat: IUserType | null;
   messages: ImsgType[];
+  setActiveChat: Function;
 }
 
-const ChatArea = ({ user, activeChat, messages }: IProps) => {
+const ChatArea = ({ user, activeChat, messages, setActiveChat }: IProps) => {
   const socket = useSelector((state: RootState) => state.socket.socket);
   const [newMessage, setNewMessage] = useState("");
   const [room, setRoom] = useState("");
@@ -84,7 +85,7 @@ const ChatArea = ({ user, activeChat, messages }: IProps) => {
 
   return (
     <Body>
-      <ChatHeader chatPartner={activeChat} />
+      <ChatHeader chatPartner={activeChat} setActiveChat={setActiveChat} />
       <ChatTextArea
         unSentMessages={unSentMessages}
         chatPartner={activeChat}
@@ -114,13 +115,9 @@ export default ChatArea;
 const Body = styled.div`
   width: 70%;
   height: 100%;
-`;
-
-const Chats = styled.div`
-  height: 80%;
-  overflow-y: scroll;
-  padding: 0 2rem;
-  padding-top: 1rem;
+  @media screen and (max-width: 480px) {
+    width: 100%;
+  }
 `;
 
 const BottomBar = styled.div`
@@ -131,6 +128,10 @@ const BottomBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @media screen and (max-width: 480px) {
+    height: 8%;
+    padding: 0.2rem 1rem;
+  }
 `;
 
 interface ISend {
@@ -150,5 +151,9 @@ const SendIcon = styled.div<ISend>`
   transition: all 0.15s ease-in;
   :hover {
     transform: ${(props) => (props.active ? "rotate(-45deg) scale(1.01)" : "")};
+  }
+  @media screen and (max-width: 480px) {
+    width: 3rem;
+    height: 3rem;
   }
 `;

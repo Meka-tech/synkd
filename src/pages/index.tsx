@@ -29,7 +29,13 @@ export default function Home() {
   }, []);
 
   const socketInitializer = async (): Promise<void> => {
-    await fetch("/api/socket");
+    await fetch("/api/socket", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*" // Adjust based on your needs
+      }
+    });
     socket = io();
 
     dispatch(updateSocket(socket));

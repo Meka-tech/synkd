@@ -28,8 +28,12 @@ const Body = styled.div`
   width: 90%;
   padding: 0.5rem 2rem;
   background-color: ${(props) => props.theme.colors.gluton};
-  height: 90%;
+  height: 70%;
   border-radius: 8px;
+  @media screen and (max-width: 480px) {
+    height: 4rem;
+    width: 80%;
+  }
 `;
 const Input = styled.input`
   border: none;
@@ -40,7 +44,7 @@ const Input = styled.input`
   font-size: 1.2rem;
   font-weight: 500;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   ::placeholder {

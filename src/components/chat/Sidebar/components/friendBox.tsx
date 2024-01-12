@@ -1,5 +1,7 @@
+import { updateOpenChat } from "@/Redux/features/openChat/openChatSlice";
 import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
+import { useDispatch } from "react-redux";
 
 interface IProps {
   user: IUserType;
@@ -7,10 +9,17 @@ interface IProps {
   close: Function;
 }
 const FriendBox = ({ user, selectChat, close }: IProps) => {
+
+  const dispatch = useDispatch();
+
+  const OpenUserChat = () => {
+    dispatch(updateOpenChat(true))
+  }
   return (
     <Body
       onClick={() => {
         selectChat(user);
+        OpenUserChat();
       }}
     >
       <PictureImage />
@@ -41,6 +50,9 @@ const Body = styled.div`
     transform: scale(1.05);
   }
   margin-bottom: 1rem;
+  @media screen and (max-width: 480px) {
+    width: 90%;
+  }
 `;
 
 const PictureImage = styled.div`
@@ -48,6 +60,10 @@ const PictureImage = styled.div`
   height: 3.5rem;
   border-radius: 50%;
   background-color: white;
+  @media screen and (max-width: 480px) {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 `;
 
 const TextContainer = styled.div`

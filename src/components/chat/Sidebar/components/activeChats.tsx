@@ -7,8 +7,9 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
 
 import ChatBox from "./chatBox";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getMostRecentMessagesAndUnreadCount } from "@/utils/indexedDb_Functions/getMostRecentMessages";
+import { updateOpenChat } from "@/Redux/features/openChat/openChatSlice";
 
 interface INewChat {
   selectChat: Function;
@@ -48,9 +49,9 @@ const ActiveChats = ({ selectChat }: INewChat) => {
             partner={partner}
             recentMsg={chat.text}
             readMsg={chat.readStatus}
-            key={i}
             recentMsgTime={chat.createdAt}
             unReadMsg={item.unreadCount}
+            key={i}
           />
         );
       })}

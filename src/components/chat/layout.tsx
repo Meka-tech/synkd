@@ -18,6 +18,9 @@ const ChatLayout = () => {
   const [activeChat, setActiveChat] = useState(null);
   const [userMessages, setUserMessages] = useState<ImsgType[]>([]);
 
+  //for mobile
+  const [openChat, setOpenChat] = useState(false);
+
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
@@ -30,9 +33,14 @@ const ChatLayout = () => {
   return (
     <Body>
       {" "}
-      <ChatSideBar user={user} setActiveChat={setActiveChat} />
+      <ChatSideBar setActiveChat={setActiveChat} />
       {activeChat ? (
-        <ChatArea user={user} activeChat={activeChat} messages={userMessages} />
+        <ChatArea
+          user={user}
+          activeChat={activeChat}
+          setActiveChat={setActiveChat}
+          messages={userMessages}
+        />
       ) : (
         <DefaultChatArea />
       )}

@@ -8,7 +8,6 @@ import ChatBubble from "../chatBubble";
 import Loading from "@/components/loading";
 import { ImsgType } from "@/types/messageType";
 
-
 interface IProps {
   user: IUserType | null;
   chatPartner: IUserType | null;
@@ -33,8 +32,8 @@ const ChatTextArea = ({
   }, [chatPartner, user?._id]);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  });
+    scrollRef.current?.scrollIntoView();
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -42,11 +41,17 @@ const ChatTextArea = ({
 
   return (
     <Chats>
-      {messages?.map((msg) => {
+      {messages?.map((msg, i) => {
         let partnerId;
         const isPartner = msg.user.username !== user?.username;
         if (isPartner) {
           partnerId = msg.user._id;
+        }
+        let SenderMsgNxtId;
+        if (messages[i + 1]) {
+          SenderMsgNxtId = messages[i + 1].user.username === msg.user.username;
+        } else {
+          SenderMsgNxtId = false;
         }
         if (room === msg.room) {
           return (
@@ -58,13 +63,20 @@ const ChatTextArea = ({
               partner={isPartner}
               readStatus={msg.readStatus}
               partnerId={partnerId}
+              userSndNxtMsg={SenderMsgNxtId}
             />
           );
         }
       })}
       {unSentMessages?.map((msg, i) => {
         return (
-          <ChatBubble text={msg.text} key={i} partner={false} sent={false} />
+          <ChatBubble
+            text={msg.text}
+            key={i}
+            partner={false}
+            sent={false}
+            userSndNxtMsg={false}
+          />
         );
       })}
       <ScrollPoint ref={scrollRef} />
@@ -78,6 +90,10 @@ const Chats = styled.div`
   overflow-y: scroll;
   padding: 0 2rem;
   padding-top: 1rem;
+  @media screen and (max-width: 480px) {
+    height: 84%;
+    padding: 0 1rem;
+  }
 `;
 
 const ScrollPoint = styled.div``;

@@ -1,13 +1,29 @@
 import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
+import { ArrowIosBack } from "@emotion-icons/evaicons-solid";
+import { useDispatch } from "react-redux";
+import { updateOpenChat } from "@/Redux/features/openChat/openChatSlice";
 
 interface Iprops {
   chatPartner: IUserType | null;
+  setActiveChat: Function;
 }
-const ChatHeader = ({ chatPartner }: Iprops) => {
+const ChatHeader = ({ chatPartner, setActiveChat }: Iprops) => {
+  const dispatch = useDispatch();
+  const GoBack = () => {
+    dispatch(updateOpenChat(false));
+    setActiveChat(null);
+  };
   return (
     <TopBar>
       <PartnerDetails>
+        <BackArrow
+          onClick={() => {
+            GoBack();
+          }}
+        >
+          <ArrowIosBack size={30} />
+        </BackArrow>
         <PartnerImage />
         <PartnerName>{chatPartner?.username}</PartnerName>
       </PartnerDetails>
@@ -25,6 +41,18 @@ const TopBar = styled.div`
   align-items: center;
   justify-content: space-between;
   display: flex;
+  @media screen and (max-width: 480px) {
+    height: 8%;
+    padding: 0.5rem 0.5rem;
+  }
+`;
+const BackArrow = styled.div`
+  display: none;
+  margin-right: 0.5rem;
+  @media screen and (max-width: 480px) {
+    display: flex;
+    color: ${(props) => props.theme.colors.secondary};
+  }
 `;
 const PartnerDetails = styled.div`
   display: flex;
