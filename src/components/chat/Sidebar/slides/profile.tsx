@@ -77,6 +77,8 @@ const Profile = ({ close }: IProfile) => {
       setDetailChange(false);
     } else if (bio !== user?.bio || username !== user.username) {
       setDetailChange(true);
+    } else if (bio === user?.bio && username === user.username) {
+      setDetailChange(false);
     }
   }, [bio, user, username, usernameAvailable, usernameError]);
 
@@ -108,6 +110,9 @@ const Profile = ({ close }: IProfile) => {
   const Cancel = () => {
     setBio(user?.bio || "");
     setUsername(user?.username || "");
+    setUsernameError("");
+    setUsernameAvailable(true);
+    setDetailChange(false);
   };
 
   const Interests = [
@@ -143,9 +148,9 @@ const Profile = ({ close }: IProfile) => {
       <TopBar>
         {detailChange ? (
           <>
-            <UpdateButton onClick={Cancel}>
+            <CancelButton onClick={Cancel}>
               <h2>Cancel</h2>
-            </UpdateButton>
+            </CancelButton>
             <UpdateButton onClick={UpdateProfile}>
               {isUpdating ? <Loading size={30} /> : <h2>Save</h2>}
             </UpdateButton>
@@ -255,6 +260,12 @@ const UpdateButton = styled.div`
     font-size: 2rem;
     font-weight: 500;
     color: ${(props) => props.theme.colors.primary};
+  }
+`;
+
+const CancelButton = styled(UpdateButton)`
+  h2 {
+    color: ${(props) => props.theme.colors.danger};
   }
 `;
 

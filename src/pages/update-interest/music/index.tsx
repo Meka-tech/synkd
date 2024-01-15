@@ -14,6 +14,8 @@ import { ArrowIosBack } from "@emotion-icons/evaicons-solid";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { updateUser } from "@/Redux/features/user/userSlice";
+import { Spotify } from "@emotion-icons/boxicons-logos";
+import { ButtonWithIcon } from "@/components/buttons/buttonWithIcon";
 
 interface ArtistsState {
   [genre: string]: {
@@ -183,6 +185,14 @@ const UpdateMusic = () => {
             onClick={() => UpdateMusic()}
           />
         </UpdateButton>
+        <SpotifyButton>
+          <ButtonWithIcon
+            icon={<Spotify size={20} color="#1db954" />}
+            variant
+            text="Use Spotify"
+            // onClick={() => UseSpotify()}
+          />
+        </SpotifyButton>
       </TextContent>
     </Main>
   );
@@ -302,4 +312,15 @@ const LoadMoreButton = styled.div`
 const UpdateButton = styled.div`
   width: 20rem;
   margin-top: 1rem;
+`;
+const SpotifyButton = styled.div`
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  @media screen and (max-width: 480px) {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
 `;
