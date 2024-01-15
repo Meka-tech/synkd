@@ -28,6 +28,7 @@
     "cors": "^2.8.5",
     "dexie": "^3.2.4",
     "dexie-react-hooks": "^1.1.7",
+    "emoji-picker-react": "^4.6.10",
     "formik": "^2.4.5",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",

@@ -7,12 +7,16 @@ import DropdownInput from "@/components/Inputs/dropdownInput";
 import { SyncLottie } from "../../../../animation/syncLottie";
 import MatchedUser from "@/components/match/matched-user";
 import { IUserType } from "@/types/userType";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/Redux/app/store";
+import { updateUser } from "@/Redux/features/user/userSlice";
 
 interface coord {
   longitude: number;
   latitude: number;
 }
 const Match = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   let token = Cookies.get("authToken") || "";
   const [coordinates, setCoordinates] = useState<coord>();
@@ -21,6 +25,7 @@ const Match = () => {
   const [matchedUsers, setMatchedUsers] = useState<
     { user: IUserType; percent: number }[]
   >([]);
+  const [user, setUser] = useState<IUserType>();
   const [excludedIdList, setExcludedIdList] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const MatchOptions = {
@@ -42,6 +47,8 @@ const Match = () => {
           }
         });
         let res = data.data.user;
+        setUser(res);
+        dispatch(updateUser(res));
         if (res.interests.music.length < 1) {
           router.push("/sync/interests");
         }
@@ -119,6 +126,8 @@ const Match = () => {
   ///////////////////////////////////
   //////////////////////////////////
 
+ 
+
   return (
     <Main>
       <TopBar>
@@ -132,7 +141,7 @@ const Match = () => {
             options={MatchOptions.all}
             premiumList={MatchOptions.premium}
             selectItem={setInterest}
-            premiumPrivileges={false}
+            premiumPrivileges={user?.premium}
           />
         </DropdownDiv>
 
@@ -148,7 +157,7 @@ const Match = () => {
             options={MatchType.all}
             premiumList={MatchType.premium}
             selectItem={setMatchingType}
-            premiumPrivileges={false}
+            premiumPrivileges={user?.premium}
           />
         </DropdownDiv>
       </TopBar>

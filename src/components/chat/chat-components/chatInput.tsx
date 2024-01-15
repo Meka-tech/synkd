@@ -1,15 +1,35 @@
 import styled from "@emotion/styled";
-import { KeyboardEventHandler, useEffect, useRef } from "react";
+import {
+  KeyboardEventHandler,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState
+} from "react";
+import Picker from "emoji-picker-react";
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   handleKeyPress: KeyboardEventHandler<HTMLInputElement>;
+  setInput: Function;
 }
-const ChatInput = ({ handleKeyPress, ...rest }: IProps) => {
+const ChatInput = ({ handleKeyPress, setInput, ...rest }: IProps) => {
   const inputRef = useRef<null | HTMLInputElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
   });
+
+  // const [chosenEmoji, setChosenEmoji] = useState(null);
+
+  // const onEmojiClick = (event: any) => {
+  //   // setChosenEmoji(event.emoji);
+
+  //   console.log(event);
+  // };
+
+  const HandleChange = (e: { target: { value: any } }) => {
+    setInput(e.target.value);
+  };
   return (
     <Body>
       <Input
@@ -17,7 +37,11 @@ const ChatInput = ({ handleKeyPress, ...rest }: IProps) => {
         {...rest}
         placeholder="Send a Text..."
         onKeyDown={handleKeyPress}
+        onChange={HandleChange}
       />
+      {/* <EmojiDiv>
+        <Picker onEmojiClick={onEmojiClick} />
+      </EmojiDiv> */}
     </Body>
   );
 };
@@ -25,14 +49,16 @@ const ChatInput = ({ handleKeyPress, ...rest }: IProps) => {
 export default ChatInput;
 
 const Body = styled.div`
-  width: 90%;
+  width: 95%;
   padding: 0.5rem 2rem;
   background-color: ${(props) => props.theme.colors.gluton};
   height: 70%;
   border-radius: 8px;
+  display: flex;
+  position: relative;
   @media screen and (max-width: 480px) {
-    height: 4rem;
-    width: 80%;
+    height: 4.5rem;
+    width: 85%;
   }
 `;
 const Input = styled.input`
@@ -46,7 +72,9 @@ const Input = styled.input`
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1rem;
   }
-
+  @media screen and (max-width: 480px) {
+    font-size: 1.6rem;
+  }
   ::placeholder {
     color: #d9d9d971;
     font-weight: 600;
@@ -57,4 +85,11 @@ const Input = styled.input`
     box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0) inset; /* Override background color */
     background-clip: text;
   }
+`;
+
+const EmojiDiv = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(0%, -90%);
 `;

@@ -62,6 +62,9 @@ const Input = styled.input`
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1.2rem;
   }
+  @media screen and (max-width: 480px) {
+    font-size: 1.6rem;
+  }
 
   ::placeholder {
     color: #d9d9d971;

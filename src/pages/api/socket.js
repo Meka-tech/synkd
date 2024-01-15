@@ -1,12 +1,5 @@
 import { Server } from "socket.io";
 
-import { cors } from "micro-cors";
-
-const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST"]
-};
-
 const SocketHandler = async (req, res) => {
   if (res.socket.server.io) {
     // console.log("Socket is already running");
@@ -47,21 +40,8 @@ const SocketHandler = async (req, res) => {
         }
       });
     });
-    res.socket.server.io = io;
   }
-  return res.socket.server.io;
+  res.end();
 };
 
-const corsHandler = cors({
-  // Adjust origin based on your needs
-  origin: "*",
-  methods: ["GET", "POST"]
-});
-
-export const config = {
-  api: {
-    bodyParser: false
-  }
-};
-
-export default corsHandler(SocketHandler);
+export default SocketHandler;

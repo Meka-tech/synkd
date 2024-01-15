@@ -18,6 +18,7 @@ import NewChat from "./slides/newChat";
 import ActiveChats from "./components/activeChats";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
+import Profile from "./slides/profile";
 
 interface IProps {
   setActiveChat: Function;
@@ -40,7 +41,8 @@ const ChatSideBar = ({ setActiveChat }: IProps) => {
 
   const Slides: SlideType = {
     notifications: <Notification close={RemoveSlide} />,
-    newChat: <NewChat selectChat={setActiveChat} close={RemoveSlide} />
+    newChat: <NewChat selectChat={setActiveChat} close={RemoveSlide} />,
+    profile: <Profile close={RemoveSlide} />
   };
 
   const ActivativeSlide = (slide: string) => {
@@ -58,7 +60,7 @@ const ChatSideBar = ({ setActiveChat }: IProps) => {
       </SlideInDiv>
       <TopBar>
         <UserDetails>
-          <UserImage>
+          <UserImage onClick={() => ActivativeSlide("profile")}>
             <User size={30} />
           </UserImage>
           {/* <UserName>{user?.username}</UserName> */}

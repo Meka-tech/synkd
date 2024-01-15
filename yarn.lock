@@ -1091,6 +1091,13 @@ ecdsa-sig-formatter@1.0.11:
   dependencies:
     safe-buffer "^5.0.1"
 
+emoji-picker-react@^4.6.10:
+  version "4.6.10"
+  resolved "https://registry.yarnpkg.com/emoji-picker-react/-/emoji-picker-react-4.6.10.tgz#afce52ec264202053ac34da9a448ba97cb96d993"
+  integrity sha512-4S3Hyq1lw8ooYGT1LYrdThCB/UN/kIEAurKLsAWEE50EHaMyIGfEk83k/mPEDTwI/Dhw3/ZiFQUCSCbW7dxoNg==
+  dependencies:
+    flairup "0.0.31"
+
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
@@ -1513,6 +1520,11 @@ find-up@^5.0.0:
   dependencies:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
+
+flairup@0.0.31:
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/flairup/-/flairup-0.0.31.tgz#e2063f01c46a855e1a5b7df26e2743b53273f5c8"
+  integrity sha512-Kuwql97uWKFQuEnO+gyPK/apLhFUP7HFcm+Sg+v55XDS7816tIrbWcavfilw+QlyuU1ey7QzyLmxcBCealMbrw==
 
 flat-cache@^3.0.4:
   version "3.2.0"

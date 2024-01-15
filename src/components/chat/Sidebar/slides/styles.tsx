@@ -14,13 +14,19 @@ export const TopBar = styled.div`
 `;
 export const HeaderDiv = styled.div`
   display: flex;
-`
+`;
 export const BackDiv = styled.div`
   cursor: pointer;
   margin-right: 1rem;
+  @media screen and (max-width: 480px) {
+    margin-right: 0rem;
+  }
 `;
 export const Title = styled.h2`
   font-size: 2.5rem;
+  @media screen and (max-width: 480px) {
+    font-size: 2rem;
+  }
 `;
 export const Body = styled.div`
   margin-top: 2rem;

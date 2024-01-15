@@ -63,7 +63,7 @@ const ChatBox = ({
         </Top>
         <Bottom>
           <Message>
-            {readMsg && userSent ? (
+            {/* {readMsg && userSent ? (
               <Tick>
                 <CheckDouble size={15} />
               </Tick>
@@ -71,9 +71,13 @@ const ChatBox = ({
               <Tick>
                 <Check size={15} />
               </Tick>
-            ) : null}
+            ) : null} */}
 
-            <RecentText>{recentMsg}</RecentText>
+            <RecentText>
+              {" "}
+              {userSent && "You: "}
+              {recentMsg}
+            </RecentText>
           </Message>
           {unReadMsg > 0 && (
             <UnReadMsgDiv>

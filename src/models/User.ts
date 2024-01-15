@@ -5,6 +5,11 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  bio: {
+    type: String,
+    required: true,
+    default: "Available"
+  },
   password: {
     type: String
   },
@@ -20,6 +25,11 @@ const UserSchema = new Schema({
     type: String,
     enum: ["proximity", "worldwide"],
     default: "proximity"
+  },
+  premium: {
+    type: Boolean,
+    required: true,
+    default: false
   },
   interests: {
     music: [String]

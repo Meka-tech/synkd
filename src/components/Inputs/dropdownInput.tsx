@@ -49,6 +49,10 @@ const DropdownInput: FC<IProps> = ({
             premium = true;
           }
 
+          if (premiumPrivileges) {
+            premium = false;
+          }
+
           return (
             <OptionItem
               key={i}

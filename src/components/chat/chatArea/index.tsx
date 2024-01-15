@@ -100,7 +100,7 @@ const ChatArea = ({ user, activeChat, messages, setActiveChat }: IProps) => {
             }
           }}
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          setInput={setNewMessage}
         />
         <SendIcon onClick={SendMessage} active={/\S/.test(newMessage)}>
           <Send size={20} />
@@ -153,7 +153,7 @@ const SendIcon = styled.div<ISend>`
     transform: ${(props) => (props.active ? "rotate(-45deg) scale(1.01)" : "")};
   }
   @media screen and (max-width: 480px) {
-    width: 3rem;
-    height: 3rem;
+    width: 3.5rem;
+    height: 3.5rem;
   }
 `;

@@ -9,12 +9,12 @@ interface IProps {
   close: Function;
 }
 const FriendBox = ({ user, selectChat, close }: IProps) => {
-
   const dispatch = useDispatch();
 
   const OpenUserChat = () => {
-    dispatch(updateOpenChat(true))
-  }
+    dispatch(updateOpenChat(true));
+  };
+
   return (
     <Body
       onClick={() => {
@@ -24,9 +24,8 @@ const FriendBox = ({ user, selectChat, close }: IProps) => {
     >
       <PictureImage />
       <TextContainer>
-        <Top>
-          <Name>{user.username}</Name>
-        </Top>
+        <Name>{user.username}</Name>
+        <Bio>{user.bio}</Bio>
       </TextContainer>
     </Body>
   );
@@ -70,14 +69,13 @@ const TextContainer = styled.div`
   width: 87%;
 `;
 
-const Top = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-`;
-
 const Name = styled.h2`
   font-size: 1.6rem;
   font-weight: 500;
+`;
+
+const Bio = styled.h2`
+  font-size: 1.4rem;
+  margin-top: 0.5rem;
+  font-weight: 300;
 `;

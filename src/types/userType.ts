@@ -1,5 +1,6 @@
 export type IUserType = {
   email: string;
+  bio: string;
   password: string;
   username: string;
   location: string[];
@@ -9,4 +10,5 @@ export type IUserType = {
     music: string[];
   };
   _id: string;
+  premium: boolean;
 };

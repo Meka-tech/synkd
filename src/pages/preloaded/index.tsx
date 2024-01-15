@@ -22,13 +22,6 @@ export default function Preloaded() {
     (state: RootState) => state.user.user
   );
 
-  // const [localMessages, setLocalMessages] = useState<ImsgType[]>([]);
-
-  // useLiveQuery(async () => {
-  //   const messages = await MessageDb.messages.toArray();
-  //   setLocalMessages(messages);
-  // });
-
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -62,42 +55,42 @@ export default function Preloaded() {
     const localMessages = await MessageDb.messages.toArray();
     try {
       if (token) {
-        if (localMessages?.length === 0) {
-          const data = await axios.get("/api/chat/get-user-messages", {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
-          const UserMessages = data.data.messages;
-          await AddToLocalDb(UserMessages);
-          router.push("/");
-        }
+        // if (localMessages?.length === 0) {
+        //   const data = await axios.get("/api/chat/get-user-messages", {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`
+        //     }
+        //   });
+        //   const UserMessages = data.data.messages;
+        //   await AddToLocalDb(UserMessages);
+        //   router.push("/");
+        // }
         if (localMessages?.length > 0) {
           let recentMessage: ImsgType | any;
 
           recentMessage = await getMostRecentReceivedMessageForUser(user?._id);
-          const response = await axios.post(
-            "/api/chat/get-received-messages",
-            {
-              updatedAt: recentMessage.updatedAt
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${authToken}`
+          if (recentMessage) {
+            const response = await axios.post(
+              "/api/chat/get-received-messages",
+              {
+                updatedAt: recentMessage.updatedAt
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${authToken}`
+                }
               }
-            }
-          );
-          const messages = response.data.messages;
+            );
+            const messages = response.data.messages;
 
-          if (messages.length > 1) {
-            console.log("hello world");
-            await MessageDb.messages.bulkPut(messages);
-            console.log("added");
+            if (messages.length > 1) {
+              await MessageDb.messages.bulkPut(messages);
+            }
+            if (messages.length === 1) {
+              await MessageDb.messages.put(messages[0]);
+            }
           }
-          if (messages.length === 1) {
-            await MessageDb.messages.put(messages[0]);
-            console.log("here");
-          }
+
           router.push("/");
         }
       }

@@ -33,7 +33,7 @@ const ChatTextArea = ({
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView();
-  }, []);
+  });
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
