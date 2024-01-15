@@ -25,7 +25,7 @@ export const ReceivedFriendRequest = ({
     setLoadAccept(true);
     try {
       const data = await axios.put(
-        "/api/user-requests/accept-friend-request",
+        "/api/user/notification/accept-request",
         { requestId: user._id },
         {
           headers: {

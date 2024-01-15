@@ -91,7 +91,7 @@ const Chats = styled.div`
   padding: 0 2rem;
   padding-top: 1rem;
   @media screen and (max-width: 480px) {
-    height: 84%;
+    height: 92%;
     padding: 0 1rem;
   }
 `;

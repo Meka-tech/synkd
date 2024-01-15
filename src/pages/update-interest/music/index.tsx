@@ -1,7 +1,7 @@
 import { RootState } from "@/Redux/app/store";
 import { IUserType } from "@/types/userType";
 import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import { searchArtistsByGenre } from "@/utils/spotifyApi";
 import axios from "axios";
@@ -12,6 +12,8 @@ import ArtistItem from "@/components/music-Items/artist-item";
 import useClickOutside from "@/hooks/useClickOutside";
 import { ArrowIosBack } from "@emotion-icons/evaicons-solid";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import { updateUser } from "@/Redux/features/user/userSlice";
 
 interface ArtistsState {
   [genre: string]: {
@@ -29,9 +31,11 @@ const UpdateMusic = () => {
   );
   const [artists, setArtists] = useState<ArtistsState>({});
   const [loading, setLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState("");
+  let token = Cookies.get("authToken") || "";
+  const dispatch = useDispatch();
 
   const ModalRef = useRef(null);
 
@@ -73,6 +77,26 @@ const UpdateMusic = () => {
     } else {
       setChosenArtists((prevArray) => [...prevArray, artist]);
     }
+  };
+
+  const UpdateMusic = async () => {
+    setIsUpdating(true);
+    try {
+      const requestBody = { interest: "music", data: chosenArtists };
+      if (token) {
+        const res = await axios.post("/api/user/update/interest", requestBody, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const NewUser = res.data.user;
+        dispatch(updateUser(NewUser));
+        router.push("/");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setIsUpdating(false);
   };
   return (
     <Main>
@@ -152,53 +176,14 @@ const UpdateMusic = () => {
         )}
 
         <UpdateButton>
-          <PrimaryButton text="Update" disabled={chosenArtists.length < 10} />
+          <PrimaryButton
+            text="Update"
+            disabled={chosenArtists.length < 10}
+            loading={isUpdating}
+            onClick={() => UpdateMusic()}
+          />
         </UpdateButton>
       </TextContent>
-      {/* {open && (
-        <PseudoBackdrop>
-          <PseudoModal ref={ModalRef}>
-            <PseudoModalBody>
-              <GenreHeader>{selectedGenre}</GenreHeader>
-              {genreList.map((genre, id) => {
-                if (!artists[genre.name]?.artists) {
-                  return;
-                }
-                if (selectedGenre === genre.name) {
-                  return (
-                    <ArtistsDiv key={id}>
-                      <ArtistList>
-                        {artists[selectedGenre]?.artists?.map((artist, i) => {
-                          return (
-                            <ArtistItem
-                              onClick={() => {
-                                handleAddArtist(artist.name);
-                              }}
-                              selected={chosenArtists.includes(artist.name)}
-                              name={artist.name}
-                              key={i}
-                            />
-                          );
-                        })}
-                      </ArtistList>
-                    </ArtistsDiv>
-                  );
-                }
-              })}
-              <LoadMoreButton>
-                <PrimaryButton
-                  text="Load more"
-                  variant
-                  loading={loading}
-                  onClick={() => {
-                    GetArtists(selectedGenre, true);
-                  }}
-                />
-              </LoadMoreButton>
-            </PseudoModalBody>
-          </PseudoModal>
-        </PseudoBackdrop>
-      )} */}
     </Main>
   );
 };
@@ -220,7 +205,8 @@ const Genres = styled.div`
   padding: 2rem;
   @media screen and (max-width: 480px) {
     width: 100%;
-    min-height: 50%;
+    height: auto;
+    padding: 1rem;
   }
 `;
 const Header = styled.div`
@@ -255,11 +241,12 @@ const TextContent = styled.div`
   align-items: center;
   justify-content: center;
   width: 50%;
-  min-height: 100%;
+  height: 100%;
   flex-direction: column;
   @media screen and (max-width: 480px) {
     width: 100%;
-    min-height: 50%;
+    height: auto;
+    margin-top: 2rem;
   }
 `;
 const Info = styled.h3`
@@ -271,18 +258,6 @@ const Info = styled.h3`
   }
 `;
 
-const PseudoBackdrop = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(2px);
-  z-index: 100;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 const PseudoModal = styled.div`
   width: 50rem;
   background-color: ${(props) => props.theme.colors.gluton};

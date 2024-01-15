@@ -25,7 +25,7 @@ const Profile = ({ close }: IProfile) => {
 
   const [bio, setBio] = useState(user?.bio || "");
   const [username, setUsername] = useState(user?.username || "");
-  const [usernameAvailable, setUsernameAvailable] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState(true);
   const [usernameError, setUsernameError] = useState("");
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [detailChange, setDetailChange] = useState(false);
@@ -87,7 +87,7 @@ const Profile = ({ close }: IProfile) => {
     setIsUpdating(true);
     try {
       const data = await axios.post(
-        "/api/user/update-profile",
+        "/api/user/update/profile",
         { username, bio },
         {
           headers: {

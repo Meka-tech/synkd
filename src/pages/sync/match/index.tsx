@@ -107,7 +107,7 @@ const Match = () => {
     const UpdateCoordinates = async (coordinates: coord) => {
       try {
         const res = await axios.post(
-          "/api/user/update-coordinates",
+          "/api/user/update/coordinates",
           coordinates,
           {
             headers: {
@@ -125,8 +125,6 @@ const Match = () => {
 
   ///////////////////////////////////
   //////////////////////////////////
-
- 
 
   return (
     <Main>

@@ -12,6 +12,8 @@ export const theme = {
   },
   bgColors: {
     dangerFade: "rgba(255,14,14,0.05)",
-    primaryFade: "rgb(0, 150, 255,0.05)"
+    primaryFade: "rgba(0, 150, 255,0.05)",
+    secondaryFade: "rgba(93, 63, 211,0.05)",
+    slateFade: "rgba(38,38,38 , 0.05)"
   }
 };

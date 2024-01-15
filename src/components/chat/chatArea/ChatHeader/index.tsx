@@ -38,12 +38,16 @@ const TopBar = styled.div`
   width: 100%;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid ${(props) => props.theme.colors.gluton};
+  background-color: ${(props) => props.theme.bgColors.slateFade};
+  backdrop-filter: blur(10px);
   align-items: center;
   justify-content: space-between;
   display: flex;
   @media screen and (max-width: 480px) {
-    height: 8%;
+    height: 6rem;
     padding: 0.5rem 0.5rem;
+    position: absolute;
+    top: 0;
   }
 `;
 const BackArrow = styled.div`
