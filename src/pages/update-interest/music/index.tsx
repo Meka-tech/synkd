@@ -220,7 +220,7 @@ const Genres = styled.div`
   padding: 2rem;
   @media screen and (max-width: 480px) {
     width: 100%;
-    height: 50%;
+    min-height: 50%;
   }
 `;
 const Header = styled.div`
@@ -255,11 +255,11 @@ const TextContent = styled.div`
   align-items: center;
   justify-content: center;
   width: 50%;
-  height: 100%;
+  min-height: 100%;
   flex-direction: column;
   @media screen and (max-width: 480px) {
     width: 100%;
-    height: 50%;
+    min-height: 50%;
   }
 `;
 const Info = styled.h3`
