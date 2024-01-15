@@ -7,9 +7,10 @@ interface IProps {
   name: string;
   onClick: () => void;
   bgImage: StaticImageData | string;
+  size?: string;
 }
 
-const GenreItem = ({ name, onClick, bgImage }: IProps) => {
+const GenreItem = ({ name, onClick, bgImage, size = "100" }: IProps) => {
   const [active, setActive] = useState(false);
   const HandleClick = () => {
     setActive(!active);
@@ -17,7 +18,7 @@ const GenreItem = ({ name, onClick, bgImage }: IProps) => {
   };
 
   return (
-    <Body onClick={HandleClick}>
+    <Body onClick={HandleClick} size={size}>
       <Image
         fill
         style={{ objectFit: "cover", objectPosition: "center" }}
@@ -31,12 +32,14 @@ const GenreItem = ({ name, onClick, bgImage }: IProps) => {
 
 export default GenreItem;
 
-interface IButtonProps {}
+interface IButtonProps {
+  size: string;
+}
 
 const Body = styled.div<IButtonProps>`
   position: relative;
-  height: 15rem;
-  width: 15rem;
+  height: ${(props) => `calc( ${props.size} / 100 * 15rem)`};
+  width: ${(props) => `calc( ${props.size} / 100 * 15rem)`};
   border-radius: 8px;
   cursor: pointer;
   transition: all ease-in 0.1s;
@@ -66,13 +69,13 @@ const Body = styled.div<IButtonProps>`
   margin-right: auto;
 
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
-    height: 12rem;
-    width: 12rem;
+    height: ${(props) => `calc( ${props.size} / 100 * 12rem)`};
+    width: ${(props) => `calc( ${props.size} / 100 * 12rem)`};
   }
 
   @media screen and (max-width: 480px) {
-    height: 7.5rem;
-    width: 7.5rem;
+    height: ${(props) => `calc( ${props.size} / 100 * 7.5rem)`};
+    width: ${(props) => `calc( ${props.size} / 100 * 7.5rem)`};
     img {
       filter: blur(0px);
     }

@@ -282,7 +282,7 @@ const PseudoBackdrop = styled.div`
 `;
 const PseudoModal = styled.div`
   width: 50rem;
-  background-color: #252525;
+  background-color: ${(props) => props.theme.colors.gluton};
   padding: 2rem 2rem;
   border-radius: 10px;
   @media screen and (max-width: 480px) {

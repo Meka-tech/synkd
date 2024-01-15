@@ -40,7 +40,7 @@ export const ButtonContainer = styled.button<IButtonProps>`
   border: ${(props) => props.variant && `1px solid white`};
   transition: all ease 0.1s;
   @media screen and (max-width: 480px) {
-    padding: 0.8rem 1rem;
+    padding: 0.5rem 1rem;
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     padding: 0.8rem 1rem;
@@ -63,6 +63,9 @@ export const ButtonText = styled.h3`
   font-size: 1.8rem;
   font-weight: 600;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.4rem;
+  }
+  @media screen and (max-width: 480px) {
     font-size: 1.4rem;
   }
 `;

@@ -38,10 +38,16 @@ const Body = styled.div`
   :hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
+  @media screen and (max-width: 480px) {
+    height: 4rem;
+  }
 `;
 
 const Text = styled.h2`
   font-size: 1.6rem;
   font-weight: 500;
   text-transform: capitalize;
+  @media screen and (max-width: 480px) {
+    font-size: 1.4rem;
+  }
 `;

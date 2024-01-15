@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import { IUserType } from "@/types/userType";
-import { ArrowBack } from "@emotion-icons/boxicons-regular";
 import { BackDiv, Body, HeaderDiv, Main, Title, TopBar } from "./styles";
 import { RootState } from "@/Redux/app/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -69,7 +68,12 @@ const Profile = ({ close }: IProfile) => {
   }, [username]);
 
   useEffect(() => {
-    if (usernameError !== "" || username.trim() === "" || bio.trim() === "") {
+    if (
+      usernameError !== "" ||
+      username.trim() === "" ||
+      bio.trim() === "" ||
+      !usernameAvailable
+    ) {
       setDetailChange(false);
     } else if (bio !== user?.bio || username !== user.username) {
       setDetailChange(true);
@@ -77,6 +81,9 @@ const Profile = ({ close }: IProfile) => {
   }, [bio, user, username, usernameAvailable, usernameError]);
 
   const UpdateProfile = async () => {
+    if (checkingUsername) {
+      return;
+    }
     setIsUpdating(true);
     try {
       const data = await axios.post(
@@ -106,7 +113,7 @@ const Profile = ({ close }: IProfile) => {
   const Interests = [
     {
       interest: "Music",
-      link: "/sync/interests",
+      link: "/update-interest/music",
       premium: false
     },
     {
