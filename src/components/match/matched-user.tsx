@@ -24,7 +24,7 @@ const MatchedUser = ({ user, percent, interest }: IProps) => {
     setLoading(true);
     if (!requestSent) {
       const res = await axios.post(
-        "/api/notification/send-request",
+        "/api/user/notification/send-request",
         {
           RequestId: user._id,
           matchCategory: interest,
