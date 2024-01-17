@@ -32,7 +32,7 @@ export default function Preloaded() {
   const GetUser = async (token: string | null) => {
     try {
       if (token) {
-        const data = await axios.get("/api/user/get-user", {
+        const data = await axios.get("/api/user/user", {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -55,16 +55,16 @@ export default function Preloaded() {
     const localMessages = await MessageDb.messages.toArray();
     try {
       if (token) {
-        // if (localMessages?.length === 0) {
-        //   const data = await axios.get("/api/chat/get-user-messages", {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`
-        //     }
-        //   });
-        //   const UserMessages = data.data.messages;
-        //   await AddToLocalDb(UserMessages);
-        //   router.push("/");
-        // }
+        if (localMessages?.length === 0) {
+          // const data = await axios.get("/api/chat/get-user-messages", {
+          //   headers: {
+          //     Authorization: `Bearer ${token}`
+          //   }
+          // });
+          // const UserMessages = data.data.messages;
+          // await AddToLocalDb(UserMessages);
+          router.push("/");
+        }
         if (localMessages?.length > 0) {
           let recentMessage: ImsgType | any;
 
@@ -120,6 +120,9 @@ export default function Preloaded() {
   };
 
   useEffect(() => {
+    if (authToken === "") {
+      router.push("/auth/sign-in");
+    }
     IsAuthenticated();
   }, []);
 

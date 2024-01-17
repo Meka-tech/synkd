@@ -16,7 +16,7 @@ import { ButtonWithIcon } from "@/components/buttons/buttonWithIcon";
 interface ArtistsState {
   [genre: string]: {
     offset: number;
-    artists: any[]; // Replace 'any' with the actual type of your artists array
+    artists: any[];
   };
 }
 
@@ -52,7 +52,10 @@ const Interests = () => {
         ...prevState,
         [genre]: {
           offset: (prevState[genre]?.offset || 0) + 1,
-          artists: [...(prevState[genre]?.artists || []), ...data]
+          artists: [
+            ...(prevState[genre]?.artists || []),
+            ...(Array.isArray(data) ? data : [])
+          ]
         }
       }));
     } catch (e) {

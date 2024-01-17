@@ -61,7 +61,10 @@ const UpdateMusic = () => {
         ...prevState,
         [genre]: {
           offset: (prevState[genre]?.offset || 0) + 1,
-          artists: [...(prevState[genre]?.artists || []), ...data]
+          artists: [
+            ...(prevState[genre]?.artists || []),
+            ...(Array.isArray(data) ? data : [])
+          ]
         }
       }));
     } catch (e) {

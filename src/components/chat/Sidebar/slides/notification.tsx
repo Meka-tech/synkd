@@ -31,7 +31,7 @@ const Notification = ({ close }: INotif) => {
   const [getNotif, setGetNotif] = useState(false);
   const GetNotifications = async () => {
     setGetNotif(true);
-    const data = await axios.get("/api/user/get-notifications", {
+    const data = await axios.get("/api/user/notifications", {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -40,7 +40,7 @@ export async function GetSpotifyToken() {
       newTokenExpirationTime.toString()
     );
 
-    return token;
+    return accessToken;
   } catch (error) {
     console.error(error);
   }
@@ -58,6 +58,7 @@ export async function searchArtistsByGenre(
     if (!token || Date.now() > (expirationTime as number)) {
       await GetSpotifyToken();
     }
+
     const response = await axios.get(searchEndpoint, {
       headers: {
         Authorization: `Bearer ${token}`

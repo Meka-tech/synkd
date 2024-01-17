@@ -17,6 +17,9 @@ const NewChat = ({ selectChat, close }: INewChat) => {
     (state: RootState) => state.user.user
   );
 
+  const Friends = user?.friendsList
+    .slice()
+    .sort((a, b) => a.username.localeCompare(b.username));
   return (
     <Main>
       <TopBar>
@@ -29,7 +32,7 @@ const NewChat = ({ selectChat, close }: INewChat) => {
       </TopBar>
 
       <Body>
-        {user?.friendsList.map((item, i) => {
+        {Friends.map((item, i) => {
           return (
             <FriendBox
               user={item}

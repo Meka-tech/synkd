@@ -41,7 +41,7 @@ const Match = () => {
   const GetUser = async (token: string | null) => {
     try {
       if (token) {
-        const data = await axios.get("/api/user/get-user", {
+        const data = await axios.get("/api/user/user", {
           headers: {
             Authorization: `Bearer ${token}`
           }

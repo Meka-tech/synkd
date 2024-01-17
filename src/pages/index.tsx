@@ -13,11 +13,13 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { ReadDBMessage } from "@/utils/indexedDb_Functions/readDBMessage";
 import { getOldestUnreadMessage } from "@/utils/indexedDb_Functions/getOldestUnreadMessage";
 import { updateSocket } from "@/Redux/features/socket/socketSlice";
+import { useRouter } from "next/router";
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default function Home() {
   let authToken = Cookies.get("authToken") || "";
+  const router = useRouter();
 
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
@@ -26,6 +28,9 @@ export default function Home() {
 
   useEffect(() => {
     socketInitializer();
+    if (authToken === "") {
+      router.push("/auth/sign-in");
+    }
   }, []);
 
   const socketInitializer = async (): Promise<void> => {
@@ -52,9 +57,9 @@ export default function Home() {
     });
   };
 
-  useEffect(() => {
-    GetUserMessages();
-  });
+  // useEffect(() => {
+  //   GetUserMessages();
+  // });
 
   const GetUserMessages = useCallback(async () => {
     try {
