@@ -57,9 +57,9 @@ export default function Home() {
     });
   };
 
-  // useEffect(() => {
-  //   GetUserMessages();
-  // });
+  useEffect(() => {
+    GetUserMessages();
+  });
 
   const GetUserMessages = useCallback(async () => {
     try {

@@ -26,6 +26,8 @@ const ActiveChats = ({ selectChat }: INewChat) => {
     setActiveChats(Data);
   });
 
+  console.log(activeChats);
+
   return (
     <Main>
       {activeChats?.map((item, i) => {
