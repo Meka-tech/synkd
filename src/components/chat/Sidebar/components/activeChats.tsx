@@ -1,4 +1,4 @@
-import { MessageDb } from "@/MessageLocalDb";
+import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { RootState } from "@/Redux/app/store";
 import { ImsgType } from "@/types/messageType";
 import { IUserType } from "@/types/userType";

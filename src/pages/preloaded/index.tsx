@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { useSession } from "next-auth/react";
 import ChatLayout from "@/components/chat/layout";
 import { IUserType } from "@/types/userType";
-import { MessageDb } from "@/MessageLocalDb";
+import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { updateUser } from "@/Redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useLiveQuery } from "dexie-react-hooks";

@@ -32,7 +32,7 @@ const NewChat = ({ selectChat, close }: INewChat) => {
       </TopBar>
 
       <Body>
-        {Friends.map((item, i) => {
+        {Friends?.map((item, i) => {
           return (
             <FriendBox
               user={item}

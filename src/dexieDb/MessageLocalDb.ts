@@ -1,5 +1,5 @@
 import Dexie, { Table } from "dexie";
-import { ImsgType } from "./types/messageType";
+import { ImsgType } from "../types/messageType";
 
 export class MySubClassedDexie extends Dexie {
   messages!: Table<ImsgType>;

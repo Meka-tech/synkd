@@ -1,4 +1,4 @@
-import { MessageDb } from "../../MessageLocalDb";
+import { MessageDb } from "../../dexieDb/MessageLocalDb";
 
 export const getMostRecentReceivedMessageForUser = async (userIdToExclude) => {
   try {

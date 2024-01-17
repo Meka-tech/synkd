@@ -4,7 +4,7 @@ import ChatArea from "./chatArea";
 import { IUserType } from "@/types/userType";
 import { useEffect, useState } from "react";
 import DefaultChatArea from "./DefaultChatArea";
-import { MessageDb } from "@/MessageLocalDb";
+import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ImsgType } from "@/types/messageType";
 import Cookies from "js-cookie";

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import ChatLayout from "@/components/chat/layout";
-import { MessageDb } from "@/MessageLocalDb";
+import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { ImsgType } from "@/types/messageType";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";

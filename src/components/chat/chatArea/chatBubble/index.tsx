@@ -5,7 +5,7 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import io, { Socket } from "socket.io-client";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { MessageDb } from "@/MessageLocalDb";
+import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { ReadDBMessage } from "@/utils/indexedDb_Functions/readDBMessage";
 import { Check, CheckDouble } from "@emotion-icons/boxicons-regular";
 import { useSelector } from "react-redux";

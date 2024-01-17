@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 import ChatHeader from "./ChatHeader";
 import ChatTextArea from "./ChatTextArea";
 import { ImsgType } from "@/types/messageType";
-import { MessageDb } from "@/MessageLocalDb";
+import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { useSelector } from "react-redux";

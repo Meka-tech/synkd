@@ -1,4 +1,4 @@
-import { MessageDb } from "@/MessageLocalDb";
+import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { ImsgType } from "@/types/messageType";
 
 export async function getMostRecentMessagesAndUnreadCount(
