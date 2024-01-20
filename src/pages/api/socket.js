@@ -3,15 +3,14 @@ import { Server } from "socket.io";
 const SocketHandler = async (req, res) => {
   const prod = process.env.NODE_ENV == "production";
   if (res.socket.server.io) {
-    // console.log("Socket is already running");
     res.end();
-    return;
+    // console.log("Socket is already running");
   } else {
     // console.log("Socket is initializing");
     let io;
     if (prod) {
       io = new Server(res.socket.server, {
-        path: "/api/socket_io",
+        path: "/api/socket",
         addTrailingSlash: false
       });
     } else {

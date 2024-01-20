@@ -28,19 +28,17 @@ export default function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    socketInitializer();
     if (authToken === "") {
       router.push("/auth/sign-in");
     }
+    socketInitializer();
   }, []);
 
   const socketInitializer = async (): Promise<void> => {
     const res = await fetch("/api/socket");
 
     if (prod) {
-      socket = io("", {
-        path: "/api/socket_io"
-      });
+      socket = io(undefined as any, { path: "/api/socket" });
     } else {
       socket = io();
     }
