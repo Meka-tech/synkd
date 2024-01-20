@@ -6,7 +6,7 @@ const SocketHandler = async (req, res) => {
   } else {
     // console.log("Socket is initializing");
     const io = new Server(res.socket.server, {
-      path: "/api/socket_io",
+      path: "/api/socket",
       addTrailingSlash: false
     });
     res.socket.server.io = io;
