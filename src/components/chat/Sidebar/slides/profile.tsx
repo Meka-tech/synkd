@@ -32,29 +32,29 @@ const Profile = ({ close }: IProfile) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
 
-  const CheckUsername = async () => {
-    if (usernameError !== "") {
-      setCheckingUsername(true);
-    }
-    try {
-      const res = await axios.post(
-        "/api/user/find-username",
-        { username },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
-        }
-      );
-      const usernameTaken = res.data.usernameTaken;
-      setUsernameAvailable(!usernameTaken);
-    } catch (error) {
-      console.log(error);
-    }
-    setCheckingUsername(false);
-  };
-
   useEffect(() => {
+    const CheckUsername = async () => {
+      if (usernameError !== "") {
+        setCheckingUsername(true);
+      }
+      try {
+        const res = await axios.post(
+          "/api/user/find-username",
+          { username },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            }
+          }
+        );
+        const usernameTaken = res.data.usernameTaken;
+        setUsernameAvailable(!usernameTaken);
+      } catch (error) {
+        console.log(error);
+      }
+      setCheckingUsername(false);
+    };
+
     if (username.length <= 3) {
       setUsernameError("username too Short");
     } else if (username.length >= 15) {

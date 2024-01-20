@@ -102,10 +102,12 @@ const ChatArea = ({ user, activeChat, messages, setActiveChat }: IProps) => {
           }}
           value={newMessage}
           setInput={setNewMessage}
+          SendButton={
+            <SendIcon onClick={SendMessage} active={/\S/.test(newMessage)}>
+              <Send size={20} />
+            </SendIcon>
+          }
         />
-        <SendIcon onClick={SendMessage} active={/\S/.test(newMessage)}>
-          <Send size={20} />
-        </SendIcon>
       </BottomBar>
     </Body>
   );
@@ -116,22 +118,26 @@ export default ChatArea;
 const Body = styled.div`
   width: 70%;
   height: 100%;
+  position: relative;
   @media screen and (max-width: 480px) {
     width: 100%;
   }
 `;
 
 const BottomBar = styled.div`
-  height: 10%;
+  z-index: 100;
+  position: absolute;
+  height: fit-content;
   width: 100%;
-  padding: 0.5rem 2rem;
-  border-top: 1px solid ${(props) => props.theme.colors.gluton};
+  bottom: 0;
+  padding: 1.5rem 2rem;
+  background-color: ${(props) => props.theme.colors.void};
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   @media screen and (max-width: 480px) {
-    height: 8%;
-    padding: 0.2rem 1rem;
+    height: fit-content;
+    padding: 1rem 1rem;
   }
 `;
 

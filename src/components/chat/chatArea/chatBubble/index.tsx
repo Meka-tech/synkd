@@ -128,12 +128,12 @@ const Bubble = styled.div<BodyProp>`
   position: relative;
   width: fit-content;
   height: fit-content;
-  max-width: 60%;
+  max-width: 80%;
   opacity: ${(props) => (props.sent ? "1" : "0.5")};
   margin-left: ${(props) => (props.partner ? "" : "auto")};
   overflow-wrap: break-word;
   @media screen and (max-width: 480px) {
-    max-width: 70%;
+    max-width: 80%;
   }
 `;
 const Body = styled.div<BodyProp>`

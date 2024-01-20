@@ -142,10 +142,12 @@ const Chats = styled.div`
   overflow-x: hidden;
   padding: 0 1rem;
   padding-top: 1rem;
+  padding-bottom: 5rem;
   @media screen and (max-width: 480px) {
     height: 92%;
     padding: 0 1rem;
     padding-top: 10rem;
+    padding-bottom: 3rem;
   }
 `;
 

@@ -57,7 +57,7 @@ const ChatBox = ({
             <RecentText>
               {" "}
               {userSent && "You: "}
-              {ShortenText(recentMsg, 50)}
+              {ShortenText(recentMsg, 30)}
             </RecentText>
           </Message>
         </Bottom>

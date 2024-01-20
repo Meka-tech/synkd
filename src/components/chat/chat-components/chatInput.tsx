@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import {
   KeyboardEventHandler,
+  ReactElement,
   SetStateAction,
   useEffect,
   useRef,
@@ -10,20 +11,22 @@ import Picker from "emoji-picker-react";
 import { RootState } from "@/Redux/app/store";
 import { useSelector } from "react-redux";
 
-interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  handleKeyPress: KeyboardEventHandler<HTMLInputElement>;
+interface IProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
+  handleKeyPress: KeyboardEventHandler<HTMLTextAreaElement>;
   setInput: Function;
   userId: string;
   activeChatId: string;
+  SendButton: ReactElement;
 }
 const ChatInput = ({
   handleKeyPress,
   setInput,
   userId,
   activeChatId,
+  SendButton,
   ...rest
 }: IProps) => {
-  const inputRef = useRef<null | HTMLInputElement>(null);
+  const inputRef = useRef<null | HTMLTextAreaElement>(null);
   const socket = useSelector((state: RootState) => state.socket.socket);
 
   useEffect(() => {
@@ -38,26 +41,33 @@ const ChatInput = ({
   //   console.log(event);
   // };
 
+  const textareaRef = useRef<null | HTMLTextAreaElement>(null);
+
   const HandleChange = (e: { target: { value: any } }) => {
     setInput(e.target.value);
+
+    const target = e.target as HTMLTextAreaElement;
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "30px";
+      textareaRef.current.style.height = `${target.scrollHeight}px`;
+    }
 
     socket?.emit("is-typing", {
       from: userId,
       to: activeChatId
     });
   };
+
   return (
     <Body>
       <Input
-        ref={inputRef}
+        ref={textareaRef}
         {...rest}
         placeholder="Send a Text..."
         onKeyDown={handleKeyPress}
         onChange={HandleChange}
       />
-      {/* <EmojiDiv>
-        <Picker onEmojiClick={onEmojiClick} />
-      </EmojiDiv> */}
+      <SendDiv>{SendButton}</SendDiv>
     </Body>
   );
 };
@@ -66,35 +76,41 @@ export default ChatInput;
 
 const Body = styled.div`
   width: 95%;
-  padding: 0.5rem 2rem;
-  background-color: ${(props) => props.theme.colors.gluton};
-  height: 70%;
-  border-radius: 8px;
+  padding: 1rem;
+  background-color: 1px solid ${(props) => props.theme.colors.danger};
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  height: fit-content;
+  border-radius: 15px;
+  max-height: 15rem;
   display: flex;
+  align-items: center;
   position: relative;
   @media screen and (max-width: 480px) {
-    height: 4.5rem;
-    width: 85%;
+    height: fit-content;
+    width: 99%;
   }
 `;
-const Input = styled.input`
+const Input = styled.textarea`
+  margin-right: 1rem;
   border: none;
   outline: none;
-  width: 90%;
-  height: 100%;
+  width: 96%;
+  resize: none;
+  min-height: 2rem;
   background-color: transparent;
   font-size: 1.6rem;
-  font-weight: 500;
+  font-weight: 400;
   overflow-wrap: break-word;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
-    font-size: 1rem;
+    font-size: 1.6rem;
+    min-height: 2rem;
   }
   @media screen and (max-width: 480px) {
     font-size: 1.6rem;
   }
   ::placeholder {
     color: #d9d9d971;
-    font-weight: 600;
+    font-weight: 400;
   }
 
   &:-webkit-autofill {
@@ -104,9 +120,6 @@ const Input = styled.input`
   }
 `;
 
-const EmojiDiv = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(0%, -90%);
+const SendDiv = styled.div`
+  position: relative;
 `;
