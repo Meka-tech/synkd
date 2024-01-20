@@ -8,7 +8,7 @@ const SocketHandler = async (req, res) => {
     // console.log("Socket is initializing");
     const io = new Server(res.socket.server, {
       cors: {
-        origin: "*", // You might want to restrict this to specific domains in production
+        origin: "*",
         methods: ["GET", "POST"]
       }
     });

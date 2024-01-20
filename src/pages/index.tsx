@@ -19,7 +19,10 @@ let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default function Home() {
   let authToken = Cookies.get("authToken") || "";
+  const prod = process.env.NODE_ENV == "production";
   const router = useRouter();
+
+  console.log("is in production :", prod);
 
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
@@ -33,10 +36,9 @@ export default function Home() {
     }
   }, []);
 
-  const socketRef = useRef(null);
   const socketInitializer = async (): Promise<void> => {
     await fetch("/api/socket");
-    socket = io();
+    socket = io(prod ? "https://synkd.netlify.app/" : "");
 
     dispatch(updateSocket(socket));
 
