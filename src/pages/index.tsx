@@ -37,8 +37,10 @@ export default function Home() {
   }, []);
 
   const socketInitializer = async (): Promise<void> => {
-    await fetch("/api/socket");
-    socket = io(prod ? "https://synkd.netlify.app/" : "");
+    const res = await fetch("/api/socket");
+
+    console.log(res.url);
+    socket = io(prod ? res.url : "");
 
     dispatch(updateSocket(socket));
 
