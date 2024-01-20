@@ -48,6 +48,7 @@ const TopBar = styled.div`
     padding: 0.5rem 0.5rem;
     position: fixed;
     top: 0;
+    z-index: 100;
   }
 `;
 const BackArrow = styled.div`

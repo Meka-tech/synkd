@@ -6,9 +6,15 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { ReadDBMessage } from "@/utils/indexedDb_Functions/readDBMessage";
-import { Check, CheckDouble } from "@emotion-icons/boxicons-regular";
+import {
+  Check,
+  CheckDouble,
+  DotsHorizontalRounded
+} from "@emotion-icons/boxicons-regular";
+import { Circle, CheckCircle } from "@emotion-icons/boxicons-solid";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
+import { TypingLottie } from "../../../../../animation/typingLottie";
 
 interface IProps {
   text: string;
@@ -19,6 +25,7 @@ interface IProps {
   id?: string;
   partnerId?: string;
   userSndNxtMsg: boolean;
+  isTyping?: boolean;
 }
 
 const ChatBubble = ({
@@ -29,7 +36,8 @@ const ChatBubble = ({
   id,
   readStatus,
   partnerId,
-  userSndNxtMsg = false
+  userSndNxtMsg = false,
+  isTyping = false
 }: IProps) => {
   let authToken = Cookies.get("authToken") || "";
   let inputDate;
@@ -80,16 +88,17 @@ const ChatBubble = ({
     <Main>
       <Bubble partner={partner} sent={sent} userSndNxtMsg={userSndNxtMsg}>
         <Body partner={partner} sent={sent} userSndNxtMsg={userSndNxtMsg}>
-          <Text>{text}</Text>
+          {!isTyping ? <Text>{text}</Text> : <TypingLottie />}
+
           <Bottom>
             <Time>{time && formattedTime}</Time>
             {!partner && sent && readStatus ? (
               <CheckIcon>
-                <CheckDouble size={15} />
+                <CheckCircle size={14} />
               </CheckIcon>
             ) : !partner && sent ? (
               <CheckIcon>
-                <Check size={15} />
+                <Circle size={14} />
               </CheckIcon>
             ) : null}
             {!sent && <Loading size={15} />}
@@ -176,10 +185,10 @@ const Bottom = styled.div`
 `;
 
 const Time = styled.h3`
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 300;
 `;
 
 const CheckIcon = styled.div`
-  margin-left: 0.1rem;
+  margin-left: 0.2rem;
 `;

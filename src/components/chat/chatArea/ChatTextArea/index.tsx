@@ -8,6 +8,8 @@ import ChatBubble from "../chatBubble";
 import Loading from "@/components/loading";
 import { ImsgType } from "@/types/messageType";
 import getChatDay from "@/utils/chat__functions/getChatDay";
+import { RootState } from "@/Redux/app/store";
+import { useSelector } from "react-redux";
 
 interface IProps {
   user: IUserType | null;
@@ -43,6 +45,30 @@ const ChatTextArea = ({
   const RoomMessages = messages.filter((message) => {
     return message.room === room;
   });
+
+  const [isTyping, setIsTyping] = useState(false);
+  const socket = useSelector((state: RootState) => state.socket.socket);
+
+  socket?.on("userTyping", (id: string) => {
+    if (chatPartner?._id === id) {
+      setIsTyping(true);
+    }
+    return;
+  });
+
+  useEffect(() => {
+    let typingTimeout: NodeJS.Timeout;
+
+    if (isTyping) {
+      typingTimeout = setTimeout(() => {
+        setIsTyping(false);
+      }, 3000);
+    }
+
+    return () => {
+      clearTimeout(typingTimeout);
+    };
+  }, [isTyping]);
 
   return (
     <Chats>
@@ -95,6 +121,15 @@ const ChatTextArea = ({
           />
         );
       })}
+      {isTyping && (
+        <ChatBubble
+          isTyping={isTyping}
+          text={""}
+          partner={true}
+          sent={true}
+          userSndNxtMsg={false}
+        />
+      )}
       <ScrollPoint ref={scrollRef} />
     </Chats>
   );

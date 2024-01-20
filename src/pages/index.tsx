@@ -3,7 +3,7 @@ import ChatLayout from "@/components/chat/layout";
 import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { ImsgType } from "@/types/messageType";
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IUserType } from "@/types/userType";
 import { RootState } from "@/Redux/app/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +33,7 @@ export default function Home() {
     }
   }, []);
 
+  const socketRef = useRef(null);
   const socketInitializer = async (): Promise<void> => {
     await fetch("/api/socket");
     socket = io();

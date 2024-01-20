@@ -1,11 +1,17 @@
 import { Server } from "socket.io";
+import cors from "cors";
 
 const SocketHandler = async (req, res) => {
   if (res.socket.server.io) {
     // console.log("Socket is already running");
   } else {
     // console.log("Socket is initializing");
-    const io = new Server(res.socket.server);
+    const io = new Server(res.socket.server, {
+      cors: {
+        origin: "*", // You might want to restrict this to specific domains in production
+        methods: ["GET", "POST"]
+      }
+    });
     res.socket.server.io = io;
 
     const socketIdMap = {};
@@ -27,6 +33,36 @@ const SocketHandler = async (req, res) => {
 
         if (targetSocketId) {
           io.to(targetSocketId).emit("message-was-read", messageId);
+        }
+      });
+
+      socket.on("is-typing", ({ from, to }) => {
+        const targetSocketId = socketIdMap[to];
+
+        if (targetSocketId) {
+          io.to(targetSocketId).emit("userTyping", from);
+        }
+      });
+
+      socket.on("send-notification", ({ from, to }) => {
+        const targetSocketId = socketIdMap[to];
+
+        if (targetSocketId) {
+          io.to(targetSocketId).emit("receive-notification", from);
+        }
+      });
+
+      socket.on("profile-updated", ({ from, friends }) => {
+        let targetSocketIds = [];
+        friends.map((friend) => {
+          let id = socketIdMap[friend];
+          targetSocketIds.push(id);
+        });
+
+        if (targetSocketIds.length > 0) {
+          for (const target of targetSocketIds) {
+            io.to(target).emit("update-profile", from);
+          }
         }
       });
 

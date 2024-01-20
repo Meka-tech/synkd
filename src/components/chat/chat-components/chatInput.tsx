@@ -7,13 +7,24 @@ import {
   useState
 } from "react";
 import Picker from "emoji-picker-react";
+import { RootState } from "@/Redux/app/store";
+import { useSelector } from "react-redux";
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   handleKeyPress: KeyboardEventHandler<HTMLInputElement>;
   setInput: Function;
+  userId: string;
+  activeChatId: string;
 }
-const ChatInput = ({ handleKeyPress, setInput, ...rest }: IProps) => {
+const ChatInput = ({
+  handleKeyPress,
+  setInput,
+  userId,
+  activeChatId,
+  ...rest
+}: IProps) => {
   const inputRef = useRef<null | HTMLInputElement>(null);
+  const socket = useSelector((state: RootState) => state.socket.socket);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -29,6 +40,11 @@ const ChatInput = ({ handleKeyPress, setInput, ...rest }: IProps) => {
 
   const HandleChange = (e: { target: { value: any } }) => {
     setInput(e.target.value);
+
+    socket?.emit("is-typing", {
+      from: userId,
+      to: activeChatId
+    });
   };
   return (
     <Body>

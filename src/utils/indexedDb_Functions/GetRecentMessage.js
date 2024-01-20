@@ -6,7 +6,11 @@ export const getMostRecentReceivedMessageForUser = async (userIdToExclude) => {
 
     // Get all messages where user.id is not equal to a certain string
     const filteredMessages = await MessageDb.messages
-      .filter((msg) => msg.user._id !== userIdToExclude)
+      .filter(
+        (msg) =>
+          msg.user._id !== userIdToExclude &&
+          msg.partner._id === userIdToExclude
+      )
       .toArray();
 
     // Sort the filtered messages by createdAt in descending order

@@ -13,7 +13,6 @@ import ChatHeader from "./ChatHeader";
 import ChatTextArea from "./ChatTextArea";
 import { ImsgType } from "@/types/messageType";
 import { MessageDb } from "@/dexieDb/MessageLocalDb";
-import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
@@ -94,6 +93,8 @@ const ChatArea = ({ user, activeChat, messages, setActiveChat }: IProps) => {
       />
       <BottomBar>
         <ChatInput
+          userId={user?._id || ""}
+          activeChatId={activeChat?._id || ""}
           handleKeyPress={(e) => {
             if (e.key === "Enter" && /\S/.test(newMessage)) {
               SendMessage();
