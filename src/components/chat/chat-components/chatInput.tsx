@@ -64,11 +64,12 @@ const Body = styled.div`
 const Input = styled.input`
   border: none;
   outline: none;
-  width: 80%;
+  width: 90%;
   height: 100%;
   background-color: transparent;
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   font-weight: 500;
+  overflow-wrap: break-word;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1rem;
   }

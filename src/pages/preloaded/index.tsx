@@ -69,6 +69,7 @@ export default function Preloaded() {
           let recentMessage: ImsgType | any;
 
           recentMessage = await getMostRecentReceivedMessageForUser(user?._id);
+
           if (recentMessage) {
             const response = await axios.post(
               "/api/chat/get-received-messages",

@@ -2,6 +2,7 @@ import { updateOpenChat } from "@/Redux/features/openChat/openChatSlice";
 import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useDispatch } from "react-redux";
+import ShortenText from "@/utils/ShortenText";
 
 interface IProps {
   user: IUserType;
@@ -25,7 +26,7 @@ const FriendBox = ({ user, selectChat, close }: IProps) => {
       <PictureImage />
       <TextContainer>
         <Name>{user.username}</Name>
-        <Bio>{user.bio}</Bio>
+        <Bio> {ShortenText(user.bio, 30)}</Bio>
       </TextContainer>
     </Body>
   );

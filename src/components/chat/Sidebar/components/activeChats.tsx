@@ -5,6 +5,7 @@ import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
+import getChatTime from "@/utils/chat__functions/getChatTime";
 
 import ChatBox from "./chatBox";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,8 +27,6 @@ const ActiveChats = ({ selectChat }: INewChat) => {
     setActiveChats(Data);
   });
 
-  console.log(activeChats);
-
   return (
     <Main>
       {activeChats?.map((item, i) => {
@@ -43,6 +42,7 @@ const ActiveChats = ({ selectChat }: INewChat) => {
           partner = chat.user;
           user = chat.partner;
         }
+        const msgTime = getChatTime(chat.createdAt);
         return (
           <ChatBox
             user={user}
@@ -51,7 +51,7 @@ const ActiveChats = ({ selectChat }: INewChat) => {
             partner={partner}
             recentMsg={chat.text}
             readMsg={chat.readStatus}
-            recentMsgTime={chat.createdAt}
+            recentMsgTime={msgTime}
             unReadMsg={item.unreadCount}
             key={i}
           />

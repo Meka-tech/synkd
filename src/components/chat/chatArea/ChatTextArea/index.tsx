@@ -2,11 +2,12 @@ import { IUserType } from "@/types/userType";
 import { GetChatId } from "@/utils/GetChatId";
 import styled from "@emotion/styled";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import ChatBubble from "../chatBubble";
 import Loading from "@/components/loading";
 import { ImsgType } from "@/types/messageType";
+import getChatDay from "@/utils/chat__functions/getChatDay";
 
 interface IProps {
   user: IUserType | null;
@@ -39,22 +40,37 @@ const ChatTextArea = ({
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const RoomMessages = messages.filter((message) => {
+    return message.room === room;
+  });
+
   return (
     <Chats>
-      {messages?.map((msg, i) => {
+      {RoomMessages?.map((msg, i) => {
         let partnerId;
         const isPartner = msg.user.username !== user?.username;
         if (isPartner) {
           partnerId = msg.user._id;
         }
         let SenderMsgNxtId;
-        if (messages[i + 1]) {
-          SenderMsgNxtId = messages[i + 1].user.username === msg.user.username;
+        if (RoomMessages[i + 1]) {
+          SenderMsgNxtId =
+            RoomMessages[i + 1].user.username === msg.user.username;
         } else {
           SenderMsgNxtId = false;
         }
-        if (room === msg.room) {
-          return (
+        let previousTime;
+        if (RoomMessages[i - 1]) {
+          previousTime = RoomMessages[i - 1].createdAt;
+        }
+        if (RoomMessages[0] === msg) {
+          previousTime = msg.createdAt;
+        }
+
+        const DayChange = getChatDay(msg.createdAt, previousTime);
+        return (
+          <React.Fragment key={i}>
+            {DayChange && <DayChangeDiv>{DayChange}</DayChangeDiv>}
             <ChatBubble
               text={msg.text}
               key={msg._id}
@@ -65,8 +81,8 @@ const ChatTextArea = ({
               partnerId={partnerId}
               userSndNxtMsg={SenderMsgNxtId}
             />
-          );
-        }
+          </React.Fragment>
+        );
       })}
       {unSentMessages?.map((msg, i) => {
         return (
@@ -88,7 +104,8 @@ export default ChatTextArea;
 const Chats = styled.div`
   height: 80%;
   overflow-y: scroll;
-  padding: 0 2rem;
+  overflow-x: hidden;
+  padding: 0 1rem;
   padding-top: 1rem;
   @media screen and (max-width: 480px) {
     height: 92%;
@@ -98,3 +115,14 @@ const Chats = styled.div`
 `;
 
 const ScrollPoint = styled.div``;
+
+const DayChangeDiv = styled.div`
+  background-color: ${(props) => props.theme.colors.gluton};
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.5rem 1.2rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+`;

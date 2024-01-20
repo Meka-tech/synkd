@@ -2,7 +2,7 @@ import { RootState } from "@/Redux/app/store";
 import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useDispatch, useSelector } from "react-redux";
-import { Check, CheckDouble } from "@emotion-icons/boxicons-regular";
+import ShortenText from "@/utils/ShortenText";
 import { updateOpenChat } from "@/Redux/features/openChat/openChatSlice";
 
 interface IProps {
@@ -10,7 +10,7 @@ interface IProps {
   profileImage?: string;
   recentMsg?: string;
   unReadMsg: number;
-  recentMsgTime?: Date;
+  recentMsgTime?: string;
   partner: IUserType;
   selectChat: Function;
   userSent: boolean;
@@ -30,18 +30,6 @@ const ChatBox = ({
     (state: RootState) => state.user.user
   );
 
-  let msgTime;
-
-  if (recentMsgTime) {
-    msgTime = new Date(recentMsgTime);
-  }
-
-  const time = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: false // Use 24-hour format
-  }).format(msgTime);
-
   const dispatch = useDispatch();
 
   const OpenUserChat = () => {
@@ -59,19 +47,19 @@ const ChatBox = ({
       <TextContainer>
         <Top>
           <Name>{partner.username}</Name>
-          <Time unRead={unReadMsg > 0}>{time}</Time>
+          <TimeDiv>
+            <Time unRead={unReadMsg > 0}>{recentMsgTime}</Time>{" "}
+            {unReadMsg > 0 && <UnReadMsgDiv />}
+          </TimeDiv>
         </Top>
         <Bottom>
           <Message>
             <RecentText>
               {" "}
               {userSent && "You: "}
-              {recentMsg}
+              {ShortenText(recentMsg, 50)}
             </RecentText>
           </Message>
-          {unReadMsg > 0 && (
-            <UnReadMsgDiv>{/* <h3>{unReadMsg}</h3> */}</UnReadMsgDiv>
-          )}
         </Bottom>
       </TextContainer>
     </Body>
@@ -89,6 +77,7 @@ const Body = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid ${(props) => props.theme.bgColors.primaryFade};
   transition: all ease-in-out 0.1s;
+  border-radius: 10px;
   :hover {
     /* background-color: ${(props) => props.theme.bgColors.primaryFade}; */
     background-color: rgba(255, 255, 255, 0.05);
@@ -121,8 +110,13 @@ interface BlueText {
   unRead: boolean;
 }
 
+const TimeDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const Time = styled.h3<BlueText>`
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: ${(props) =>
     props.unRead ? props.theme.colors.primary : props.theme.colors.dusty};
 `;
@@ -145,9 +139,10 @@ const RecentText = styled.h2`
 `;
 
 const UnReadMsgDiv = styled.div`
-  min-width: 2rem;
-  height: 2rem;
-  border-radius: 50px;
+  margin-left: 0.5rem;
+  min-width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
   width: fit-content;
   padding: 0.5rem;
   background-color: ${(props) => props.theme.colors.primary};
@@ -158,9 +153,4 @@ const UnReadMsgDiv = styled.div`
     font-weight: 600;
     font-size: 1rem;
   }
-`;
-
-const Tick = styled.div`
-  margin-right: 0.1rem;
-  color: ${(props) => props.theme.colors.dusty};
 `;

@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
 import Loading from "../../../loading";
 import { useCallback, useEffect, useState } from "react";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
-import io, { Socket } from "socket.io-client";
+
 import Cookies from "js-cookie";
 import axios from "axios";
 import { MessageDb } from "@/dexieDb/MessageLocalDb";
@@ -79,22 +78,25 @@ const ChatBubble = ({
 
   return (
     <Main>
-      <Body partner={partner} sent={sent} userSndNxtMsg={userSndNxtMsg}>
-        <Text>{text}</Text>
-        <Bottom>
-          <Time>{time && formattedTime}</Time>
-          {!partner && sent && readStatus ? (
-            <CheckIcon>
-              <CheckDouble size={15} />
-            </CheckIcon>
-          ) : !partner && sent ? (
-            <CheckIcon>
-              <Check size={15} />
-            </CheckIcon>
-          ) : null}
-          {!sent && <Loading size={15} />}
-        </Bottom>
-      </Body>
+      <Bubble partner={partner} sent={sent} userSndNxtMsg={userSndNxtMsg}>
+        <Body partner={partner} sent={sent} userSndNxtMsg={userSndNxtMsg}>
+          <Text>{text}</Text>
+          <Bottom>
+            <Time>{time && formattedTime}</Time>
+            {!partner && sent && readStatus ? (
+              <CheckIcon>
+                <CheckDouble size={15} />
+              </CheckIcon>
+            ) : !partner && sent ? (
+              <CheckIcon>
+                <Check size={15} />
+              </CheckIcon>
+            ) : null}
+            {!sent && <Loading size={15} />}
+          </Bottom>
+        </Body>
+        {!userSndNxtMsg && <BubbleArrow partner={partner} />}
+      </Bubble>
     </Main>
   );
 };
@@ -104,34 +106,59 @@ export default ChatBubble;
 const Main = styled.div`
   width: 100%;
   margin-bottom: 1rem;
+  overflow: hidden;
+  padding: 0 1rem;
 `;
 interface BodyProp {
   partner: boolean;
-  sent: boolean;
-  userSndNxtMsg: boolean;
+  sent?: boolean;
+  userSndNxtMsg?: boolean;
 }
-const Body = styled.div<BodyProp>`
+const Bubble = styled.div<BodyProp>`
   cursor: pointer;
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  max-width: 60%;
+  opacity: ${(props) => (props.sent ? "1" : "0.5")};
+  margin-left: ${(props) => (props.partner ? "" : "auto")};
+  overflow-wrap: break-word;
+  @media screen and (max-width: 480px) {
+    max-width: 70%;
+  }
+`;
+const Body = styled.div<BodyProp>`
   background-color: ${(props) =>
     props.partner ? props.theme.colors.slate : props.theme.colors.primary};
   height: fit-content;
   width: fit-content;
+  position: relative;
   color: ${(props) => props.theme.colors.snow};
-  border-top-right-radius: 15px;
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: ${(props) =>
-    props.userSndNxtMsg ? "15px" : props.partner ? "" : "15px"};
-  border-bottom-right-radius: ${(props) =>
-    props.userSndNxtMsg ? "15px" : props.partner ? "15px" : ""};
+  border-radius: 15px;
   padding: 0.5rem 1rem;
   display: flex;
   align-items: end;
-  margin-left: ${(props) => (props.partner ? "" : "auto")};
   overflow-wrap: break-word;
-  max-width: 60%;
-  opacity: ${(props) => (props.sent ? "1" : "0.5")};
-  @media screen and (max-width: 480px) {
-    max-width: 70%;
+`;
+const BubbleArrow = styled.div<BodyProp>`
+  position: absolute;
+  width: 0;
+  right: ${(props) => !props.partner && "-2px"};
+  bottom: ${(props) => (props.partner ? "35px" : "35px")};
+  left: ${(props) => (props.partner ? "-13px" : "auto")};
+  height: 0;
+  ::after {
+    content: "";
+    position: absolute;
+    border: 0 solid transparent;
+    border-top: 9px solid
+      ${(props) =>
+        props.partner ? props.theme.colors.slate : props.theme.colors.primary};
+    border-radius: 0 20px 0;
+    width: 15px;
+    height: 30px;
+    transform: ${(props) =>
+      props.partner ? "rotate(145deg)" : " rotate(45deg) scaleY(-1)"};
   }
 `;
 
