@@ -37,9 +37,8 @@ export default function Home() {
   const socketInitializer = async (): Promise<void> => {
     const res = await fetch("/api/socket");
 
-    console.log(res.url);
     if (prod) {
-      socket = io(res.url, { path: "/api/socket" });
+      socket = io({ path: "/api/socket" });
     } else {
       socket = io();
     }

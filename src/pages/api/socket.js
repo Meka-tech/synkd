@@ -1,5 +1,4 @@
 import { Server } from "socket.io";
-import cors from "cors";
 
 const SocketHandler = async (req, res) => {
   if (res.socket.server.io) {
