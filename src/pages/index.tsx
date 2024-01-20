@@ -38,7 +38,7 @@ export default function Home() {
     const res = await fetch("/api/socket");
 
     if (prod) {
-      socket = io({ path: "/api/socket" });
+      socket = io({ path: "/api/socket_io" });
     } else {
       socket = io();
     }
