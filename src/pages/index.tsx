@@ -22,8 +22,6 @@ export default function Home() {
   const prod = process.env.NODE_ENV == "production";
   const router = useRouter();
 
-  console.log("is in production :", prod);
-
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
@@ -40,7 +38,11 @@ export default function Home() {
     const res = await fetch("/api/socket");
 
     console.log(res.url);
-    socket = io(prod ? res.url : "");
+    if (prod) {
+      socket = io(res.url, { path: "/api/socket" });
+    } else {
+      socket = io();
+    }
 
     dispatch(updateSocket(socket));
 
