@@ -14,6 +14,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { ImsgType } from "@/types/messageType";
 import { RootState } from "@/Redux/app/store";
 import { getMostRecentReceivedMessageForUser } from "@/utils/indexedDb_Functions/GetRecentMessage";
+import { updateFriends } from "@/Redux/features/friends/friendsSlice";
 
 export default function Preloaded() {
   const { data: sessionData, status } = useSession();
@@ -37,12 +38,14 @@ export default function Preloaded() {
             Authorization: `Bearer ${token}`
           }
         });
-        let res = data.data.user;
+        let resUser = data.data.user;
+        let resFriends = data.data.friends;
 
-        dispatch(updateUser(res));
+        dispatch(updateUser(resUser));
+        dispatch(updateFriends(resFriends));
         await GetUserMessages(token);
 
-        if (res.interests.music.length < 1) {
+        if (resUser.interests.music.length < 1) {
           router.push("/sync/interests");
         }
       }

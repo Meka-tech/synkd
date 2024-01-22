@@ -3,50 +3,48 @@ import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useDispatch, useSelector } from "react-redux";
 import ShortenText from "@/utils/ShortenText";
-import { updateOpenChat } from "@/Redux/features/openChat/openChatSlice";
+import {
+  updateActiveChatId,
+  updateLaunch,
+  updateOpenChat
+} from "@/Redux/features/openChat/openChatSlice";
 
 interface IProps {
-  user: IUserType;
-  profileImage?: string;
   recentMsg?: string;
   unReadMsg: number;
   recentMsgTime?: string;
-  partner: IUserType;
-  selectChat: Function;
+  partner: IUserType | null | undefined;
   userSent: boolean;
-  readMsg: boolean;
 }
 const ChatBox = ({
-  user,
   partner,
-  selectChat,
   recentMsg,
   recentMsgTime,
   userSent,
-  unReadMsg,
-  readMsg
+  unReadMsg
 }: IProps) => {
-  const userDetails: IUserType | null = useSelector(
-    (state: RootState) => state.user.user
-  );
-
   const dispatch = useDispatch();
 
+  const justLaunched = useSelector((state: RootState) => state.openChat.launch);
+
   const OpenUserChat = () => {
+    if (justLaunched) {
+      dispatch(updateLaunch(false));
+    }
     dispatch(updateOpenChat(true));
+    dispatch(updateActiveChatId(partner?._id));
   };
 
   return (
     <Body
       onClick={() => {
-        selectChat(partner);
         OpenUserChat();
       }}
     >
       <PictureImage />
       <TextContainer>
         <Top>
-          <Name>{partner.username}</Name>
+          <Name>{partner?.username}</Name>
           <TimeDiv>
             <Time unRead={unReadMsg > 0}>{recentMsgTime}</Time>{" "}
             {unReadMsg > 0 && <UnReadMsgDiv />}

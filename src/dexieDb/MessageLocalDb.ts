@@ -6,7 +6,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super("myDatabase");
-    this.version(1).stores({
+    this.version(2).stores({
       messages:
         "++_id, text, user , partner , room ,readStatus, createdAt , updatedAt " // Primary key and indexed props
     });

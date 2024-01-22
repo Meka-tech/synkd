@@ -20,14 +20,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
 import Profile from "./slides/profile";
 
-interface IProps {
-  setActiveChat: Function;
-}
+interface IProps {}
 
 type SlideType = {
   [key: string]: React.ReactNode;
 };
-const ChatSideBar = ({ setActiveChat }: IProps) => {
+const ChatSideBar = ({}: IProps) => {
   const [slideInActive, setSlideInActive] = useState(false);
   const [activeSlide, setActiveSlide] = useState(""); //options //notifications //profile
   const SlideRef = useRef(null);
@@ -41,7 +39,7 @@ const ChatSideBar = ({ setActiveChat }: IProps) => {
 
   const Slides: SlideType = {
     notifications: <Notification close={RemoveSlide} />,
-    newChat: <NewChat selectChat={setActiveChat} close={RemoveSlide} />,
+    newChat: <NewChat close={RemoveSlide} />,
     profile: <Profile close={RemoveSlide} />
   };
 
@@ -63,7 +61,6 @@ const ChatSideBar = ({ setActiveChat }: IProps) => {
           <UserImage onClick={() => ActivativeSlide("profile")}>
             <User size={30} />
           </UserImage>
-          {/* <UserName>{user?.username}</UserName> */}
         </UserDetails>
         <Utitilites>
           <AddIcon onClick={() => ActivativeSlide("newChat")}>
@@ -81,7 +78,7 @@ const ChatSideBar = ({ setActiveChat }: IProps) => {
         <SearchInput />
       </SearchArea>
       <Texts>
-        <ActiveChats selectChat={setActiveChat} />
+        <ActiveChats />
       </Texts>
     </Body>
   );
@@ -101,7 +98,7 @@ const Body = styled.div<BodyProps>`
   transition: 0.15s ease-in-out;
   @media screen and (max-width: 480px) {
     width: 100vw;
-    z-index: 100;
+    z-index: 500;
     position: absolute;
     transform: ${(props) =>
       props.openChat ? "translateX(-100%)" : "translateX(0)"};

@@ -17,7 +17,7 @@ async function handler(req, res, next) {
       userId,
       { $set: { username, bio } },
       { new: true }
-    ).populate("friendsList");
+    );
 
     res.status(200).json({ success: true, user: updatedUser });
   } catch (err) {

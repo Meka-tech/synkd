@@ -5,7 +5,7 @@ export interface ImsgType {
   user: IUserType;
   partner: IUserType;
   room: string;
-  readStatus:boolean;
+  readStatus: boolean;
   createdAt: Date;
   updatedAt: Date;
   _id: string;

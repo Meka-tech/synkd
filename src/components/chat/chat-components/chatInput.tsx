@@ -16,32 +16,47 @@ interface IProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   setInput: Function;
   userId: string;
   activeChatId: string;
-  SendButton: ReactElement;
 }
 const ChatInput = ({
   handleKeyPress,
   setInput,
   userId,
   activeChatId,
-  SendButton,
+
   ...rest
 }: IProps) => {
-  const inputRef = useRef<null | HTMLTextAreaElement>(null);
+  const textareaRef = useRef<null | HTMLTextAreaElement>(null);
   const socket = useSelector((state: RootState) => state.socket.socket);
+  const [scrollingUp, setScrollingUp] = useState(false);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    textareaRef.current?.focus();
   });
 
-  // const [chosenEmoji, setChosenEmoji] = useState(null);
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentPosition = window.scrollY;
 
-  // const onEmojiClick = (event: any) => {
-  //   // setChosenEmoji(event.emoji);
+      const scrollThreshold = 100;
 
-  //   console.log(event);
-  // };
+      if (currentPosition < scrollThreshold) {
+        setScrollingUp(true);
+      } else {
+        setScrollingUp(false);
+      }
+    };
 
-  const textareaRef = useRef<null | HTMLTextAreaElement>(null);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (scrollingUp) {
+      textareaRef.current?.blur();
+    }
+  }, [scrollingUp]);
 
   const HandleChange = (e: { target: { value: any } }) => {
     setInput(e.target.value);
@@ -67,7 +82,7 @@ const ChatInput = ({
         onKeyDown={handleKeyPress}
         onChange={HandleChange}
       />
-      <SendDiv>{SendButton}</SendDiv>
+      {/* <SendDiv>{SendButton}</SendDiv> */}
     </Body>
   );
 };
@@ -85,13 +100,16 @@ const Body = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  margin-right: 1rem;
   @media screen and (max-width: 480px) {
     height: fit-content;
     width: 99%;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    max-height: 10rem;
   }
 `;
 const Input = styled.textarea`
-  margin-right: 1rem;
   border: none;
   outline: none;
   width: 96%;
@@ -107,6 +125,7 @@ const Input = styled.textarea`
   }
   @media screen and (max-width: 480px) {
     font-size: 1.6rem;
+    min-height: 1rem;
   }
   ::placeholder {
     color: #d9d9d971;

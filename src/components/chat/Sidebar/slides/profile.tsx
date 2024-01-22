@@ -31,6 +31,7 @@ const Profile = ({ close }: IProfile) => {
   const [detailChange, setDetailChange] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
+  const socket = useSelector((state: RootState) => state.socket.socket);
 
   useEffect(() => {
     const CheckUsername = async () => {
@@ -97,9 +98,13 @@ const Profile = ({ close }: IProfile) => {
           }
         }
       );
-      let user = data.data.user;
+      let resuser = data.data.user;
+      socket?.emit("profile-updated", {
+        from: user?._id,
+        friends: user?.friendsList
+      });
 
-      dispatch(updateUser(user));
+      dispatch(updateUser(resuser));
       close();
     } catch (error) {
       console.log(error);

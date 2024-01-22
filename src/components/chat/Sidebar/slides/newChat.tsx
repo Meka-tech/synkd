@@ -9,17 +9,24 @@ import Link from "next/link";
 import { ArrowIosBack } from "@emotion-icons/evaicons-solid";
 
 interface INewChat {
-  selectChat: Function;
   close: Function;
 }
-const NewChat = ({ selectChat, close }: INewChat) => {
+const NewChat = ({ close }: INewChat) => {
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
 
-  const Friends = user?.friendsList
-    .slice()
-    .sort((a, b) => a.username.localeCompare(b.username));
+  const Friends: IUserType[] | [] = useSelector(
+    (state: RootState) => state.friends.friends
+  );
+
+  // const FriendsList: [] = [];
+
+  // console.log(Friends);
+
+  const FriendsList = Friends.slice().sort((a, b) =>
+    a.username.localeCompare(b.username)
+  );
   return (
     <Main>
       <TopBar>
@@ -32,15 +39,8 @@ const NewChat = ({ selectChat, close }: INewChat) => {
       </TopBar>
 
       <Body>
-        {Friends?.map((item, i) => {
-          return (
-            <FriendBox
-              user={item}
-              selectChat={selectChat}
-              key={i}
-              close={close}
-            />
-          );
+        {FriendsList?.map((item, i) => {
+          return <FriendBox user={item} key={i} close={close} />;
         })}
         <NewFriendDiv>
           <NewFriendText> SYNK WITH MORE USERS</NewFriendText>

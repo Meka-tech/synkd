@@ -1,25 +1,34 @@
-import { updateOpenChat } from "@/Redux/features/openChat/openChatSlice";
+import {
+  updateActiveChatId,
+  updateLaunch,
+  updateOpenChat
+} from "@/Redux/features/openChat/openChatSlice";
 import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ShortenText from "@/utils/ShortenText";
+import { RootState } from "@/Redux/app/store";
 
 interface IProps {
   user: IUserType;
-  selectChat: Function;
+
   close: Function;
 }
-const FriendBox = ({ user, selectChat, close }: IProps) => {
+const FriendBox = ({ user, close }: IProps) => {
   const dispatch = useDispatch();
+  const justLaunched = useSelector((state: RootState) => state.openChat.launch);
 
   const OpenUserChat = () => {
+    if (justLaunched) {
+      dispatch(updateLaunch(false));
+    }
     dispatch(updateOpenChat(true));
+    dispatch(updateActiveChatId(user._id));
   };
 
   return (
     <Body
       onClick={() => {
-        selectChat(user);
         OpenUserChat();
       }}
     >

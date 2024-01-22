@@ -14,6 +14,11 @@ import { ReadDBMessage } from "@/utils/indexedDb_Functions/readDBMessage";
 import { getOldestUnreadMessage } from "@/utils/indexedDb_Functions/getOldestUnreadMessage";
 import { updateSocket } from "@/Redux/features/socket/socketSlice";
 import { useRouter } from "next/router";
+import {
+  updateFriend,
+  updateFriends
+} from "@/Redux/features/friends/friendsSlice";
+import { updateUser } from "@/Redux/features/user/userSlice";
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -33,6 +38,19 @@ export default function Home() {
     }
     socketInitializer();
   }, []);
+
+  const UpdateFriendProfile = async (id: string) => {
+    try {
+      const res = await axios.get(`/api/friends/${id}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      const friend = res.data.data;
+
+      dispatch(updateFriend(friend));
+    } catch (e) {}
+  };
 
   const socketInitializer = async (): Promise<void> => {
     const res = await fetch("/api/socket");
@@ -58,14 +76,33 @@ export default function Home() {
     socket.on("message-was-read", async (messageId) => {
       await ReadDBMessage(messageId);
     });
+
+    socket.on("update-profile", async (id) => {
+      await UpdateFriendProfile(id);
+    });
     socket.on("disconnect", () => {
       console.log("Disconnected");
     });
   };
+  const GetUser = useCallback(async () => {
+    try {
+      if (authToken) {
+        const data = await axios.get("/api/user/user", {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        });
+        let resUser = data.data.user;
+        let resFriends = data.data.friends;
 
-  useEffect(() => {
-    GetUserMessages();
-  });
+        dispatch(updateUser(resUser));
+        dispatch(updateFriends(resFriends));
+        await GetUserMessages();
+      }
+    } catch (e) {
+      router.push("/auth/sign-in");
+    }
+  }, []);
 
   const GetUserMessages = useCallback(async () => {
     try {
@@ -103,9 +140,9 @@ export default function Home() {
 
   const handleVisibilityChange = useCallback(() => {
     if (!document.hidden) {
-      GetUserMessages();
+      GetUser();
     }
-  }, [GetUserMessages]);
+  }, []);
 
   useEffect(() => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -113,8 +150,11 @@ export default function Home() {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [handleVisibilityChange, GetUserMessages]);
+  }, [handleVisibilityChange]);
 
+  if (document.hidden) {
+    GetUser();
+  }
   return (
     <Body>
       <ChatLayout />

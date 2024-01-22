@@ -13,26 +13,23 @@ import { useSelector } from "react-redux";
 
 interface IProps {
   user: IUserType | null;
-  chatPartner: IUserType | null;
   unSentMessages: { text: string; id: number }[];
   messages: ImsgType[];
 }
 
-const ChatTextArea = ({
-  chatPartner,
-  user,
-  unSentMessages,
-  messages
-}: IProps) => {
+const ChatTextArea = ({ user, unSentMessages, messages }: IProps) => {
   const [room, setRoom] = useState("");
   const scrollRef = useRef<null | HTMLDivElement>(null);
+  const chatPartnerId = useSelector(
+    (state: RootState) => state.openChat.activeChatId
+  );
 
   useEffect(() => {
-    if (chatPartner) {
-      const chatId = GetChatId(user?._id, chatPartner?._id);
+    if (chatPartnerId) {
+      const chatId = GetChatId(user?._id, chatPartnerId);
       setRoom(chatId);
     }
-  }, [chatPartner, user?._id]);
+  }, [chatPartnerId, user?._id]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView();
@@ -50,7 +47,7 @@ const ChatTextArea = ({
   const socket = useSelector((state: RootState) => state.socket.socket);
 
   socket?.on("userTyping", (id: string) => {
-    if (chatPartner?._id === id) {
+    if (chatPartnerId === id) {
       setIsTyping(true);
     }
     return;
@@ -74,10 +71,11 @@ const ChatTextArea = ({
     <Chats>
       {RoomMessages?.map((msg, i) => {
         let partnerId;
-        const isPartner = msg.user.username !== user?.username;
+        const isPartner = msg.user._id !== user?._id;
         if (isPartner) {
           partnerId = msg.user._id;
         }
+
         let SenderMsgNxtId;
         if (RoomMessages[i + 1]) {
           SenderMsgNxtId =

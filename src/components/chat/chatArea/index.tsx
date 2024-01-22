@@ -19,13 +19,14 @@ import { RootState } from "@/Redux/app/store";
 
 interface IProps {
   user: IUserType | null;
-  activeChat: IUserType | null;
   messages: ImsgType[];
-  setActiveChat: Function;
 }
 
-const ChatArea = ({ user, activeChat, messages, setActiveChat }: IProps) => {
+const ChatArea = ({ user, messages }: IProps) => {
   const socket = useSelector((state: RootState) => state.socket.socket);
+  const activeChatId = useSelector(
+    (state: RootState) => state.openChat.activeChatId
+  );
   const [newMessage, setNewMessage] = useState("");
   const [room, setRoom] = useState("");
   let authToken = Cookies.get("authToken") || "";
@@ -35,11 +36,11 @@ const ChatArea = ({ user, activeChat, messages, setActiveChat }: IProps) => {
   >([]);
 
   useEffect(() => {
-    if (activeChat) {
-      const chatId = GetChatId(user?._id, activeChat?._id);
+    if (activeChatId) {
+      const chatId = GetChatId(user?._id, activeChatId);
       setRoom(chatId);
     }
-  }, [activeChat, user?._id]);
+  }, [activeChatId, user?._id]);
 
   const SendMessage = async () => {
     if (/\S/.test(newMessage)) {
@@ -52,7 +53,7 @@ const ChatArea = ({ user, activeChat, messages, setActiveChat }: IProps) => {
       const response = await axios.post(
         "/api/chat/post-message",
         {
-          partnerId: activeChat?._id,
+          partnerId: activeChatId,
           text: Message,
           room: room
         },
@@ -66,7 +67,7 @@ const ChatArea = ({ user, activeChat, messages, setActiveChat }: IProps) => {
       const ResponseMessage = response.data.message;
 
       socket?.emit("post-message", {
-        userId: activeChat?._id,
+        userId: activeChatId,
         message: ResponseMessage
       });
 
@@ -82,32 +83,32 @@ const ChatArea = ({ user, activeChat, messages, setActiveChat }: IProps) => {
     }
   };
 
+  const handleKeyDown = (e: { key: string; preventDefault: () => void }) => {
+    if (e.key === "Enter" && /\S/.test(newMessage)) {
+      e.preventDefault();
+      SendMessage();
+    }
+  };
+
   return (
     <Body>
-      <ChatHeader chatPartner={activeChat} setActiveChat={setActiveChat} />
+      <ChatHeader />
       <ChatTextArea
         unSentMessages={unSentMessages}
-        chatPartner={activeChat}
         user={user}
         messages={messages}
       />
       <BottomBar>
         <ChatInput
           userId={user?._id || ""}
-          activeChatId={activeChat?._id || ""}
-          handleKeyPress={(e) => {
-            if (e.key === "Enter" && /\S/.test(newMessage)) {
-              SendMessage();
-            }
-          }}
+          activeChatId={activeChatId || ""}
+          handleKeyPress={handleKeyDown}
           value={newMessage}
           setInput={setNewMessage}
-          SendButton={
-            <SendIcon onClick={SendMessage} active={/\S/.test(newMessage)}>
-              <Send size={20} />
-            </SendIcon>
-          }
         />
+        <SendIcon onClick={SendMessage} active={/\S/.test(newMessage)}>
+          <Send size={20} />
+        </SendIcon>
       </BottomBar>
     </Body>
   );
@@ -119,6 +120,7 @@ const Body = styled.div`
   width: 70%;
   height: 100%;
   position: relative;
+  overflow: hidden;
   @media screen and (max-width: 480px) {
     width: 100%;
   }

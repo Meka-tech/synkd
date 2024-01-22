@@ -7,15 +7,19 @@ interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
   variant?: boolean;
   loading?: boolean;
+  bgColor?: string;
+  danger?: boolean;
 }
 export const PrimaryButton: FC<IProps> = ({
   text = "Button",
   variant,
   loading,
+  bgColor,
+  danger,
   ...rest
 }) => {
   return (
-    <ButtonContainer {...rest} variant={variant}>
+    <ButtonContainer {...rest} variant={variant} bg={bgColor} danger={danger}>
       {loading ? <Loading /> : <ButtonText>{text}</ButtonText>}
     </ButtonContainer>
   );
@@ -23,6 +27,8 @@ export const PrimaryButton: FC<IProps> = ({
 
 interface IButtonProps {
   variant?: boolean;
+  danger?: boolean;
+  bg?: string;
 }
 export const ButtonContainer = styled.button<IButtonProps>`
   all: unset;
@@ -33,10 +39,16 @@ export const ButtonContainer = styled.button<IButtonProps>`
   box-sizing: border-box;
   cursor: pointer;
   background-color: ${(props) =>
-    props.variant ? " " : props.theme.colors.snow};
+    props.bg
+      ? props.bg
+      : props.danger
+      ? props.theme.colors.danger
+      : props.variant
+      ? " "
+      : props.theme.colors.snow};
   border-radius: 8px;
   padding: 1.1rem 1rem;
-  color: ${(props) => (props.variant ? "white" : "black")};
+  color: ${(props) => (props.variant || props.danger ? "white" : "black")};
   border: ${(props) => props.variant && `1px solid white`};
   transition: all ease 0.1s;
   @media screen and (max-width: 480px) {

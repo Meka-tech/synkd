@@ -7,19 +7,13 @@ import DefaultChatArea from "./DefaultChatArea";
 import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ImsgType } from "@/types/messageType";
-import Cookies from "js-cookie";
-import axios from "axios";
-import io, { Socket } from "socket.io-client";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
+
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
 
 const ChatLayout = () => {
-  const [activeChat, setActiveChat] = useState(null);
   const [userMessages, setUserMessages] = useState<ImsgType[]>([]);
-
-  //for mobile
-  const [openChat, setOpenChat] = useState(false);
+  const launch = useSelector((state: RootState) => state.openChat.launch);
 
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
@@ -28,21 +22,16 @@ const ChatLayout = () => {
   useLiveQuery(async () => {
     const messages = await MessageDb.messages.toArray();
     setUserMessages(messages);
-  });
+  }, []);
 
   return (
     <Body>
       {" "}
-      <ChatSideBar setActiveChat={setActiveChat} />
-      {activeChat ? (
-        <ChatArea
-          user={user}
-          activeChat={activeChat}
-          setActiveChat={setActiveChat}
-          messages={userMessages}
-        />
-      ) : (
+      <ChatSideBar />
+      {launch ? (
         <DefaultChatArea />
+      ) : (
+        <ChatArea user={user} messages={userMessages} />
       )}
     </Body>
   );
