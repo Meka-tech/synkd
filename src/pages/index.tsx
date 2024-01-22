@@ -84,18 +84,16 @@ export default function Home() {
       console.log("Disconnected");
     });
   };
-  const GetUser = useCallback(async () => {
+  const UpdateUser = useCallback(async () => {
     try {
       if (authToken) {
-        const data = await axios.get("/api/user/user", {
+        const data = await axios.get("/api/friends/all", {
           headers: {
             Authorization: `Bearer ${authToken}`
           }
         });
-        let resUser = data.data.user;
         let resFriends = data.data.friends;
 
-        dispatch(updateUser(resUser));
         dispatch(updateFriends(resFriends));
         await GetUserMessages();
       }
@@ -140,7 +138,7 @@ export default function Home() {
 
   const handleVisibilityChange = useCallback(() => {
     if (!document.hidden) {
-      GetUser();
+      UpdateUser();
     }
   }, []);
 
@@ -153,7 +151,7 @@ export default function Home() {
   }, [handleVisibilityChange]);
 
   if (document.hidden) {
-    GetUser();
+    UpdateUser();
   }
   return (
     <Body>

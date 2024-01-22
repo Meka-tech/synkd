@@ -12,21 +12,12 @@ async function handler(req, res, next) {
 
   if (req.method === "GET") {
     try {
-      const user = await User.findOne({ _id: userId }).populate({
-        path: "friendsList",
-        model: "user"
-      });
+      const userFriends = await User.findOne({ _id: userId }).populate(
+        "friendsList"
+      );
 
-      const friends = user.friendsList;
-
-      //alphabetical
-      const sortedList = friends
-        .slice()
-        .sort((a, b) => a.username.localeCompare(b.username));
-
-      return res
-        .status(200)
-        .json({ friends: sortedList, message: "Fetched friends" });
+      const populatedFriendsList = userFriends.friendsList;
+      return res.status(200).json({ friends: populatedFriendsList });
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }

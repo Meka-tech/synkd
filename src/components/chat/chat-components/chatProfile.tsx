@@ -1,5 +1,6 @@
 import { RootState } from "@/Redux/app/store";
 import { getActiveChatPartner } from "@/Redux/features/friends/friendsSlice";
+import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
