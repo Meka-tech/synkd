@@ -19,25 +19,52 @@ import {
   updateFriends
 } from "@/Redux/features/friends/friendsSlice";
 import { updateUser } from "@/Redux/features/user/userSlice";
+import { useSocket } from "@/context/SocketContext";
 
-let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+// let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default function Home() {
   let authToken = Cookies.get("authToken") || "";
   const prod = process.env.NODE_ENV == "production";
   const router = useRouter();
+  const socket = useSocket();
+
+  // console.log(socket);
 
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
+
+  console.log(user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (authToken === "") {
       router.push("/auth/sign-in");
     }
-    socketInitializer();
+
+    // socketInitializer();
   }, []);
+
+  useEffect(() => {
+    socket?.on("connect", () => {
+      console.log("connect");
+      if (user?._id) {
+        socket.emit("user-online", user?._id);
+      }
+    });
+    socket?.on("get-message", async (message) => {
+      await MessageDb.messages.add(message);
+    });
+
+    socket?.on("message-was-read", async (messageId) => {
+      await ReadDBMessage(messageId);
+    });
+
+    socket?.on("update-profile", async (id) => {
+      await UpdateFriendProfile(id);
+    });
+  }, [socket]);
 
   const UpdateFriendProfile = async (id: string) => {
     try {
@@ -53,34 +80,35 @@ export default function Home() {
   };
 
   const socketInitializer = async (): Promise<void> => {
-    const res = await fetch("/api/socket");
+    // const res = await fetch("/api/socket");
 
-    if (prod) {
-      socket = io(undefined as any, { path: "/api/socket" });
-    } else {
-      socket = io();
-    }
+    // if (prod) {
+    //   socket = io(undefined as any, { path: "/api/socket" });
+    // } else {
+    //   socket = io();
+    // }
 
-    dispatch(updateSocket(socket));
+    // dispatch(updateSocket(socket));
 
-    socket.on("connect", () => {
+    socket?.on("connect", () => {
+      console.log("connected");
       if (user?._id) {
         socket.emit("user-online", user?._id);
       }
     });
 
-    socket.on("get-message", async (message) => {
+    socket?.on("get-message", async (message) => {
       await MessageDb.messages.add(message);
     });
 
-    socket.on("message-was-read", async (messageId) => {
+    socket?.on("message-was-read", async (messageId) => {
       await ReadDBMessage(messageId);
     });
 
-    socket.on("update-profile", async (id) => {
+    socket?.on("update-profile", async (id) => {
       await UpdateFriendProfile(id);
     });
-    socket.on("disconnect", () => {
+    socket?.on("disconnect", () => {
       console.log("Disconnected");
     });
   };

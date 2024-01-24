@@ -10,6 +10,7 @@ import { theme } from "@/styles/globalTheme";
 import { persistor, store } from "@/Redux/app/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { SocketProvider } from "@/context/SocketContext";
 
 export default function App({
   Component,
@@ -18,13 +19,15 @@ export default function App({
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <main className={OpenSans.className}>
-          <ThemeProvider theme={theme}>
-            <SessionProvider session={session}>
-              <Component {...pageProps} />
-            </SessionProvider>
-          </ThemeProvider>
-        </main>
+        <SocketProvider>
+          <main className={OpenSans.className}>
+            <ThemeProvider theme={theme}>
+              <SessionProvider session={session}>
+                <Component {...pageProps} />
+              </SessionProvider>
+            </ThemeProvider>
+          </main>
+        </SocketProvider>
       </PersistGate>
     </Provider>
   );

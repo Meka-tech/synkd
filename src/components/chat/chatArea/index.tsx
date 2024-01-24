@@ -16,6 +16,7 @@ import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
+import { useSocket } from "@/context/SocketContext";
 
 interface IProps {
   user: IUserType | null;
@@ -23,7 +24,8 @@ interface IProps {
 }
 
 const ChatArea = ({ user, messages }: IProps) => {
-  const socket = useSelector((state: RootState) => state.socket.socket);
+  // const socket = useSelector((state: RootState) => state.socket.socket);
+  const socket = useSocket();
   const activeChatId = useSelector(
     (state: RootState) => state.openChat.activeChatId
   );

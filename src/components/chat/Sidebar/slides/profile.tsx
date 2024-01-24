@@ -12,6 +12,8 @@ import Cookies from "js-cookie";
 import { updateUser } from "@/Redux/features/user/userSlice";
 import { Crown } from "@emotion-icons/boxicons-solid";
 import { useRouter } from "next/router";
+import { useSocket } from "@/context/SocketContext";
+// import { socket } from "@/service/socket";
 
 interface IProfile {
   close: Function;
@@ -31,7 +33,8 @@ const Profile = ({ close }: IProfile) => {
   const [detailChange, setDetailChange] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
-  const socket = useSelector((state: RootState) => state.socket.socket);
+  // const socket = useSelector((state: RootState) => state.socket.socket);
+  const socket = useSocket();
 
   useEffect(() => {
     const CheckUsername = async () => {

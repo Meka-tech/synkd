@@ -10,6 +10,7 @@ import {
 import Picker from "emoji-picker-react";
 import { RootState } from "@/Redux/app/store";
 import { useSelector } from "react-redux";
+import { useSocket } from "@/context/SocketContext";
 
 interface IProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   handleKeyPress: KeyboardEventHandler<HTMLTextAreaElement>;
@@ -26,8 +27,10 @@ const ChatInput = ({
   ...rest
 }: IProps) => {
   const textareaRef = useRef<null | HTMLTextAreaElement>(null);
-  const socket = useSelector((state: RootState) => state.socket.socket);
+  // const socket = useSelector((state: RootState) => state.socket.socket);
   const [scrollingUp, setScrollingUp] = useState(false);
+
+  const socket = useSocket();
 
   useEffect(() => {
     textareaRef.current?.focus();

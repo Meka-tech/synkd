@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
     res
       .status(200)
-      .json({ token: token, userId: user._id, message: "authenticated" });
+      .json({ token: token, user: user, message: "authenticated" });
   } catch (err) {
     res.status(500).json({ data: err });
   }

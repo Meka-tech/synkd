@@ -23,6 +23,8 @@ const SocketHandler = async (req, res) => {
     io.on("connection", (socket) => {
       socket.on("user-online", (userId) => {
         socketIdMap[userId] = socket.id;
+
+        console.log(socketIdMap);
       });
 
       socket.on("post-message", ({ userId, message }) => {

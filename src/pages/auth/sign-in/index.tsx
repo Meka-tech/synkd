@@ -13,9 +13,12 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
 import { useSession, signIn, signOut } from "next-auth/react";
+import { updateUser } from "@/Redux/features/user/userSlice";
+import { useDispatch } from "react-redux";
 
 function SignIn() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [serverErrorMessage, setServerErrorMessage] = useState("");
   const formik = useFormik({
@@ -30,6 +33,7 @@ function SignIn() {
       try {
         let data = await axios.post("/api/auth/sign-in", values);
         const token = data?.data.token;
+        dispatch(updateUser(data.data.user));
         Cookies.set("authToken", token);
         router.push("/preloaded");
       } catch (e: any) {

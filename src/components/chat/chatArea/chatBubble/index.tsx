@@ -15,6 +15,7 @@ import { Circle, CheckCircle } from "@emotion-icons/boxicons-solid";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
 import { TypingLottie } from "../../../../../animation/typingLottie";
+import { useSocket } from "@/context/SocketContext";
 
 interface IProps {
   text: string;
@@ -46,8 +47,8 @@ const ChatBubble = ({
     inputDate = new Date(time);
   }
 
-  const socket = useSelector((state: RootState) => state.socket.socket);
-
+  // const socket = useSelector((state: RootState) => state.socket.socket);
+  const socket = useSocket();
   const formattedTime = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "numeric",

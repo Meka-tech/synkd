@@ -10,6 +10,8 @@ import { ImsgType } from "@/types/messageType";
 import getChatDay from "@/utils/chat__functions/getChatDay";
 import { RootState } from "@/Redux/app/store";
 import { useSelector } from "react-redux";
+import { useSocket } from "@/context/SocketContext";
+// import { socket } from "@/service/socket";
 
 interface IProps {
   user: IUserType | null;
@@ -44,7 +46,9 @@ const ChatTextArea = ({ user, unSentMessages, messages }: IProps) => {
   });
 
   const [isTyping, setIsTyping] = useState(false);
-  const socket = useSelector((state: RootState) => state.socket.socket);
+  // const socket = useSelector((state: RootState) => state.socket.socket);
+
+  const socket = useSocket();
 
   socket?.on("userTyping", (id: string) => {
     if (chatPartnerId === id) {
