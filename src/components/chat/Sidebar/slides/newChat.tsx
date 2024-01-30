@@ -20,9 +20,7 @@ const NewChat = ({ close }: INewChat) => {
     (state: RootState) => state.friends.friends
   );
 
-  // const FriendsList: [] = [];
 
-  // console.log(Friends);
 
   const FriendsList = Friends.slice().sort((a, b) =>
     a.username.localeCompare(b.username)

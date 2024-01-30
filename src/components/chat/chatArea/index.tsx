@@ -92,8 +92,29 @@ const ChatArea = ({ user, messages }: IProps) => {
     }
   };
 
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    let initialHeight = window.innerHeight;
+
+    const handleResize = () => {
+      const currentHeight = window.innerHeight;
+      const calculatedHeight = initialHeight - currentHeight;
+
+      setKeyboardHeight(calculatedHeight);
+
+      initialHeight = currentHeight;
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <Body>
+    <Body keyboardHeight={keyboardHeight}>
       <ChatHeader />
       <ChatTextArea
         unSentMessages={unSentMessages}
@@ -118,13 +139,17 @@ const ChatArea = ({ user, messages }: IProps) => {
 
 export default ChatArea;
 
-const Body = styled.div`
+interface IBody {
+  keyboardHeight: number;
+}
+const Body = styled.div<IBody>`
   width: 70%;
   height: 100%;
   position: relative;
   overflow: hidden;
   @media screen and (max-width: 480px) {
     width: 100%;
+    height: ${(props) => `calc(100% -${props.keyboardHeight})`};
   }
 `;
 

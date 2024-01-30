@@ -50,12 +50,12 @@ const ActiveChats = ({}: INewChat) => {
           }
 
           user = userDetails;
-          userSent = true;
         } else {
           for (let friend of Friends) {
             if (friend._id === chat.partner._id) {
               partner = friend;
             }
+            userSent = true;
           }
         }
         const msgTime = getChatTime(chat.createdAt);

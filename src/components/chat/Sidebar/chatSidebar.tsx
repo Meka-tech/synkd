@@ -29,6 +29,9 @@ const ChatSideBar = ({}: IProps) => {
   const [slideInActive, setSlideInActive] = useState(false);
   const [activeSlide, setActiveSlide] = useState(""); //options //notifications //profile
   const SlideRef = useRef(null);
+  const ReadNotification = useSelector(
+    (state: RootState) => state.user.readNotification
+  );
 
   const RemoveSlide = () => {
     setSlideInActive(false);
@@ -67,10 +70,11 @@ const ChatSideBar = ({}: IProps) => {
             <Plus size={20} />
           </AddIcon>
           <BellIcon onClick={() => ActivativeSlide("notifications")}>
-            <Bell size={20} />
+            <Bell size={25} />
+            {!ReadNotification && <BlueCheck />}
           </BellIcon>
           <OptionIcon>
-            <DotsVerticalRounded size={20} />
+            <DotsVerticalRounded size={25} />
           </OptionIcon>
         </Utitilites>
       </TopBar>
@@ -136,18 +140,12 @@ const UserImage = styled.div`
     width: 3rem;
   }
 `;
-const UserName = styled.h2`
-  color: white;
-  font-size: 1.4rem;
-  font-weight: 500;
-  margin-left: 1.5rem;
-`;
 
 const Utitilites = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 10rem;
+  width: 14rem;
 `;
 
 const AddIcon = styled.div`
@@ -163,12 +161,22 @@ const AddIcon = styled.div`
 const BellIcon = styled.div`
   cursor: pointer;
   transition: all ease 0.1s;
+  position: relative;
 
   :hover {
     scale: 1.05;
   }
 `;
 
+const BlueCheck = styled.div`
+  background-color: ${(props) => props.theme.colors.primary};
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
 const OptionIcon = styled(BellIcon)``;
 
 const SearchArea = styled.div`

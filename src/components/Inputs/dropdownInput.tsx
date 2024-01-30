@@ -84,11 +84,11 @@ const DropdownInput: FC<IProps> = ({
 export default DropdownInput;
 
 const Main = styled.div`
-  width: 18rem;
+  width: 25rem;
   position: relative;
   height: fit-content;
   @media screen and (max-width: 480px) {
-    width: 12rem;
+    width: 100%;
   }
 `;
 
@@ -97,7 +97,7 @@ interface Drop {
 }
 
 const Body = styled.div`
-  border-radius: 10px;
+  border-radius: 8px;
   width: 100%;
   padding: 1rem 2rem;
   /* background-color: #1a1919; */
@@ -109,7 +109,7 @@ const Body = styled.div`
   align-items: center;
   position: relative;
   @media screen and (max-width: 480px) {
-    padding: 0.5rem 1rem;
+    padding: 1rem;
   }
 `;
 
@@ -126,7 +126,7 @@ const Text = styled.h2`
   font-size: 1.4rem;
   text-transform: capitalize;
   @media screen and (max-width: 480px) {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 `;
 
@@ -137,7 +137,7 @@ const OptionsDiv = styled.div<Drop>`
   transform: translateY(100%);
   z-index: 10;
   display: ${(props) => (props.open ? "block" : "none")};
-  border-radius: 10px;
+  border-radius: 8px;
   background-color: rgb(38, 38, 38);
   box-shadow: 0px 17px 57px -40px #000000;
   padding: 1rem 0;

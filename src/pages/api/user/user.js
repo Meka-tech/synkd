@@ -16,6 +16,7 @@ async function handler(req, res, next) {
       );
 
       const populatedFriendsList = userFriends.friendsList;
+
       return res
         .status(200)
         .json({ user: user, friends: populatedFriendsList });

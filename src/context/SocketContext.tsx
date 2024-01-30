@@ -22,11 +22,12 @@ export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
     const socketInitializer = async (): Promise<void> => {
       const res = await fetch("/api/socket");
 
-      if (prod) {
-        newSocket = io(undefined as any, { path: "/api/socket" });
-      } else {
-        newSocket = io();
-      }
+      // if (prod) {
+      //   newSocket = io(undefined as any, { path: "/api/socket" });
+      // } else {
+      //   newSocket = io();
+      // }
+      newSocket = io();
       setSocket(newSocket);
 
       // socket?.on("connect", () => {

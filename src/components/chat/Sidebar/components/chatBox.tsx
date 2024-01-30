@@ -3,6 +3,7 @@ import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useDispatch, useSelector } from "react-redux";
 import ShortenText from "@/utils/ShortenText";
+import { Envelope } from "@emotion-icons/boxicons-solid";
 import {
   updateActiveChatId,
   updateLaunch,
@@ -41,21 +42,29 @@ const ChatBox = ({
         OpenUserChat();
       }}
     >
+      {unReadMsg > 0 && <UnReadMsgDiv />}
       <PictureImage />
       <TextContainer>
         <Top>
           <Name>{partner?.username}</Name>
           <TimeDiv>
             <Time unRead={unReadMsg > 0}>{recentMsgTime}</Time>{" "}
-            {unReadMsg > 0 && <UnReadMsgDiv />}
           </TimeDiv>
         </Top>
         <Bottom>
           <Message>
             <RecentText>
-              {" "}
-              {userSent && "You: "}
-              {ShortenText(recentMsg, 30)}
+              {unReadMsg > 0 ? (
+                <NewMessage>
+                  <Envelope size={20} /> New Message
+                </NewMessage>
+              ) : (
+                <>
+                  {" "}
+                  {userSent && "You: "}
+                  {ShortenText(recentMsg, 30)}
+                </>
+              )}
             </RecentText>
           </Message>
         </Bottom>
@@ -73,9 +82,9 @@ const Body = styled.div`
   cursor: pointer;
   padding: 1.5rem 1rem;
   justify-content: space-between;
-  border-bottom: 1px solid ${(props) => props.theme.bgColors.primaryFade};
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: all ease-in-out 0.1s;
-  border-radius: 10px;
+  border-radius: 5px;
   :hover {
     /* background-color: ${(props) => props.theme.bgColors.primaryFade}; */
     background-color: rgba(255, 255, 255, 0.05);
@@ -134,6 +143,12 @@ const RecentText = styled.h2`
   font-weight: 400;
   font-size: 1.4rem;
   color: ${(props) => props.theme.colors.dusty};
+`;
+
+const NewMessage = styled.h2`
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: ${(props) => props.theme.colors.primary};
 `;
 
 const UnReadMsgDiv = styled.div`

@@ -47,7 +47,6 @@ const ChatBubble = ({
     inputDate = new Date(time);
   }
 
-  // const socket = useSelector((state: RootState) => state.socket.socket);
   const socket = useSocket();
   const formattedTime = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
@@ -83,7 +82,7 @@ const ChatBubble = ({
 
   useEffect(() => {
     ReadMessage();
-  });
+  }, []);
 
   return (
     <Main>

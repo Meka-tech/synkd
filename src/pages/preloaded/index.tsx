@@ -8,7 +8,10 @@ import { useSession } from "next-auth/react";
 import ChatLayout from "@/components/chat/layout";
 import { IUserType } from "@/types/userType";
 import { MessageDb } from "@/dexieDb/MessageLocalDb";
-import { updateUser } from "@/Redux/features/user/userSlice";
+import {
+  updateNotifications,
+  updateUser
+} from "@/Redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ImsgType } from "@/types/messageType";
@@ -21,6 +24,10 @@ export default function Preloaded() {
 
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
+  );
+
+  const notifications = useSelector(
+    (state: RootState) => state.user.notifications
   );
 
   const router = useRouter();
@@ -44,6 +51,7 @@ export default function Preloaded() {
         dispatch(updateUser(resUser));
         dispatch(updateFriends(resFriends));
         await GetUserMessages(token);
+        await GetNotifications(token);
 
         if (resUser.interests.music.length < 1) {
           router.push("/sync/interests");
@@ -52,6 +60,16 @@ export default function Preloaded() {
     } catch (e) {
       router.push("/auth/sign-in");
     }
+  };
+
+  const GetNotifications = async (token: string | null) => {
+    const data = await axios.get("/api/user/notifications", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const notification = data.data.notifications;
+    dispatch(updateNotifications(notification));
   };
 
   const GetUserMessages = async (token: string | null) => {

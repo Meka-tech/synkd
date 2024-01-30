@@ -23,8 +23,6 @@ const SocketHandler = async (req, res) => {
     io.on("connection", (socket) => {
       socket.on("user-online", (userId) => {
         socketIdMap[userId] = socket.id;
-
-        console.log(socketIdMap);
       });
 
       socket.on("post-message", ({ userId, message }) => {
@@ -56,6 +54,14 @@ const SocketHandler = async (req, res) => {
 
         if (targetSocketId) {
           io.to(targetSocketId).emit("receive-notification", from);
+        }
+      });
+
+      socket.on("accepted-request", ({ from, to }) => {
+        const targetSocketId = socketIdMap[to];
+
+        if (targetSocketId) {
+          io.to(targetSocketId).emit("request-accepted", from);
         }
       });
 

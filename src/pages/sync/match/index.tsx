@@ -10,6 +10,9 @@ import { IUserType } from "@/types/userType";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
 import { updateUser } from "@/Redux/features/user/userSlice";
+import { PrimaryButton } from "@/components/buttons/primaryButton";
+import { Sad } from "@emotion-icons/boxicons-solid";
+import Link from "next/link";
 
 interface coord {
   longitude: number;
@@ -25,7 +28,8 @@ const Match = () => {
   const [matchedUsers, setMatchedUsers] = useState<
     { user: IUserType; percent: number }[]
   >([]);
-  const [user, setUser] = useState<IUserType>();
+  const user = useSelector((state: RootState) => state.user.user);
+
   const [excludedIdList, setExcludedIdList] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const MatchOptions = {
@@ -47,7 +51,7 @@ const Match = () => {
           }
         });
         let res = data.data.user;
-        setUser(res);
+
         dispatch(updateUser(res));
         if (res.interests.music.length < 1) {
           router.push("/sync/interests");
@@ -92,6 +96,7 @@ const Match = () => {
       const data = res.data.data;
       setLoading(false);
       setMatchedUsers((prev) => [...prev, ...data]);
+      setHasSynk(true);
 
       //so the same users won't be returned
       const ids = data.map((item: { user: { _id: any } }) => item.user._id);
@@ -128,6 +133,9 @@ const Match = () => {
 
   return (
     <Main>
+      <HeaderText>
+        <span>Get </span>SYNKD
+      </HeaderText>
       <TopBar>
         <DropdownDiv>
           <DropdownDescription>
@@ -143,9 +151,6 @@ const Match = () => {
           />
         </DropdownDiv>
 
-        <HeaderText>
-          <span>Get </span>SYNKD
-        </HeaderText>
         <DropdownDiv>
           <DropdownDescription>
             <span>Synk </span> nearby or worldwide
@@ -159,31 +164,45 @@ const Match = () => {
           />
         </DropdownDiv>
       </TopBar>
-      <Body hasSynkd={matchedUsers.length > 0}>
-        <SyncButton
-          hasSynkd={matchedUsers.length > 0}
-          onClick={() => GetMatches()}
-        >
+      <Body hasSynkd={hasSynk}>
+        <SyncButton hasSynkd={hasSynk} onClick={() => GetMatches()}>
           {loading ? (
             <SyncLottie />
           ) : (
-            <SyncText hasSynkd={matchedUsers.length > 0}>
-              {matchedUsers.length === 0 ? "SYNK" : "RE-SYNK"}
+            <SyncText hasSynkd={hasSynk}>
+              {!hasSynk ? "SYNK" : "RE-SYNK"}
             </SyncText>
           )}
         </SyncButton>
-        <UsersContainer hasSynkd={matchedUsers.length > 0}>
-          {matchedUsers?.map(({ user, percent }, index) => {
-            return (
-              <MatchedUser
-                key={index}
-                user={user}
-                percent={percent}
-                interest={interest}
-              />
-            );
-          })}
-        </UsersContainer>
+        <AfterSynk hasSynkd={hasSynk}>
+          <UsersContainer>
+            {matchedUsers?.map(({ user: matcheduser, percent }, index) => {
+              return (
+                <MatchedUser
+                  key={index}
+                  sender={user}
+                  user={matcheduser}
+                  percent={percent}
+                  interest={interest}
+                />
+              );
+            })}
+            {hasSynk && matchedUsers?.length === 0 && (
+              <NoUsers>
+                <Sad size={30} />
+                <h2>
+                  No users found, try switching proximity to find more users
+                </h2>
+              </NoUsers>
+            )}
+          </UsersContainer>
+          {hasSynk && (
+            <Link href={"/"}>
+              <PrimaryButton text="Continue" variant={true} />
+            </Link>
+          )}
+        </AfterSynk>
+
         {!coordinates && (
           <Information>
             Give Location Permission and refresh to Synk
@@ -198,25 +217,18 @@ export default Match;
 
 const Main = styled.div`
   width: 100%;
-  height: 100dvh;
-`;
-
-const TopBar = styled.div`
-  padding: 2rem 1rem;
-  width: 100%;
-  height: 10rem;
-  display: grid;
-  align-items: center;
-  justify-content: space-between;
-  grid-template-columns: 1fr 1fr 1fr;
+  height: fit-content;
 `;
 
 const HeaderText = styled.h1`
   text-align: center;
   font-size: 3rem;
   color: ${(props) => props.theme.colors.primary};
+  margin-top: 2rem;
   @media screen and (max-width: 480px) {
     font-size: 2.5rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
   }
   span {
     color: white;
@@ -226,25 +238,47 @@ const HeaderText = styled.h1`
     }
   }
 `;
+
+const TopBar = styled.div`
+  width: 100%;
+  height: 8rem;
+  display: grid;
+  align-items: center;
+  justify-content: space-between;
+  grid-template-columns: 1fr 1fr;
+  @media screen and (max-width: 480px) {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5rem;
+    padding: 0 2rem;
+  }
+`;
+
 const DropdownDiv = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  @media screen and (max-width: 480px) {
+    margin-bottom: 1rem;
+    align-items: start;
+  }
 `;
 
 const DropdownDescription = styled.h2`
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
   @media screen and (max-width: 480px) {
-    font-size: 1rem;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
   }
   span {
     color: ${(props) => props.theme.colors.primary};
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     @media screen and (max-width: 480px) {
-      font-size: 1rem;
+      font-size: 1.4rem;
     }
   }
 `;
@@ -257,9 +291,9 @@ const Body = styled.div<SynkDetails>`
   display: flex;
   justify-content: ${(props) => (props.hasSynkd ? "space-between" : "center")};
   align-items: center;
-  height: calc(100dvh - 10rem);
+  height: auto;
   transition: all ease 0.5s;
-  padding: 0 3rem;
+  padding: 3rem 4rem;
   position: relative;
   @media screen and (max-width: 480px) {
     flex-direction: column;
@@ -269,8 +303,8 @@ const Body = styled.div<SynkDetails>`
 `;
 
 const SyncButton = styled.div<SynkDetails>`
-  width: ${(props) => (props.hasSynkd ? "20rem" : "35rem")};
-  height: ${(props) => (props.hasSynkd ? "20rem" : "35rem")};
+  width: ${(props) => (props.hasSynkd ? "25rem" : "35rem")};
+  height: ${(props) => (props.hasSynkd ? "25rem" : "35rem")};
   box-shadow: 0px 0px 42px -36px rgb(0, 150, 255);
   border-radius: 50%;
   cursor: pointer;
@@ -278,6 +312,8 @@ const SyncButton = styled.div<SynkDetails>`
   justify-content: center;
   align-items: center;
   transition: all 0.5s ease;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
   :hover {
     transform: scale(1.05);
     box-shadow: 0px 0px 55px -31px rgb(0, 150, 255);
@@ -295,11 +331,9 @@ const SyncText = styled.h2<SynkDetails>`
   }
 `;
 
-const UsersContainer = styled.div<SynkDetails>`
+const AfterSynk = styled.div<SynkDetails>`
   width: 45%;
-  height: 45rem;
-  border-radius: 10px;
-  overflow-y: scroll;
+  height: fit;
   position: ${(props) => (props.hasSynkd ? "relative" : "absolute")};
   transform: ${(props) =>
     props.hasSynkd ? "translateX(0)" : "translateX(150%)"};
@@ -309,6 +343,36 @@ const UsersContainer = styled.div<SynkDetails>`
     width: 100%;
     height: 60%;
     margin-bottom: 1rem;
+  }
+`;
+
+const UsersContainer = styled.div`
+  width: 100%;
+  height: 45rem;
+  border-radius: 10px;
+  overflow-y: scroll;
+
+  transition: all 0.5s ease;
+  @media screen and (max-width: 480px) {
+    width: 100%;
+    height: 30rem;
+    margin-bottom: 1rem;
+  }
+`;
+
+const NoUsers = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: ${(props) => props.theme.colors.dusty};
+  margin-top: 25%;
+
+  h2 {
+    text-align: center;
+
+    font-size: 1.6rem;
+    font-weight: 300;
+    margin-top: auto;
   }
 `;
 

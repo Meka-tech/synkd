@@ -4,29 +4,27 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { ReceivedFriendRequest } from "../components/friendRequest";
 import { Bell } from "@emotion-icons/boxicons-solid";
-import { IUserType } from "@/types/userType";
 import Loading from "@/components/loading";
 import { BackDiv, Body, HeaderDiv, Main, Title, TopBar } from "./styles";
 import { ArrowIosBack } from "@emotion-icons/evaicons-solid";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/Redux/app/store";
+import {
+  updateNotifications,
+  updateReadNotifications
+} from "@/Redux/features/user/userSlice";
 
 interface INotif {
   close: Function;
 }
+
 const Notification = ({ close }: INotif) => {
   let token = Cookies.get("authToken") || "";
 
-  const [notifications, setNotifications] = useState<
-    | [
-        {
-          user: IUserType;
-          _id: string;
-          matchCategory: string;
-          percent: string;
-          notificationType: string;
-        }
-      ]
-    | []
-  >([]);
+  const notifications = useSelector(
+    (state: RootState) => state.user.notifications
+  );
+  const dispatch = useDispatch();
 
   const [getNotif, setGetNotif] = useState(false);
   const GetNotifications = async () => {
@@ -37,11 +35,13 @@ const Notification = ({ close }: INotif) => {
       }
     });
     setGetNotif(false);
-    setNotifications(data.data.notifications);
+    dispatch(updateNotifications(data.data.notifications));
+    dispatch(updateReadNotifications(true));
   };
 
   useEffect(() => {
     GetNotifications();
+    dispatch(updateReadNotifications(true));
   }, []);
 
   return (
@@ -56,7 +56,7 @@ const Notification = ({ close }: INotif) => {
       </TopBar>
 
       {getNotif && <Loading size={30} />}
-      {!getNotif && notifications?.length === 0 && (
+      {notifications?.length === 0 && (
         <NoNotifications>
           <Icon>
             <Bell size={200} />

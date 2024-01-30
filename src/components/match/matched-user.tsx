@@ -8,17 +8,20 @@ import axios from "axios";
 import { IUserType } from "@/types/userType";
 import Cookies from "js-cookie";
 import { css, keyframes } from "@emotion/react";
+import { useSocket } from "@/context/SocketContext";
 
 interface IProps {
   user: IUserType;
   percent: number;
   interest: string;
+  sender: IUserType | null;
 }
-const MatchedUser = ({ user, percent, interest }: IProps) => {
+const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
   const [hover, setHover] = useState(false);
   const [requestSent, setSendRequest] = useState(false);
   const [loading, setLoading] = useState(false);
   let authToken = Cookies.get("authToken") || "";
+  const socket = useSocket();
 
   const SendFriendRequest = async () => {
     setLoading(true);
@@ -36,6 +39,15 @@ const MatchedUser = ({ user, percent, interest }: IProps) => {
           }
         }
       );
+
+      socket?.emit("send-notification", {
+        from: sender?._id,
+        to: user._id
+      });
+      socket?.emit("accepted-request", {
+        from: sender?._id,
+        to: user._id
+      });
       setLoading(false);
       setSendRequest(true);
     }
@@ -67,7 +79,7 @@ const MatchedUser = ({ user, percent, interest }: IProps) => {
             <CheckCircle size={25} />
           </CheckSection>
         ) : (
-          <IconSection hover={hover} loading={loading}>
+          <IconSection hover={hover} isloading={loading}>
             <Sync size={20} />
           </IconSection>
         )}
@@ -100,6 +112,7 @@ const Main = styled.div`
   align-items: center;
   transition: all ease 0.2s;
   margin-bottom: 1rem;
+  position: relative;
   :active {
     transform: scale(0.95);
   }
@@ -164,7 +177,7 @@ const PercentText = styled.h2`
 `;
 interface HoverPlane {
   hover: boolean;
-  loading?: boolean;
+  isloading?: boolean;
 }
 const Right = styled.div<HoverPlane>`
   height: 100%;
@@ -210,13 +223,13 @@ const IconSection = styled.div<HoverPlane>`
   height: 3rem;
   border-radius: 50%;
   background-color: ${(props) =>
-    props.hover || props.loading ? props.theme.colors.primary : "white"};
+    props.hover || props.isloading ? props.theme.colors.primary : "white"};
   color: ${(props) =>
-    props.hover || props.loading ? "white" : props.theme.colors.primary};
+    props.hover || props.isloading ? "white" : props.theme.colors.primary};
   transition: all ease-in-out 0.2s;
   transform: ${(props) => (props.hover ? "rotate(0)" : "rotate(-90deg)")};
   animation: ${(props) =>
-    props.loading
+    props.isloading
       ? css`
           ${rotateAnimation} 1s linear infinite
         `

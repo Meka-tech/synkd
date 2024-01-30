@@ -42,8 +42,13 @@ async function handler(req, res, next) {
         (request) => request.user.toString() !== userId
       );
 
-    user.friendsList.push(requestId);
-    requestUser.friendsList.push(userId);
+    if (!user.friendsList.includes(requestId)) {
+      user.friendsList.push(requestId);
+    }
+
+    if (!requestUser.friendsList.includes(userId)) {
+      requestUser.friendsList.push(userId);
+    }
 
     // Save the updated user document
     await user.save();

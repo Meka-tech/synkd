@@ -1,9 +1,11 @@
+import { updateFriends } from "@/Redux/features/friends/friendsSlice";
 import Loading from "@/components/loading";
 import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 interface IProps {
   user: IUserType;
@@ -20,6 +22,20 @@ export const ReceivedFriendRequest = ({
   let token = Cookies.get("authToken") || "";
   const [loadAccept, setLoadAccept] = useState(false);
   const [loadReject, setLoadReject] = useState(false);
+  const dispatch = useDispatch();
+
+  const UpdateUser = async () => {
+    try {
+      const data = await axios.get("/api/friends/all", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      let resFriends = data.data.friends;
+
+      dispatch(updateFriends(resFriends));
+    } catch (e) {}
+  };
 
   const AcceptRequest = async () => {
     setLoadAccept(true);
@@ -33,6 +49,7 @@ export const ReceivedFriendRequest = ({
           }
         }
       );
+      await UpdateUser();
       refresh();
     } catch (err) {
       console.log(err);

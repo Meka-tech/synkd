@@ -1,11 +1,24 @@
 import { IUserType } from "@/types/userType";
 import { createSlice } from "@reduxjs/toolkit";
 
+interface INotification {
+  user: IUserType;
+  _id: string;
+  matchCategory: string;
+  percent: string;
+  notificationType: string;
+}
+
 interface UserSliceType {
   user: IUserType | null;
+  notifications: INotification[];
+  readNotification: boolean;
 }
+
 const initialState: UserSliceType = {
-  user: null
+  user: null,
+  notifications: [],
+  readNotification: true
 };
 
 export const userSlice = createSlice({
@@ -14,10 +27,20 @@ export const userSlice = createSlice({
   reducers: {
     updateUser: (state, action) => {
       state.user = action.payload;
+    },
+    updateNotifications: (state, action) => {
+      if (state.notifications !== action.payload) {
+        state.notifications = [...action.payload];
+        state.readNotification = false;
+      }
+    },
+    updateReadNotifications: (state, action) => {
+      state.readNotification = action.payload;
     }
   }
 });
 
-export const { updateUser } = userSlice.actions;
+export const { updateUser, updateReadNotifications, updateNotifications } =
+  userSlice.actions;
 
 export default userSlice.reducer;

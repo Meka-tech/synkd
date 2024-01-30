@@ -18,10 +18,11 @@ import {
   updateFriend,
   updateFriends
 } from "@/Redux/features/friends/friendsSlice";
-import { updateUser } from "@/Redux/features/user/userSlice";
+import {
+  updateNotifications,
+  updateUser
+} from "@/Redux/features/user/userSlice";
 import { useSocket } from "@/context/SocketContext";
-
-// let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default function Home() {
   let authToken = Cookies.get("authToken") || "";
@@ -29,26 +30,20 @@ export default function Home() {
   const router = useRouter();
   const socket = useSocket();
 
-  // console.log(socket);
-
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
 
-  console.log(user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (authToken === "") {
       router.push("/auth/sign-in");
     }
-
-    // socketInitializer();
   }, []);
 
   useEffect(() => {
     socket?.on("connect", () => {
-      console.log("connect");
       if (user?._id) {
         socket.emit("user-online", user?._id);
       }
@@ -63,6 +58,14 @@ export default function Home() {
 
     socket?.on("update-profile", async (id) => {
       await UpdateFriendProfile(id);
+    });
+
+    socket?.on("receive-notification", async (id) => {
+      await GetNotifications();
+    });
+
+    socket?.on("request-accepted", async (id) => {
+      await UpdateUser();
     });
   }, [socket]);
 
@@ -79,39 +82,16 @@ export default function Home() {
     } catch (e) {}
   };
 
-  const socketInitializer = async (): Promise<void> => {
-    // const res = await fetch("/api/socket");
-
-    // if (prod) {
-    //   socket = io(undefined as any, { path: "/api/socket" });
-    // } else {
-    //   socket = io();
-    // }
-
-    // dispatch(updateSocket(socket));
-
-    socket?.on("connect", () => {
-      console.log("connected");
-      if (user?._id) {
-        socket.emit("user-online", user?._id);
+  const GetNotifications = async () => {
+    const data = await axios.get("/api/user/notifications", {
+      headers: {
+        Authorization: `Bearer ${authToken}`
       }
     });
-
-    socket?.on("get-message", async (message) => {
-      await MessageDb.messages.add(message);
-    });
-
-    socket?.on("message-was-read", async (messageId) => {
-      await ReadDBMessage(messageId);
-    });
-
-    socket?.on("update-profile", async (id) => {
-      await UpdateFriendProfile(id);
-    });
-    socket?.on("disconnect", () => {
-      console.log("Disconnected");
-    });
+    const notification = data.data.notifications;
+    dispatch(updateNotifications(notification));
   };
+
   const UpdateUser = useCallback(async () => {
     try {
       if (authToken) {
