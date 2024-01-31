@@ -12,25 +12,20 @@ interface SocketContextProps {
 const SocketContext = createContext<Socket | null>(null);
 
 export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
-  const socketUrl: string = process.env.SOCKET_URL || "";
+  const socketUrl: string = process.env.NEXT_PUBLIC_SOCKET_URL || "";
   const [socket, setSocket] = useState<Socket | null>(null);
-  const user = useSelector((state: RootState) => state.user?.user);
+
+  console.log(socketUrl, "socketUrl");
 
   useEffect(() => {
     let newSocket: Socket;
 
     const socketInitializer = async (): Promise<void> => {
-      const res = await fetch("/api/socket");
+      // const res = await fetch("/api/socket");
+      // const res = await fetch(socketUrl);
 
       newSocket = io(socketUrl);
       setSocket(newSocket);
-
-      // socket?.on("connect", () => {
-      //   console.log("connect");
-      //   if (user?._id) {
-      //     socket.emit("user-online", user?._id);
-      //   }
-      // });
 
       socket?.on("disconnect", () => {
         console.log("Disconnected");
