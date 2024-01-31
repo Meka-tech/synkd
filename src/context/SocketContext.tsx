@@ -12,7 +12,7 @@ interface SocketContextProps {
 const SocketContext = createContext<Socket | null>(null);
 
 export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
-  const prod = process.env.NODE_ENV == "production";
+  const socketUrl: string = process.env.SOCKET_URL || "";
   const [socket, setSocket] = useState<Socket | null>(null);
   const user = useSelector((state: RootState) => state.user?.user);
 
@@ -22,12 +22,7 @@ export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
     const socketInitializer = async (): Promise<void> => {
       const res = await fetch("/api/socket");
 
-      // if (prod) {
-      //   newSocket = io(undefined as any, { path: "/api/socket" });
-      // } else {
-      //   newSocket = io();
-      // }
-      newSocket = io();
+      newSocket = io(socketUrl);
       setSocket(newSocket);
 
       // socket?.on("connect", () => {
