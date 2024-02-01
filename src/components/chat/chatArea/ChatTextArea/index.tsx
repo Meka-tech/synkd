@@ -17,9 +17,15 @@ interface IProps {
   user: IUserType | null;
   unSentMessages: { text: string; id: number }[];
   messages: ImsgType[];
+  keyboardHeight: number;
 }
 
-const ChatTextArea = ({ user, unSentMessages, messages }: IProps) => {
+const ChatTextArea = ({
+  user,
+  unSentMessages,
+  messages,
+  keyboardHeight
+}: IProps) => {
   const [room, setRoom] = useState("");
   const scrollRef = useRef<null | HTMLDivElement>(null);
   const chatPartnerId = useSelector(
@@ -72,7 +78,7 @@ const ChatTextArea = ({ user, unSentMessages, messages }: IProps) => {
   }, [isTyping]);
 
   return (
-    <Chats>
+    <Chats offset={keyboardHeight}>
       {RoomMessages?.map((msg, i) => {
         let partnerId;
         const isPartner = msg.user._id !== user?._id;
@@ -138,15 +144,21 @@ const ChatTextArea = ({ user, unSentMessages, messages }: IProps) => {
 };
 
 export default ChatTextArea;
-const Chats = styled.div`
+
+interface IChat {
+  offset: number;
+}
+const Chats = styled.div<IChat>`
   height: 80%;
   overflow-y: scroll;
   overflow-x: hidden;
   padding: 0 1rem;
   padding-top: 1rem;
   padding-bottom: 5rem;
+  transition: ease-in all 0.1s;
   @media screen and (max-width: 480px) {
     height: 92%;
+    margin-top: ${(props) => `-${props.offset}px`};
     padding: 0 1rem;
     padding-top: 10rem;
     padding-bottom: 3rem;

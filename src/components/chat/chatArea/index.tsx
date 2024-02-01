@@ -114,12 +114,13 @@ const ChatArea = ({ user, messages }: IProps) => {
   }, []);
 
   return (
-    <Body keyboardHeight={keyboardHeight}>
+    <Body>
       <ChatHeader />
       <ChatTextArea
         unSentMessages={unSentMessages}
         user={user}
         messages={messages}
+        keyboardHeight={keyboardHeight}
       />
       <BottomBar>
         <ChatInput
@@ -139,17 +140,13 @@ const ChatArea = ({ user, messages }: IProps) => {
 
 export default ChatArea;
 
-interface IBody {
-  keyboardHeight: number;
-}
-const Body = styled.div<IBody>`
+const Body = styled.div`
   width: 70%;
   height: 100%;
   position: relative;
   overflow: hidden;
   @media screen and (max-width: 480px) {
     width: 100%;
-    height: ${(props) => `calc(100% -${props.keyboardHeight})`};
   }
 `;
 

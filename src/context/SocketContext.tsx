@@ -15,8 +15,6 @@ export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
   const socketUrl: string = process.env.NEXT_PUBLIC_SOCKET_URL || "";
   const [socket, setSocket] = useState<Socket | null>(null);
 
-  console.log(socketUrl, "socketUrl");
-
   useEffect(() => {
     let newSocket: Socket;
 

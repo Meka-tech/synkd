@@ -37,9 +37,10 @@ export default function getChatDay(date1, date2) {
     RecentChatYear === todaysYear;
 
   const IsYesterday =
-    RecentChatDay === todaysDay - 1 &&
-    RecentChatMonth === todaysMonth &&
-    RecentChatYear === todaysYear;
+    (RecentChatDay === todaysDay - 1 &&
+      RecentChatMonth === todaysMonth &&
+      RecentChatYear === todaysYear) ||
+    todaysDay === 1;
 
   const IsWithinTheWeek = PreviousChatDay > RecentChatDay - 8 && !IsToday;
 

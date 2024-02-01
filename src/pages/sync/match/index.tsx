@@ -198,7 +198,9 @@ const Match = () => {
           </UsersContainer>
           {hasSynk && (
             <Link href={"/"}>
-              <PrimaryButton text="Continue" variant={true} />
+              <ContinueButton>
+                <PrimaryButton text="Continue" variant={true} />
+              </ContinueButton>
             </Link>
           )}
         </AfterSynk>
@@ -382,4 +384,10 @@ const Information = styled.h2`
   bottom: 1rem;
   transform: translateX(-50%);
   font-size: 1.4rem;
+`;
+
+const ContinueButton = styled.div`
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 `;
