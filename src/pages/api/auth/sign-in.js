@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         userId: user._id.toString()
       },
       secret,
-      { expiresIn: "24h" }
+      { expiresIn: "72h" }
     );
 
     res

@@ -52,7 +52,6 @@ const ChatTextArea = ({
   });
 
   const [isTyping, setIsTyping] = useState(false);
-  // const socket = useSelector((state: RootState) => state.socket.socket);
 
   const socket = useSocket();
 

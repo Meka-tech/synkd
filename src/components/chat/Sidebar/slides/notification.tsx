@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { ReceivedFriendRequest } from "../components/friendRequest";
+import { ReceivedFriendRequest } from "../components/receivedFriendRequest";
 import { Bell } from "@emotion-icons/boxicons-solid";
 import Loading from "@/components/loading";
 import { BackDiv, Body, HeaderDiv, Main, Title, TopBar } from "./styles";
@@ -13,6 +13,7 @@ import {
   updateNotifications,
   updateReadNotifications
 } from "@/Redux/features/user/userSlice";
+import { SentFriendRequest } from "../components/sentFriendRequest";
 
 interface INotif {
   close: Function;
@@ -77,8 +78,17 @@ const Notification = ({ close }: INotif) => {
                 refresh={GetNotifications}
               />
             );
-          } else {
-            return;
+          }
+          if (item.notificationType === "sentRequest") {
+            return (
+              <SentFriendRequest
+                user={item.user}
+                key={item._id}
+                matchCategory={item.matchCategory}
+                percent={item.percent}
+                refresh={GetNotifications}
+              />
+            );
           }
         })}
       </Body>

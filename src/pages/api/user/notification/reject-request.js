@@ -32,33 +32,22 @@ async function handler(req, res, next) {
       return res.status(404).json({ error: "Sent request not found" });
     }
 
+    //remove from notification
     user.notifications.receivedRequests =
       user.notifications.receivedRequests.filter(
         (request) => request.user.toString() !== requestId
       );
-    //if user sent a request to the same person
-    user.notifications.sentRequests = user.notifications.sentRequests.filter(
-      (request) => request.user.toString() !== requestId
-    );
 
-    requestUser.notifications.sentRequests =
-      requestUser.notifications.sentRequests.filter(
-        (request) => request.user.toString() !== userId
-      );
-
-    if (!user.friendsList.includes(requestId)) {
-      user.friendsList.push(requestId);
-    }
-
-    if (!requestUser.friendsList.includes(userId)) {
-      requestUser.friendsList.push(userId);
-    }
+    // requestUser.notifications.sentRequests =
+    //   requestUser.notifications.sentRequests.filter(
+    //     (request) => request.user.toString() !== userId
+    //   );
 
     // Save the updated user document
     await user.save();
     await requestUser.save();
 
-    res.status(200).json({ success: "friend request accepted" });
+    res.status(200).json({ success: "friend request rejected" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

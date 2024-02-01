@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import Image from "next/image";
 import DefaultPfp from "../../images/pfp/pfp1.jpeg";
 import React, { FC, useState } from "react";
-import { Sync } from "@emotion-icons/boxicons-regular";
+import { Sync, Undo } from "@emotion-icons/boxicons-regular";
 import { CheckCircle } from "@emotion-icons/boxicons-solid";
 import axios from "axios";
 import { IUserType } from "@/types/userType";
@@ -18,7 +18,7 @@ interface IProps {
 }
 const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
   const [hover, setHover] = useState(false);
-  const [requestSent, setSendRequest] = useState(false);
+  const [requestSent, setRequestSent] = useState(false);
   const [loading, setLoading] = useState(false);
   let authToken = Cookies.get("authToken") || "";
   const socket = useSocket();
@@ -29,7 +29,7 @@ const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
       const res = await axios.post(
         "/api/user/notification/send-request",
         {
-          RequestId: user._id,
+          requestId: user._id,
           matchCategory: interest,
           percent: `${percent}`
         },
@@ -49,7 +49,31 @@ const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
         to: user._id
       });
       setLoading(false);
-      setSendRequest(true);
+      setRequestSent(true);
+    }
+  };
+
+  const UnsendFriendRequest = async () => {
+    setLoading(true);
+    if (requestSent) {
+      const res = await axios.post(
+        "/api/user/notification/unsend-request",
+        {
+          requestId: user._id
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        }
+      );
+
+      socket?.emit("send-notification", {
+        from: sender?._id,
+        to: user._id
+      });
+      setLoading(false);
+      setRequestSent(false);
     }
   };
   return (
@@ -60,7 +84,6 @@ const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
       onMouseLeave={() => {
         setHover(false);
       }}
-      onClick={SendFriendRequest}
     >
       <UserDetails>
         <UserImage>
@@ -75,18 +98,24 @@ const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
       </UserDetails>
       <Right hover={hover}>
         {requestSent ? (
-          <CheckSection>
-            <CheckCircle size={25} />
+          <CheckSection onClick={UnsendFriendRequest}>
+            <Undo size={25} />
           </CheckSection>
         ) : (
-          <IconSection hover={hover} isloading={loading}>
+          <IconSection
+            hover={hover}
+            isloading={loading}
+            onClick={SendFriendRequest}
+          >
             <Sync size={20} />
           </IconSection>
         )}
 
         <SyncTextDiv hover={hover}>
           {requestSent ? (
-            <h3>Request Sent</h3>
+            <h4>
+              un-synk{loading ? "ing" : ""} with {user?.username}
+            </h4>
           ) : (
             <h3>
               <span>Synk{loading ? "ing" : ""}</span> with {user?.username}
@@ -113,12 +142,12 @@ const Main = styled.div`
   transition: all ease 0.2s;
   margin-bottom: 1rem;
   position: relative;
-  :active {
+  /* :active {
     transform: scale(0.95);
-  }
+  } */
   @media screen and (max-width: 480px) {
     height: 8rem;
-    padding: 1rem 2rem;
+    padding: 1rem;
   }
 `;
 
@@ -197,6 +226,14 @@ const Right = styled.div<HoverPlane>`
       font-size: 1.2rem;
     }
   }
+  h4 {
+    font-size: 1.4rem;
+    color: ${(props) => props.theme.colors.danger};
+
+    @media screen and (max-width: 480px) {
+      font-size: 1.2rem;
+    }
+  }
   span {
     color: ${(props) => props.theme.colors.primary};
   }
@@ -237,5 +274,12 @@ const IconSection = styled.div<HoverPlane>`
 `;
 
 const CheckSection = styled.div`
-  color: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.danger};
+  background-color: ${(props) => props.theme.bgColors.dangerFade};
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

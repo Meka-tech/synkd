@@ -12,12 +12,14 @@ declare module "@emotion/react" {
       dusty: string;
       slate: string;
       gluton: string;
+      amber: string;
     };
     bgColors: {
       dangerFade: string;
       primaryFade: string;
       secondaryFade: string;
       slateFade: string;
+      amberFade: string;
     };
   }
 }

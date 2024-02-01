@@ -6,14 +6,14 @@ async function handler(req, res, next) {
   await mongooseConnect();
   let userId = authenticateJWT(req, res, next);
 
-  const { RequestId, matchCategory, percent } = req.body;
+  const { requestId, matchCategory, percent } = req.body;
 
   if (!userId) {
     return res.status(401).json({ message: "unauthorized" });
   }
 
   const requestToAdd = {
-    user: userId, // Replace with the actual user ID of the request sender
+    user: userId,
     matchCategory,
     percent
   };
@@ -21,14 +21,14 @@ async function handler(req, res, next) {
   try {
     //add to recipient Send Id
     await User.updateOne(
-      { _id: RequestId },
+      { _id: requestId },
       { $push: { "notifications.receivedRequests": requestToAdd } }
     );
 
     //add to User Recipient ID
     await User.updateOne(
       { _id: userId },
-      { $push: { "notifications.sentRequests": { user: RequestId } } }
+      { $push: { "notifications.sentRequests": { user: requestId } } }
     );
 
     res.status(200).json({ success: "friend request sent sucessfully" });

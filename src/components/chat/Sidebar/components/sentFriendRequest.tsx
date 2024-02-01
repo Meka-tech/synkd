@@ -6,6 +6,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { DotsVerticalRounded } from "@emotion-icons/boxicons-regular";
 
 interface IProps {
   user: IUserType;
@@ -13,7 +14,7 @@ interface IProps {
   matchCategory: string;
   refresh: Function;
 }
-export const ReceivedFriendRequest = ({
+export const SentFriendRequest = ({
   user,
   percent,
   matchCategory,
@@ -21,7 +22,7 @@ export const ReceivedFriendRequest = ({
 }: IProps) => {
   let token = Cookies.get("authToken") || "";
   const [loadAccept, setLoadAccept] = useState(false);
-  const [loadReject, setLoadReject] = useState(false);
+  const [seeMore, setSeeMore] = useState(false);
   const dispatch = useDispatch();
 
   const UpdateUser = async () => {
@@ -37,11 +38,11 @@ export const ReceivedFriendRequest = ({
     } catch (e) {}
   };
 
-  const AcceptRequest = async () => {
+  const UnsendRequest = async () => {
     setLoadAccept(true);
     try {
-      const data = await axios.put(
-        "/api/user/notification/accept-request",
+      const data = await axios.post(
+        "/api/user/notification/unsend-request",
         { requestId: user._id },
         {
           headers: {
@@ -56,28 +57,38 @@ export const ReceivedFriendRequest = ({
     }
     setLoadAccept(false);
   };
+
   return (
     <Main>
-      <ProfileDiv>
-        <ProfileImage />
-        <NameText>
-          <b>{user.username}</b> wants to sync with you
-        </NameText>
-      </ProfileDiv>
-      <DecisionDiv>
-        <AcceptDiv onClick={AcceptRequest}>
-          {loadAccept ? <Loading /> : "accept"}
-        </AcceptDiv>
-        <RejectDiv>{loadReject ? <Loading /> : "reject"}</RejectDiv>
-      </DecisionDiv>
+      <Body>
+        <ProfileDiv>
+          <ProfileImage />
+          <NameText>
+            You requested to synk with <b>{user.username}</b>
+          </NameText>
+        </ProfileDiv>
+        <DecisionDiv>
+          <UnsendDiv onClick={UnsendRequest}>
+            {loadAccept ? <Loading /> : "undo"}
+          </UnsendDiv>
+        </DecisionDiv>
+      </Body>
     </Main>
   );
 };
 
 const Main = styled.div`
   width: 100%;
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  height: fit-content;
+  margin-bottom: 1rem;
+`;
+
+const Body = styled.div`
+  width: 100%;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -86,7 +97,7 @@ const Main = styled.div`
 const ProfileDiv = styled.div`
   display: flex;
   align-items: center;
-  width: 60%;
+
   cursor: pointer;
 `;
 const ProfileImage = styled.div`
@@ -94,12 +105,12 @@ const ProfileImage = styled.div`
   height: 3rem;
   border-radius: 50%;
   background-color: white;
-  margin-right: 0.5rem;
+  margin-right: 1.2rem;
 `;
 const NameText = styled.h2`
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   b {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: ${(props) => props.theme.colors.primary};
   }
 `;
@@ -107,14 +118,13 @@ const NameText = styled.h2`
 const DecisionDiv = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 35%;
+  width: fit-content;
 `;
 
-const AcceptDiv = styled.div`
+const UnsendDiv = styled.div`
   cursor: pointer;
-  background-color: ${(props) => props.theme.bgColors.primaryFade};
-  color: ${(props) => props.theme.colors.primary};
+  background-color: ${(props) => props.theme.bgColors.amberFade};
+  color: ${(props) => props.theme.colors.amber};
   border-radius: 8px;
   font-size: 1.2rem;
   width: 6rem;
@@ -122,8 +132,9 @@ const AcceptDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 1rem;
 `;
-const RejectDiv = styled(AcceptDiv)`
-  background-color: ${(props) => props.theme.bgColors.dangerFade};
-  color: ${(props) => props.theme.colors.danger};
+
+const MoreDiv = styled.div`
+  width: 100%;
 `;

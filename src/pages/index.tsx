@@ -49,7 +49,12 @@ export default function Home() {
       }
     });
     socket?.on("get-message", async (message) => {
-      await MessageDb.messages.add(message);
+      let existingMessage = await MessageDb.messages.get({
+        _id: message._id
+      });
+      if (!existingMessage) {
+        await MessageDb.messages.add(message);
+      }
     });
 
     socket?.on("message-was-read", async (messageId) => {

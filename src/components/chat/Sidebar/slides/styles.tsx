@@ -4,6 +4,9 @@ export const Main = styled.div`
   height: 100%;
   width: 100%;
   padding: 1rem;
+  @media screen and (max-width: 480px) {
+    padding: 1rem 0.5rem;
+  }
 `;
 export const TopBar = styled.div`
   margin-top: 1rem;

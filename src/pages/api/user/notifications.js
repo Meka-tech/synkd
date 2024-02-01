@@ -16,12 +16,12 @@ async function handler(req, res, next) {
         .populate({
           path: "notifications.sentRequests.user",
           model: "user",
-          select: "username email" // Specify the fields you want to select
+          select: "username email"
         })
         .populate({
           path: "notifications.receivedRequests.user",
           model: "user",
-          select: "username email" // Specify the fields you want to select
+          select: "username email"
         })
         .exec();
 

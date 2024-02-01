@@ -14,6 +14,9 @@ import { RootState } from "@/Redux/app/store";
 const ChatLayout = () => {
   const [userMessages, setUserMessages] = useState<ImsgType[]>([]);
   const launch = useSelector((state: RootState) => state.openChat.launch);
+  const activeChatId = useSelector(
+    (state: RootState) => state.openChat.activeChatId
+  );
 
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
@@ -28,7 +31,7 @@ const ChatLayout = () => {
     <Body>
       {" "}
       <ChatSideBar />
-      {launch ? (
+      {launch || !activeChatId ? (
         <DefaultChatArea />
       ) : (
         <ChatArea user={user} messages={userMessages} />
