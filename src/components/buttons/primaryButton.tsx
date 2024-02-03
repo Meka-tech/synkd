@@ -44,40 +44,38 @@ export const ButtonContainer = styled.button<IButtonProps>`
       : props.danger
       ? props.theme.colors.danger
       : props.variant
-      ? " "
-      : props.theme.colors.snow};
+      ? props.theme.bgColors.primaryFade
+      : props.theme.colors.primary};
   border-radius: 8px;
   padding: 1.1rem 1rem;
-  color: ${(props) => (props.variant || props.danger ? "white" : "black")};
-  border: ${(props) => props.variant && `1px solid white`};
+  color: ${(props) => (props.variant || props.danger ? "white" : "white")};
+  border: ${(props) =>
+    props.variant && `1px solid ${props.theme.colors.primary}`};
   transition: all ease 0.1s;
   @media screen and (max-width: 480px) {
-    padding: 0.5rem 1rem;
+    padding: 1rem;
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     padding: 0.8rem 1rem;
   }
   :disabled {
-    color: #3a3939;
-    background-color: #adadad;
+    opacity: 0.5;
   }
   :active {
     transform: scale(0.98);
   }
   :hover {
-    /* background-color: ${(props) =>
-      props.variant ? "rgba(255, 255, 255, 0.05)" : "#d1d1d1"}; */
-    opacity: 0.7;
+    transform: scale(1.04);
   }
 `;
 
 export const ButtonText = styled.h3`
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: 300;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1.4rem;
   }
   @media screen and (max-width: 480px) {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
   }
 `;

@@ -40,7 +40,7 @@ const Body = styled.div<IButtonProps>`
   position: relative;
   height: ${(props) => `calc( ${props.size} / 100 * 15rem)`};
   width: ${(props) => `calc( ${props.size} / 100 * 15rem)`};
-  border-radius: 8px;
+  border-radius: 50%;
   cursor: pointer;
   transition: all ease-in 0.1s;
   display: flex;

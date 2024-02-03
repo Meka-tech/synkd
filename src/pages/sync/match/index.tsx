@@ -220,6 +220,11 @@ export default Match;
 const Main = styled.div`
   width: 100%;
   height: fit-content;
+  @media screen and (max-width: 480px) {
+    height: 100dvh;
+    max-height: fit-content;
+    padding-bottom: 1rem;
+  }
 `;
 
 const HeaderText = styled.h1`
@@ -310,6 +315,7 @@ const Body = styled.div<SynkDetails>`
   transition: all ease 0.5s;
   padding: 3rem 4rem;
   position: relative;
+
   @media screen and (max-width: 480px) {
     flex-direction: column;
     padding: 1rem 1.5rem;
@@ -371,7 +377,7 @@ const UsersContainer = styled.div`
   @media screen and (max-width: 480px) {
     width: 100%;
     height: 30rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     height: 40rem;

@@ -31,10 +31,24 @@ const SearchArtist = ({ select, chosenArtists, ...rest }: IProps) => {
             Authorization: `Bearer ${token}`
           }
         });
-        setSearchResult(response.data.artists.items);
+
+        const originalArray = response.data.artists.items;
+
+        const uniqueArray = originalArray.reduce(
+          (accumulator: any[], currentValue: { name: any }) => {
+            if (!accumulator.includes(currentValue.name)) {
+              accumulator.push(currentValue);
+            }
+            return accumulator;
+          },
+          []
+        );
+
+        setSearchResult(uniqueArray);
       } catch (err) {}
       setSearching(false);
     };
+
     if (text !== "" && focused) {
       SearchArtist();
     }
@@ -44,6 +58,7 @@ const SearchArtist = ({ select, chosenArtists, ...rest }: IProps) => {
     setFocused(false);
   });
 
+  const artists = [];
   return (
     <Main ref={inputRef}>
       <Body focused={focused}>
@@ -61,7 +76,7 @@ const SearchArtist = ({ select, chosenArtists, ...rest }: IProps) => {
         />
         {searching && <LoadingVariantLottie />}
       </Body>
-      {searchResult && focused && text !== "" && (
+      {searchResult.length > 0 && focused && text !== "" ? (
         <ResultDiv>
           {searchResult.map((result, i) => {
             return (
@@ -74,7 +89,11 @@ const SearchArtist = ({ select, chosenArtists, ...rest }: IProps) => {
             );
           })}
         </ResultDiv>
-      )}
+      ) : searchResult.length == 0 && focused && text !== "" ? (
+        <ResultDiv>
+          <NoResults>No results</NoResults>{" "}
+        </ResultDiv>
+      ) : null}
     </Main>
   );
 };
@@ -119,6 +138,7 @@ const Icon = styled.div<IinputStyles>`
       ? `${props.theme.colors.primary} `
       : `${props.theme.colors.snow}`}; */
   margin-right: 1rem;
+  color: ${(props) => props.theme.colors.dusty};
   @media screen and (max-width: 480px) {
     margin-right: 0.5rem;
   }
@@ -169,5 +189,24 @@ const ResultDiv = styled.div`
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     transform: translateY(102%);
+  }
+`;
+
+const NoResults = styled.div`
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem 0;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: ${(props) => props.theme.colors.dusty};
+  @media screen and (max-width: 480px) {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: 1.4rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: 1.4rem;
   }
 `;

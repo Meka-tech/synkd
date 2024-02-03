@@ -46,6 +46,12 @@ const Text = styled.h2`
     font-size: 2rem;
     font-weight: 700;
   }
+  @media screen and (max-width: 480px) {
+    font-size: 1.6rem;
+    b {
+      font-size: 1.6rem;
+    }
+  }
 `;
 
 const Button = styled.div`

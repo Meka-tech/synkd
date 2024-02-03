@@ -302,7 +302,7 @@ const TopNav = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  padding-right: 2rem;
+
   @media screen and (max-width: 480px) {
     margin-bottom: 1rem;
     flex-direction: column;
@@ -329,6 +329,13 @@ const SearchDiv = styled.div`
 `;
 const BackIcon = styled.div`
   cursor: pointer;
+
+  border-radius: 50%;
+  padding: 1rem;
+  transition: all ease-in-out 0.2s;
+  :hover {
+    background-color: ${(props) => props.theme.colors.slate};
+  }
 `;
 
 const Title = styled.h1`
@@ -378,9 +385,9 @@ const Info = styled.h3`
 `;
 
 const PseudoModal = styled.div`
-  width: 50rem;
+  width: 60rem;
   background-color: ${(props) => props.theme.colors.gluton};
-  padding: 2rem 1rem;
+  padding: 2rem 1.5rem;
   border-radius: 10px;
   margin-bottom: 1rem;
   @media screen and (max-width: 480px) {

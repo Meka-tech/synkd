@@ -33,6 +33,10 @@ export default function Home() {
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
+  const isMobile =
+    /iPhone|iPad|iPod|Android|webOS|BlackBerry|Windows Phone/i.test(
+      navigator.userAgent
+    );
 
   const dispatch = useDispatch();
 
@@ -40,7 +44,11 @@ export default function Home() {
     if (authToken === "") {
       router.push("/auth/sign-in");
     }
-    dispatch(updateLaunch(true));
+    if (isMobile) {
+      dispatch(updateLaunch(false));
+    } else {
+      dispatch(updateLaunch(true));
+    }
   }, []);
 
   useEffect(() => {

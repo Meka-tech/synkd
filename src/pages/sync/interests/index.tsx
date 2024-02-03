@@ -270,9 +270,11 @@ const Main = styled.div`
   padding-top: 5rem;
   position: relative;
   overflow: hidden;
+
   @media screen and (max-width: 480px) {
     padding: 1rem 1.5rem;
     padding-top: 3rem;
+    padding-bottom: 8rem;
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     padding-top: 3rem;
@@ -331,9 +333,7 @@ const SearchDiv = styled.div`
   }
 `;
 
-const Body = styled.div`
-  margin-bottom: 4rem;
-`;
+const Body = styled.div``;
 const GenreBody = styled.div`
   padding: 1rem;
   overflow: hidden;
@@ -405,16 +405,15 @@ const SpotifyButton = styled.div`
 
 const Footer = styled.div`
   padding: 1rem 5rem;
-  position: absolute;
   width: 100%;
-  bottom: 1rem;
-  left: 0;
+  margin-top: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   @media screen and (max-width: 480px) {
     padding: 1rem 2rem;
+    margin-top: 2rem;
     flex-direction: column-reverse;
   }
 `;
