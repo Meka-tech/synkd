@@ -27,7 +27,6 @@ import { updateLaunch } from "@/Redux/features/openChat/openChatSlice";
 
 export default function Home() {
   let authToken = Cookies.get("authToken") || "";
-  const prod = process.env.NODE_ENV == "production";
   const router = useRouter();
   const socket = useSocket();
 

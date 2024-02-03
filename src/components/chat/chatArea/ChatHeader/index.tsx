@@ -27,7 +27,9 @@ const ChatHeader = ({}: Iprops) => {
   const profileRef = useRef(null);
   const GoBack = () => {
     dispatch(updateOpenChat(false));
-    dispatch(updateActiveChatId(""));
+    setTimeout(() => {
+      dispatch(updateActiveChatId(""));
+    }, 500);
   };
 
   useClickOutside(profileRef, () => {
@@ -107,7 +109,7 @@ const BackArrow = styled.div`
   margin-right: 0.5rem;
   @media screen and (max-width: 480px) {
     display: flex;
-    color: ${(props) => props.theme.colors.secondary};
+    color: ${(props) => props.theme.colors.snow};
   }
 `;
 
