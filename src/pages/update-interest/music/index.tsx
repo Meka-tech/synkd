@@ -246,15 +246,6 @@ const UpdateMusic = () => {
               </PseudoModalBody>
             </PseudoModal>
           )}
-
-          <UpdateButton>
-            <PrimaryButton
-              text="Update"
-              disabled={chosenArtists.length < 10}
-              loading={isUpdating}
-              onClick={() => UpdateMusic()}
-            />
-          </UpdateButton>
           <SpotifyButton>
             <ButtonWithIcon
               icon={<Spotify size={20} color="#1db954" />}
@@ -263,6 +254,14 @@ const UpdateMusic = () => {
               onClick={() => UseSpotify()}
             />
           </SpotifyButton>
+          <UpdateButton>
+            <PrimaryButton
+              text="Update"
+              disabled={chosenArtists.length < 10}
+              loading={isUpdating}
+              onClick={() => UpdateMusic()}
+            />
+          </UpdateButton>
         </TextContent>
       </Body>
     </Main>
@@ -421,7 +420,8 @@ const LoadMoreButton = styled.div`
 
 const UpdateButton = styled.div`
   width: 30rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
   @media screen and (max-width: 480px) {
     width: 80%;
   }
@@ -430,12 +430,10 @@ const SpotifyButton = styled.div`
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
   width: 30rem;
+  margin-top: 1rem;
   @media screen and (max-width: 480px) {
     margin-top: 1rem;
-    margin-bottom: 1rem;
     width: 80%;
   }
 `;

@@ -134,7 +134,7 @@ const Match = () => {
   return (
     <Main>
       <HeaderText>
-        <span>Get </span>SYNKD
+        <span>Get </span>In-Synk
       </HeaderText>
       <TopBar>
         <DropdownDiv>
@@ -387,7 +387,7 @@ const Information = styled.h2`
 `;
 
 const ContinueButton = styled.div`
-  width: 80%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 `;

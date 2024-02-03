@@ -101,7 +101,7 @@ const Body = styled.div`
   width: 100%;
   padding: 1rem 2rem;
   /* background-color: #1a1919; */
-  background-color: rgb(38, 38, 38);
+  background-color: ${(props) => props.theme.colors.gluton};
   cursor: pointer;
   /* box-shadow: inset 4px 38px 28px -25px #292828; */
   display: flex;
@@ -118,16 +118,11 @@ const Caret = styled.div<Drop>`
   width: 2rem;
   transform: ${(props) => (props.open ? "rotate(180deg)" : "")};
   transition: all ease 0.1s;
-  @media screen and (max-width: 480px) {
-    width: 1rem;
-  }
 `;
 const Text = styled.h2`
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-transform: capitalize;
-  @media screen and (max-width: 480px) {
-    font-size: 1.2rem;
-  }
+  font-weight: 400;
 `;
 
 const OptionsDiv = styled.div<Drop>`
@@ -138,9 +133,9 @@ const OptionsDiv = styled.div<Drop>`
   z-index: 10;
   display: ${(props) => (props.open ? "block" : "none")};
   border-radius: 8px;
-  background-color: rgb(38, 38, 38);
+  background-color: ${(props) => props.theme.colors.gluton};
   box-shadow: 0px 17px 57px -40px #000000;
-  padding: 1rem 0;
+  padding: 1rem 0.5rem;
 `;
 
 interface options {
@@ -149,14 +144,20 @@ interface options {
 }
 const OptionItem = styled.div<options>`
   width: 100%;
+  border-radius: 8px;
   padding: 0.5rem 2rem;
   cursor: pointer;
-  border-radius: 10px;
-  color: gray;
+  color: ${(props) => props.theme.colors.dusty};
   display: flex;
   justify-content: space-between;
   align-items: center;
   :hover {
+    background-color: ${(props) =>
+      !props.premiumOption
+        ? props.theme.colors.slate
+        : props.isPremiumAccount && props.premiumOption
+        ? props.theme.colors.slate
+        : ""};
     color: ${(props) =>
       !props.premiumOption
         ? "white"
