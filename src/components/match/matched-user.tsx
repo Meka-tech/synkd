@@ -132,7 +132,7 @@ export default MatchedUser;
 const Main = styled.div`
   cursor: pointer;
   width: 100%;
-  background-color: #0c0c0c;
+  background-color: ${(props) => props.theme.colors.gluton};
   border-radius: 10px;
   height: 10rem;
   padding: 2rem;
@@ -142,12 +142,12 @@ const Main = styled.div`
   transition: all ease 0.2s;
   margin-bottom: 1rem;
   position: relative;
-  /* :active {
-    transform: scale(0.95);
-  } */
   @media screen and (max-width: 480px) {
     height: 8rem;
     padding: 1rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    height: 8rem;
   }
 `;
 
@@ -167,6 +167,14 @@ const UserImage = styled.div`
   img {
     width: 5rem;
     height: 5rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    width: 4rem;
+    height: 4rem;
+    img {
+      width: 4rem;
+      height: 4rem;
+    }
   }
   @media screen and (max-width: 480px) {
     width: 3rem;
@@ -190,17 +198,25 @@ const NamePercent = styled.div`
 `;
 const Username = styled.h2`
   font-size: 1.8rem;
+  font-weight: 600;
   @media screen and (max-width: 480px) {
     font-size: 1.4rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.6rem;
   }
 `;
 
 const Percent = styled.div``;
 
 const PercentText = styled.h2`
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  font-weight: 500;
   color: ${(props) => props.theme.colors.primary};
   @media screen and (max-width: 480px) {
+    font-size: 1.2rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1.4rem;
   }
 `;
@@ -221,6 +237,7 @@ const Right = styled.div<HoverPlane>`
   h3 {
     font-size: 1.4rem;
     color: white;
+    font-weight: 400;
 
     @media screen and (max-width: 480px) {
       font-size: 1.2rem;
@@ -228,6 +245,7 @@ const Right = styled.div<HoverPlane>`
   }
   h4 {
     font-size: 1.4rem;
+    font-weight: 400;
     color: ${(props) => props.theme.colors.danger};
 
     @media screen and (max-width: 480px) {

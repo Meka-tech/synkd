@@ -5,6 +5,7 @@ import axios from "axios";
 import { GetSpotifyToken } from "@/utils/spotifyApi";
 import ArtistItem from "./artist-item";
 import useClickOutside from "@/hooks/useClickOutside";
+import { LoadingLottie, LoadingVariantLottie } from "../../../animation";
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   chosenArtists: string[];
@@ -22,7 +23,7 @@ const SearchArtist = ({ select, chosenArtists, ...rest }: IProps) => {
       const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
         text
       )}&type=artist`;
-
+      setSearching(true);
       try {
         const token = await GetSpotifyToken();
         const response = await axios.get(searchUrl, {
@@ -32,6 +33,7 @@ const SearchArtist = ({ select, chosenArtists, ...rest }: IProps) => {
         });
         setSearchResult(response.data.artists.items);
       } catch (err) {}
+      setSearching(false);
     };
     if (text !== "" && focused) {
       SearchArtist();
@@ -57,6 +59,7 @@ const SearchArtist = ({ select, chosenArtists, ...rest }: IProps) => {
           placeholder="Search for your favourite artists..."
           // onKeyDown={handleKeyPress}
         />
+        {searching && <LoadingVariantLottie />}
       </Body>
       {searchResult && focused && text !== "" && (
         <ResultDiv>

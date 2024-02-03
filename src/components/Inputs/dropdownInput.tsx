@@ -87,6 +87,9 @@ const Main = styled.div`
   width: 25rem;
   position: relative;
   height: fit-content;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    width: 20rem;
+  }
   @media screen and (max-width: 480px) {
     width: 100%;
   }
@@ -111,6 +114,9 @@ const Body = styled.div`
   @media screen and (max-width: 480px) {
     padding: 1rem;
   }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    padding: 0.8rem 1.5rem;
+  }
 `;
 
 const Caret = styled.div<Drop>`
@@ -123,6 +129,9 @@ const Text = styled.h2`
   font-size: 1.6rem;
   text-transform: capitalize;
   font-weight: 400;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.4rem;
+  }
 `;
 
 const OptionsDiv = styled.div<Drop>`
@@ -145,12 +154,15 @@ interface options {
 const OptionItem = styled.div<options>`
   width: 100%;
   border-radius: 8px;
-  padding: 0.5rem 2rem;
+  padding: 1rem 2rem;
   cursor: pointer;
   color: ${(props) => props.theme.colors.dusty};
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    padding: 0.8rem 1.5rem;
+  }
   :hover {
     background-color: ${(props) =>
       !props.premiumOption
@@ -167,7 +179,7 @@ const OptionItem = styled.div<options>`
   }
 
   @media screen and (max-width: 480px) {
-    padding: 0.5rem 1rem;
+    padding: 1rem;
   }
 `;
 

@@ -232,11 +232,18 @@ const HeaderText = styled.h1`
     margin-top: 1rem;
     margin-bottom: 2rem;
   }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 2.6rem;
+    margin-top: 1rem;
+  }
   span {
     color: white;
     font-size: 3rem;
     @media screen and (max-width: 480px) {
       font-size: 2.5rem;
+    }
+    @media screen and (min-width: 1300px) and (max-width: 1600px) {
+      font-size: 2.6rem;
     }
   }
 `;
@@ -276,10 +283,16 @@ const DropdownDescription = styled.h2`
     font-size: 1.4rem;
     margin-bottom: 1rem;
   }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.4rem;
+  }
   span {
     color: ${(props) => props.theme.colors.primary};
     font-size: 1.6rem;
     @media screen and (max-width: 480px) {
+      font-size: 1.4rem;
+    }
+    @media screen and (min-width: 1300px) and (max-width: 1600px) {
       font-size: 1.4rem;
     }
   }
@@ -359,6 +372,9 @@ const UsersContainer = styled.div`
     width: 100%;
     height: 30rem;
     margin-bottom: 1rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    height: 40rem;
   }
 `;
 
