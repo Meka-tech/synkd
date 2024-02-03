@@ -12,7 +12,7 @@ import useClickOutside from "@/hooks/useClickOutside";
 import axios from "axios";
 import Cookies from "js-cookie";
 import SearchInput from "./components/searchInput";
-import { User } from "@emotion-icons/boxicons-regular";
+import { User, Filter } from "@emotion-icons/boxicons-regular";
 
 import NewChat from "./slides/newChat";
 import ActiveChats from "./components/activeChats";
@@ -80,6 +80,7 @@ const ChatSideBar = ({}: IProps) => {
       </TopBar>
       <SearchArea>
         <SearchInput />
+        <Filter size={20} />
       </SearchArea>
       <Texts>
         <ActiveChats />
@@ -110,7 +111,7 @@ const Body = styled.div<BodyProps>`
 `;
 
 const TopBar = styled.div`
-  height: 10%;
+  height: 8%;
   width: 100%;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid ${(props) => props.theme.colors.slate};
@@ -118,6 +119,9 @@ const TopBar = styled.div`
   align-items: center;
   justify-content: space-between;
   @media screen and (max-width: 480px) {
+    height: 8%;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
     height: 8%;
   }
 `;
@@ -146,6 +150,9 @@ const Utitilites = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 14rem;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    width: 12rem;
+  }
 `;
 
 const AddIcon = styled.div`
@@ -180,15 +187,24 @@ const BlueCheck = styled.div`
 const OptionIcon = styled(BellIcon)``;
 
 const SearchArea = styled.div`
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   background-color: ${(props) => props.theme.colors.slate};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    padding: 0.5rem 1rem;
+  }
 `;
 const Texts = styled.div`
   padding-top: 1rem;
-  height: 80%;
+  height: 82%;
   overflow-y: scroll;
   width: 100%;
   @media screen and (max-width: 480px) {
+    height: 82%;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
     height: 82%;
   }
 `;

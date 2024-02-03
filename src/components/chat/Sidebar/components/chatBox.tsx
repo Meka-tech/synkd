@@ -85,6 +85,9 @@ const Body = styled.div`
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: all ease-in-out 0.1s;
   border-radius: 5px;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    padding: 1rem;
+  }
   :hover {
     /* background-color: ${(props) => props.theme.bgColors.primaryFade}; */
     background-color: rgba(255, 255, 255, 0.05);
@@ -96,6 +99,10 @@ const PictureImage = styled.div`
   height: 4rem;
   border-radius: 50%;
   background-color: white;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    width: 3rem;
+    height: 3rem;
+  }
 `;
 
 const TextContainer = styled.div`
@@ -112,6 +119,9 @@ const Top = styled.div`
 const Name = styled.h2`
   font-size: 1.6rem;
   font-weight: 600;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.4rem;
+  }
 `;
 interface BlueText {
   unRead: boolean;
@@ -126,6 +136,9 @@ const Time = styled.h3<BlueText>`
   font-size: 1.1rem;
   color: ${(props) =>
     props.unRead ? props.theme.colors.primary : props.theme.colors.dusty};
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1rem;
+  }
 `;
 
 const Bottom = styled.div`
@@ -143,12 +156,18 @@ const RecentText = styled.h2`
   font-weight: 400;
   font-size: 1.4rem;
   color: ${(props) => props.theme.colors.dusty};
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const NewMessage = styled.h2`
   font-weight: 400;
   font-size: 1.4rem;
   color: ${(props) => props.theme.colors.primary};
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const UnReadMsgDiv = styled.div`

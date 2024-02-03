@@ -62,6 +62,9 @@ const Body = styled.div`
   @media screen and (max-width: 480px) {
     width: 90%;
   }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    padding: 1rem;
+  }
 `;
 
 const PictureImage = styled.div`
@@ -73,6 +76,10 @@ const PictureImage = styled.div`
     width: 2.5rem;
     height: 2.5rem;
   }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    width: 3rem;
+    height: 3rem;
+  }
 `;
 
 const TextContainer = styled.div`
@@ -82,10 +89,16 @@ const TextContainer = styled.div`
 const Name = styled.h2`
   font-size: 1.6rem;
   font-weight: 500;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.4rem;
+  }
 `;
 
 const Bio = styled.h2`
   font-size: 1.4rem;
   margin-top: 0.5rem;
   font-weight: 300;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.2rem;
+  }
 `;

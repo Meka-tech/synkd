@@ -1,9 +1,14 @@
 import { RootState } from "@/Redux/app/store";
 import { IUserType } from "@/types/userType";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "@emotion/styled";
-import { searchArtistsByGenre } from "@/utils/spotifyApi";
+import {
+  GetSpotifyToken,
+  SpotifyAuth,
+  getFollowedArtists,
+  searchArtistsByGenre
+} from "@/utils/spotifyApi";
 import axios from "axios";
 import GenreItem from "@/components/music-Items/genre-item";
 import { genreList } from "../../../../lib/genreData";
@@ -16,6 +21,7 @@ import Cookies from "js-cookie";
 import { updateUser } from "@/Redux/features/user/userSlice";
 import { Spotify } from "@emotion-icons/boxicons-logos";
 import { ButtonWithIcon } from "@/components/buttons/buttonWithIcon";
+import SearchArtist from "@/components/music-Items/search-artist";
 
 interface ArtistsState {
   [genre: string]: {
@@ -35,6 +41,8 @@ const UpdateMusic = () => {
   const [loading, setLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [open, setOpen] = useState(false);
+  const [authAccessToken, setAuthAccessToken] = useState("");
+  const [usedSpotify, setUsedSpotify] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState("");
   let token = Cookies.get("authToken") || "";
   const dispatch = useDispatch();
@@ -45,6 +53,10 @@ const UpdateMusic = () => {
     setOpen(false);
     setSelectedGenre("");
   });
+
+  useEffect(() => {
+    GetSpotifyToken();
+  }, []);
 
   const GetArtists = async (genre: string, more: boolean = false) => {
     setLoading(true);
@@ -103,9 +115,54 @@ const UpdateMusic = () => {
     }
     setIsUpdating(false);
   };
+
+  const UseSpotify = async () => {
+    try {
+      await SpotifyAuth(true);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    // Check if the page was redirected with an access token
+    const handleRedirect = () => {
+      const hashParams = window.location.hash.substring(1).split("&");
+      for (const param of hashParams) {
+        const [key, value] = param.split("=");
+        if (key === "access_token") {
+          setAuthAccessToken(value);
+        }
+      }
+    };
+
+    if (window.location.hash.includes("access_token")) {
+      handleRedirect();
+    }
+  }, []);
+
+  const GetFollowedArtists = async () => {
+    const artists = await getFollowedArtists(authAccessToken);
+    const names: string[] = [];
+    for (const artist of artists) {
+      if (!chosenArtists.includes(artist.name)) {
+        names.push(artist.name);
+      }
+    }
+
+    setChosenArtists((prev) => [...prev, ...names]);
+  };
+
+  useEffect(() => {
+    if (authAccessToken && !usedSpotify) {
+      setUsedSpotify(true);
+      GetFollowedArtists();
+    }
+  }, [authAccessToken]);
+
   return (
     <Main>
-      <Genres>
+      <TopNav>
         <Header>
           <BackIcon
             onClick={() => {
@@ -116,87 +173,98 @@ const UpdateMusic = () => {
           </BackIcon>
           <Title>Update Your Music taste</Title>
         </Header>
-        <Grid>
-          {genreList.map((genre, i) => (
-            <GenreItem
-              size="80"
-              name={genre.name}
-              bgImage={genre.image}
-              key={i}
-              onClick={() => {
-                setOpen(true);
-                setSelectedGenre(genre.name);
-                if (artists[genre.name]?.artists) {
-                  return;
-                }
-                GetArtists(genre.name);
-              }}
-            />
-          ))}
-        </Grid>
-      </Genres>
-      <TextContent>
-        <Info>{chosenArtists.length} artists picked</Info>
-        {open && (
-          <PseudoModal ref={ModalRef}>
-            <PseudoModalBody>
-              <GenreHeader>{selectedGenre}</GenreHeader>
-              {genreList.map((genre, id) => {
-                if (!artists[genre.name]?.artists) {
-                  return;
-                }
-                if (selectedGenre === genre.name) {
-                  return (
-                    <ArtistsDiv key={id}>
-                      <ArtistList>
-                        {artists[selectedGenre]?.artists?.map((artist, i) => {
-                          return (
-                            <ArtistItem
-                              onClick={() => {
-                                handleAddArtist(artist.name);
-                              }}
-                              selected={chosenArtists.includes(artist.name)}
-                              name={artist.name}
-                              key={i}
-                            />
-                          );
-                        })}
-                      </ArtistList>
-                    </ArtistsDiv>
-                  );
-                }
-              })}
-              <LoadMoreButton>
-                <PrimaryButton
-                  text="Load more"
-                  variant
-                  loading={loading}
-                  onClick={() => {
-                    GetArtists(selectedGenre, true);
-                  }}
-                />
-              </LoadMoreButton>
-            </PseudoModalBody>
-          </PseudoModal>
-        )}
+        <SearchDiv>
+          {" "}
+          <SearchArtist
+            select={handleAddArtist}
+            chosenArtists={chosenArtists}
+          />
+        </SearchDiv>
+      </TopNav>
+      <Body>
+        <Genres>
+          <Grid>
+            {genreList.map((genre, i) => (
+              <GenreItem
+                size="80"
+                name={genre.name}
+                bgImage={genre.image}
+                key={i}
+                onClick={() => {
+                  setOpen(true);
+                  setSelectedGenre(genre.name);
+                  if (artists[genre.name]?.artists) {
+                    return;
+                  }
+                  GetArtists(genre.name);
+                }}
+              />
+            ))}
+          </Grid>
+        </Genres>
+        <TextContent>
+          <Info>{chosenArtists.length} artists picked</Info>
+          {open && (
+            <PseudoModal ref={ModalRef}>
+              <PseudoModalBody>
+                <GenreHeader>{selectedGenre}</GenreHeader>
+                {genreList.map((genre, id) => {
+                  if (!artists[genre.name]?.artists) {
+                    return;
+                  }
+                  if (selectedGenre === genre.name) {
+                    return (
+                      <ArtistsDiv key={id}>
+                        <ArtistList>
+                          {artists[selectedGenre]?.artists?.map((artist, i) => {
+                            return (
+                              <ArtistItem
+                                onClick={() => {
+                                  handleAddArtist(artist.name);
+                                }}
+                                selected={chosenArtists.includes(artist.name)}
+                                name={artist.name}
+                                key={i}
+                              />
+                            );
+                          })}
+                        </ArtistList>
+                      </ArtistsDiv>
+                    );
+                  }
+                })}
+                <LoadMoreButton>
+                  <PrimaryButton
+                    text="Load more"
+                    variant
+                    loading={loading}
+                    onClick={() => {
+                      GetArtists(selectedGenre, true);
+                    }}
+                  />
+                </LoadMoreButton>
+              </PseudoModalBody>
+            </PseudoModal>
+          )}
 
-        <UpdateButton>
-          <PrimaryButton
-            text="Update"
-            disabled={chosenArtists.length < 10}
-            loading={isUpdating}
-            onClick={() => UpdateMusic()}
-          />
-        </UpdateButton>
-        <SpotifyButton>
-          <ButtonWithIcon
-            icon={<Spotify size={20} color="#1db954" />}
-            variant
-            text="Use Spotify"
-            // onClick={() => UseSpotify()}
-          />
-        </SpotifyButton>
-      </TextContent>
+          <UpdateButton>
+            <PrimaryButton
+              text="Update"
+              disabled={chosenArtists.length < 10}
+              loading={isUpdating}
+              onClick={() => UpdateMusic()}
+            />
+          </UpdateButton>
+          <SpotifyButton>
+            <ButtonWithIcon
+              icon={<Spotify size={20} color="#1db954" />}
+              variant
+              text="Artists you follow on Spotify"
+              onClick={() => UseSpotify()}
+            />
+          </SpotifyButton>
+        </TextContent>
+      </Body>
     </Main>
   );
 };
@@ -207,7 +275,11 @@ const Main = styled.div`
   width: 100%;
   height: 100dvh;
   padding: 1rem;
+`;
+
+const Body = styled.div`
   display: flex;
+  align-items: center;
   @media screen and (max-width: 480px) {
     flex-direction: column;
   }
@@ -216,36 +288,70 @@ const Main = styled.div`
 const Genres = styled.div`
   width: 50%;
   padding: 2rem;
+  display: flex;
+  align-items: center;
+  height: 80dvh;
   @media screen and (max-width: 480px) {
     width: 100%;
     height: auto;
     padding: 1rem;
   }
 `;
+const TopNav = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  padding-right: 2rem;
+  @media screen and (max-width: 480px) {
+    margin-bottom: 1rem;
+    flex-direction: column;
+  }
+`;
+
 const Header = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;
+  width: 50%;
   @media screen and (max-width: 480px) {
-    margin-bottom: 1rem;
+    width: 100%;
+  }
+`;
+const SearchDiv = styled.div`
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media screen and (max-width: 480px) {
+    width: 100%;
+    margin-top: 1rem;
   }
 `;
 const BackIcon = styled.div`
   cursor: pointer;
 `;
+
 const Title = styled.h1`
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-left: 1rem;
   @media screen and (max-width: 480px) {
     font-size: 2rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 2.5rem;
   }
 `;
 const Grid = styled.div`
   display: flex;
   grid-gap: 15px;
   flex-wrap: wrap;
+  align-items: center;
   @media screen and (max-width: 480px) {
     grid-gap: 7px;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    grid-gap: 10px;
   }
 `;
 
@@ -254,8 +360,9 @@ const TextContent = styled.div`
   align-items: center;
   justify-content: center;
   width: 50%;
-  height: 100%;
+  height: 80dvh;
   flex-direction: column;
+  margin-top: 1rem;
   @media screen and (max-width: 480px) {
     width: 100%;
     height: auto;
@@ -274,7 +381,7 @@ const Info = styled.h3`
 const PseudoModal = styled.div`
   width: 50rem;
   background-color: ${(props) => props.theme.colors.gluton};
-  padding: 2rem 2rem;
+  padding: 2rem 1rem;
   border-radius: 10px;
   margin-bottom: 1rem;
   @media screen and (max-width: 480px) {
@@ -313,8 +420,11 @@ const LoadMoreButton = styled.div`
 `;
 
 const UpdateButton = styled.div`
-  width: 20rem;
+  width: 30rem;
   margin-top: 1rem;
+  @media screen and (max-width: 480px) {
+    width: 80%;
+  }
 `;
 const SpotifyButton = styled.div`
   width: fit-content;
@@ -322,8 +432,10 @@ const SpotifyButton = styled.div`
   margin-right: auto;
   margin-top: 2rem;
   margin-bottom: 2rem;
+  width: 30rem;
   @media screen and (max-width: 480px) {
     margin-top: 1rem;
     margin-bottom: 1rem;
+    width: 80%;
   }
 `;

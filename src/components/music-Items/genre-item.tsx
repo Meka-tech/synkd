@@ -90,4 +90,7 @@ const Text = styled.h2`
   font-weight: 800;
   text-transform: capitalize;
   z-index: 10;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.6rem;
+  }
 `;

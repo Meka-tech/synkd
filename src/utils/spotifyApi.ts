@@ -53,26 +53,54 @@ export async function searchArtistsByGenre(
 ) {
   const searchEndpoint = "https://api.spotify.com/v1/search";
   const type = "artist";
+  const authToken = await GetSpotifyToken();
+  if (authToken) {
+    try {
+      const response = await axios.get(searchEndpoint, {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        },
+        params: {
+          q: `genre:"${genre}"`,
+          type,
+          limit,
+          offset
+        }
+      });
 
-  try {
-    if (!token || Date.now() > (expirationTime as number)) {
+      return response.data.artists.items;
+    } catch (error) {
       await GetSpotifyToken();
     }
-
-    const response = await axios.get(searchEndpoint, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      params: {
-        q: `genre:"${genre}"`,
-        type,
-        limit,
-        offset
-      }
-    });
-
-    return response.data.artists.items;
-  } catch (error) {
-    console.log(error);
   }
 }
+
+export async function SpotifyAuth(update: boolean) {
+  const BaseUrl = window.location.origin;
+
+  const authorization_url = "https://accounts.spotify.com/authorize";
+  const scope = "user-follow-read";
+  const redirectUri = update
+    ? `${BaseUrl}/update-interest/music`
+    : `${BaseUrl}/sync/interests`;
+
+  window.location.href = `${authorization_url}?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}&response_type=token&scope=${encodeURIComponent(scope)}`;
+}
+
+export const getFollowedArtists = async (accessToken: string) => {
+  const limit = 50;
+  const ArtistsUrl = `https://api.spotify.com/v1/me/following?type=artist&limit=${limit}`;
+
+  try {
+    const response = await axios.get(ArtistsUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    return response.data.artists.items;
+  } catch (err) {
+    console.error("Error fetching listening history:", err);
+  }
+};

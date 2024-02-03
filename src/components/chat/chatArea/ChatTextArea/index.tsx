@@ -148,7 +148,7 @@ interface IChat {
   offset: number;
 }
 const Chats = styled.div<IChat>`
-  height: 80%;
+  height: 82%;
   overflow-y: scroll;
   overflow-x: hidden;
   padding: 0 1rem;
@@ -159,7 +159,7 @@ const Chats = styled.div<IChat>`
     height: 92%;
     margin-top: ${(props) => `-${props.offset}px`};
     padding: 0 1rem;
-    padding-top: 10rem;
+    padding-top: 7rem;
     padding-bottom: 3rem;
   }
 `;
@@ -175,4 +175,8 @@ const DayChangeDiv = styled.div`
   font-size: 1.2rem;
   border-radius: 8px;
   margin-bottom: 1rem;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
 `;

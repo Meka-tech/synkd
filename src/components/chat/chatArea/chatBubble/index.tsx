@@ -91,7 +91,7 @@ const ChatBubble = ({
           {!isTyping ? <Text>{text}</Text> : <TypingLottie />}
 
           <Bottom>
-            <Time>{time && formattedTime}</Time>
+            <Time partner={partner}>{time && formattedTime}</Time>
             {!partner && sent && readStatus ? (
               <CheckIcon>
                 <CheckCircle size={14} />
@@ -176,17 +176,28 @@ const Text = styled.h2`
   font-weight: 500;
   min-width: 20%;
   overflow-wrap: break-word;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const Bottom = styled.div`
   margin-left: 0.8rem;
   display: flex;
   align-items: center;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    margin-left: 0.6rem;
+  }
 `;
 
-const Time = styled.h3`
+const Time = styled.h3<BodyProp>`
   font-size: 1rem;
   font-weight: 300;
+  color: ${(props) =>
+    props.partner ? props.theme.colors.dusty : props.theme.colors.snow};
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const CheckIcon = styled.div`

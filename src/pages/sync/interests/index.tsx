@@ -1,9 +1,13 @@
 import axios from "axios";
-import { useState, useRef } from "react";
-import { searchArtistsByGenre } from "@/utils/spotifyApi";
+import { useState, useRef, useEffect } from "react";
+import {
+  SpotifyAuth,
+  getFollowedArtists,
+  searchArtistsByGenre
+} from "@/utils/spotifyApi";
 import GenreItem from "@/components/music-Items/genre-item";
 import styled from "@emotion/styled";
-import { Music } from "@emotion-icons/boxicons-regular";
+import { Music, InfoCircle } from "@emotion-icons/boxicons-regular";
 import ArtistItem from "@/components/music-Items/artist-item";
 import { PrimaryButton } from "@/components/buttons/primaryButton";
 import useClickOutside from "../../../hooks/useClickOutside";
@@ -12,6 +16,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { Spotify } from "@emotion-icons/boxicons-logos";
 import { ButtonWithIcon } from "@/components/buttons/buttonWithIcon";
+import SearchArtist from "@/components/music-Items/search-artist";
 
 interface ArtistsState {
   [genre: string]: {
@@ -29,6 +34,9 @@ const Interests = () => {
   const ModalRef = useRef(null);
   const [chosenArtists, setChosenArtists] = useState<string[]>([]);
   let token = Cookies.get("authToken") || "";
+
+  const [authAccessToken, setAuthAccessToken] = useState("");
+  const [usedSpotify, setUsedSpotify] = useState(false);
 
   const router = useRouter();
 
@@ -95,16 +103,51 @@ const Interests = () => {
 
   const UseSpotify = async () => {
     try {
-      await axios.get("/api/spotify/spotify-login");
+      await SpotifyAuth(false);
     } catch (e) {
       console.log(e);
     }
   };
 
+  useEffect(() => {
+    // Check if the page was redirected with an access token
+    const handleRedirect = () => {
+      const hashParams = window.location.hash.substring(1).split("&");
+      for (const param of hashParams) {
+        const [key, value] = param.split("=");
+        if (key === "access_token") {
+          setAuthAccessToken(value);
+        }
+      }
+    };
+
+    if (window.location.hash.includes("access_token")) {
+      handleRedirect();
+    }
+  }, []);
+
+  const GetFollowedArtists = async () => {
+    const artists = await getFollowedArtists(authAccessToken);
+    const names: string[] = [];
+    for (const artist of artists) {
+      if (!chosenArtists.includes(artist.name)) {
+        names.push(artist.name);
+      }
+    }
+    setChosenArtists((prev) => [...prev, ...names]);
+  };
+
+  useEffect(() => {
+    if (authAccessToken && !usedSpotify) {
+      setUsedSpotify(true);
+      GetFollowedArtists();
+    }
+  }, [authAccessToken]);
+
   return (
     <Main>
-      <Header>
-        <div>
+      <TopNav>
+        <Header>
           <SubTitle>This will just take a moment</SubTitle>
           <Title>
             Who do you listen to ?{" "}
@@ -112,9 +155,14 @@ const Interests = () => {
               <Music size={34} style={{ marginLeft: "1rem" }} />
             </span>
           </Title>
-        </div>
-        <Info>Please pick at least 10 artists</Info>
-      </Header>
+        </Header>
+        <SearchDiv>
+          <SearchArtist
+            chosenArtists={chosenArtists}
+            select={handleAddArtist}
+          />
+        </SearchDiv>
+      </TopNav>
 
       <Body>
         <GenreBody>
@@ -140,7 +188,7 @@ const Interests = () => {
           <ButtonWithIcon
             icon={<Spotify size={20} color="#1db954" />}
             variant
-            text="Use Spotify"
+            text="Artists you follow on Spotify"
             onClick={() => UseSpotify()}
           />
         </SpotifyButton>
@@ -190,9 +238,15 @@ const Interests = () => {
         </PseudoBackdrop>
       )}
       <Footer>
-        <FooterInfo> {chosenArtists.length} artist(s) picked</FooterInfo>
+        <FooterInfo>
+          <InfoIcon>
+            {" "}
+            <InfoCircle size={20} />
+          </InfoIcon>
+          Pick at least 10 artists:
+          <span> {chosenArtists.length} artists picked</span>
+        </FooterInfo>
         <FooterButton>
-          {" "}
           <PrimaryButton
             text="Save"
             disabled={chosenArtists.length < 10}
@@ -217,16 +271,29 @@ const Main = styled.div`
   position: relative;
   overflow: hidden;
   @media screen and (max-width: 480px) {
-    padding: 2rem;
+    padding: 1rem 1.5rem;
+    padding-top: 3rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
     padding-top: 3rem;
   }
 `;
-const Header = styled.div`
+const TopNav = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2rem;
   @media screen and (max-width: 480px) {
     flex-direction: column;
+  }
+`;
+const Header = styled.div`
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  @media screen and (max-width: 480px) {
+    width: 100%;
   }
 `;
 const SubTitle = styled.h3`
@@ -235,24 +302,32 @@ const SubTitle = styled.h3`
   @media screen and (max-width: 480px) {
     font-size: 1rem;
   }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 1.4rem;
+  }
 `;
 const Title = styled.h2`
   font-size: 4rem;
   font-weight: 800;
-  margin-bottom: 3rem;
   display: inline-flex;
   align-items: center;
   @media screen and (max-width: 480px) {
     font-size: 2.6rem;
     margin-bottom: 0.5rem;
   }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 3rem;
+  }
 `;
 
-const Info = styled.h3`
-  font-size: 1.6rem;
+const SearchDiv = styled.div`
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   @media screen and (max-width: 480px) {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
+    width: 100%;
+    margin-top: 0.5rem;
   }
 `;
 
@@ -262,6 +337,9 @@ const Body = styled.div`
 const GenreBody = styled.div`
   padding: 1rem;
   overflow: hidden;
+  @media screen and (max-width: 480px) {
+    padding: 0;
+  }
 `;
 const GenreList = styled.div`
   display: flex;
@@ -320,30 +398,56 @@ const SpotifyButton = styled.div`
   margin-left: auto;
   margin-right: auto;
   margin-top: 2rem;
+  @media screen and (max-width: 480px) {
+    width: 80%;
+  }
 `;
 
 const Footer = styled.div`
   padding: 1rem 5rem;
   position: absolute;
   width: 100%;
-  bottom: 0;
+  bottom: 1rem;
   left: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
+
   @media screen and (max-width: 480px) {
     padding: 1rem 2rem;
+    flex-direction: column-reverse;
   }
 `;
 
 const FooterInfo = styled.h2`
   font-size: 1.6rem;
+  color: ${(props) => props.theme.colors.dusty};
+  font-weight: 400;
+  display: inline-flex;
+  span {
+    color: ${(props) => props.theme.colors.primary};
+    font-size: 1.6rem;
+    margin-left: 0.5rem;
+    @media screen and (max-width: 480px) {
+      font-size: 1.4rem;
+    }
+  }
   @media screen and (max-width: 480px) {
     font-size: 1.4rem;
+    margin-top: 1rem;
   }
 `;
 
+const InfoIcon = styled.div`
+  margin-right: 0.5rem;
+`;
+
 const FooterButton = styled.div`
-  width: 8rem;
+  width: 25rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  @media screen and (max-width: 480px) {
+    width: 80%;
+  }
 `;

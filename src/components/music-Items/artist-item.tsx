@@ -34,20 +34,28 @@ const Body = styled.div`
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid gray;
-  color: white;
+  color: ${(props) => props.theme.colors.dusty};
   :hover {
     background-color: rgba(255, 255, 255, 0.1);
+    color: ${(props) => props.theme.colors.snow};
   }
   @media screen and (max-width: 480px) {
+    height: 4rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
     height: 4rem;
   }
 `;
 
 const Text = styled.h2`
   font-size: 1.6rem;
-  font-weight: 500;
+  font-weight: 400;
   text-transform: capitalize;
+
   @media screen and (max-width: 480px) {
+    font-size: 1.4rem;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1.4rem;
   }
 `;

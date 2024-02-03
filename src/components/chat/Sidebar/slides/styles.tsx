@@ -7,6 +7,9 @@ export const Main = styled.div`
   @media screen and (max-width: 480px) {
     padding: 1rem 0.5rem;
   }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    padding: 1rem 0.5rem;
+  }
 `;
 export const TopBar = styled.div`
   margin-top: 1rem;
@@ -30,6 +33,9 @@ export const Title = styled.h2`
   @media screen and (max-width: 480px) {
     font-size: 2rem;
   }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    font-size: 2rem;
+  }
 `;
 export const Body = styled.div`
   margin-top: 2rem;
@@ -37,4 +43,7 @@ export const Body = styled.div`
   max-height: 90%;
   height: fit-content;
   padding: 1rem 0;
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    margin-top: 1rem;
+  }
 `;

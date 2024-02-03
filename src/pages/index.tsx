@@ -23,6 +23,7 @@ import {
   updateUser
 } from "@/Redux/features/user/userSlice";
 import { useSocket } from "@/context/SocketContext";
+import { updateLaunch } from "@/Redux/features/openChat/openChatSlice";
 
 export default function Home() {
   let authToken = Cookies.get("authToken") || "";
@@ -40,6 +41,7 @@ export default function Home() {
     if (authToken === "") {
       router.push("/auth/sign-in");
     }
+    dispatch(updateLaunch(true));
   }, []);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function Home() {
         _id: message._id
       });
       if (!existingMessage) {
-        await MessageDb.messages.add(message);
+        await MessageDb.messages.put(message);
       }
     });
 

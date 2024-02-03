@@ -65,7 +65,7 @@ const ChatHeader = ({}: Iprops) => {
 export default ChatHeader;
 
 const TopBar = styled.div`
-  height: 10%;
+  height: 8%;
   width: 100%;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid ${(props) => props.theme.colors.gluton};
@@ -81,6 +81,9 @@ const TopBar = styled.div`
     padding: 0.5rem 0.5rem;
     position: fixed;
     top: 0;
+  }
+  @media screen and (min-width: 1300px) and (max-width: 1600px) {
+    height: 8%;
   }
 `;
 
