@@ -24,7 +24,6 @@ interface IProps {
 }
 
 const ChatArea = ({ user, messages }: IProps) => {
-  // const socket = useSelector((state: RootState) => state.socket.socket);
   const socket = useSocket();
   const activeChatId = useSelector(
     (state: RootState) => state.openChat.activeChatId

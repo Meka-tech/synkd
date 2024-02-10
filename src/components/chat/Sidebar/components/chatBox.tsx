@@ -42,7 +42,6 @@ const ChatBox = ({
         OpenUserChat();
       }}
     >
-      {unReadMsg > 0 && <UnReadMsgDiv />}
       <PictureImage />
       <TextContainer>
         <Top>
