@@ -81,7 +81,7 @@ const TopBar = styled.div`
   @media screen and (max-width: 480px) {
     height: 6rem;
     padding: 0.5rem 0.5rem;
-    position: fixed;
+    position: sticky;
     top: 0;
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {

@@ -2,15 +2,13 @@ import styled from "@emotion/styled";
 import {
   KeyboardEventHandler,
   ReactElement,
-  SetStateAction,
   useEffect,
   useRef,
   useState
 } from "react";
-import Picker from "emoji-picker-react";
-import { RootState } from "@/Redux/app/store";
-import { useSelector } from "react-redux";
 import { useSocket } from "@/context/SocketContext";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/app/store";
 
 interface IProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   handleKeyPress: KeyboardEventHandler<HTMLTextAreaElement>;
@@ -23,14 +21,12 @@ const ChatInput = ({
   setInput,
   userId,
   activeChatId,
-
   ...rest
 }: IProps) => {
   const textareaRef = useRef<null | HTMLTextAreaElement>(null);
-  // const socket = useSelector((state: RootState) => state.socket.socket);
   const [scrollingUp, setScrollingUp] = useState(false);
-
   const socket = useSocket();
+  const chatId = useSelector((state: RootState) => state.openChat.activeChatId);
 
   useEffect(() => {
     textareaRef.current?.focus();
@@ -63,6 +59,7 @@ const ChatInput = ({
 
   const HandleChange = (e: { target: { value: any } }) => {
     setInput(e.target.value);
+    sessionStorage.setItem(`${chatId}-chat`, e.target.value);
 
     const target = e.target as HTMLTextAreaElement;
     if (textareaRef.current) {
@@ -85,7 +82,6 @@ const ChatInput = ({
         onKeyDown={handleKeyPress}
         onChange={HandleChange}
       />
-      {/* <SendDiv>{SendButton}</SendDiv> */}
     </Body>
   );
 };

@@ -29,7 +29,9 @@ const ChatArea = ({ user, messages }: IProps) => {
   const activeChatId = useSelector(
     (state: RootState) => state.openChat.activeChatId
   );
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState(
+    sessionStorage.getItem(`${activeChatId}-chat`) || ""
+  );
   const [room, setRoom] = useState("");
   let authToken = Cookies.get("authToken") || "";
 
@@ -48,6 +50,7 @@ const ChatArea = ({ user, messages }: IProps) => {
     if (/\S/.test(newMessage)) {
       let Message = newMessage;
       setNewMessage("");
+      sessionStorage.setItem(`${activeChatId}-chat`, "");
 
       const UMessage = { text: Message, id: Math.random() };
       setUnsentMessages((prev) => [...prev, UMessage]);

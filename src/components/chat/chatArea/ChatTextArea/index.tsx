@@ -2,7 +2,7 @@ import { IUserType } from "@/types/userType";
 import { GetChatId } from "@/utils/GetChatId";
 import styled from "@emotion/styled";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 
 import ChatBubble from "../chatBubble";
 import Loading from "@/components/loading";
@@ -159,7 +159,7 @@ const Chats = styled.div<IChat>`
     height: 92%;
     margin-top: ${(props) => `-${props.offset}px`};
     padding: 0 1rem;
-    padding-top: 7rem;
+    padding-top: 2rem;
     padding-bottom: 3rem;
   }
 `;
