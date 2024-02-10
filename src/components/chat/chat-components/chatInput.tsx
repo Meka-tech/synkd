@@ -119,7 +119,7 @@ const Body = styled.div`
 const Input = styled.textarea`
   border: none;
   outline: none;
-  width: 96%;
+  width: 100%;
   resize: none;
   min-height: 2rem;
   background-color: transparent;

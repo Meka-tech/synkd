@@ -143,7 +143,7 @@ const Body = styled.div<BodyProp>`
   width: fit-content;
   position: relative;
   color: ${(props) => props.theme.colors.snow};
-  border-radius: 15px;
+  border-radius: 10px;
   padding: 0.5rem 1rem;
   display: flex;
   align-items: end;

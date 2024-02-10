@@ -1,5 +1,13 @@
 export default function getChatDay(date1, date2) {
-  let dayNames = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
+  let dayNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ];
   const RecentChat = new Date(date1);
   const RecentChatDay = RecentChat.getDate();
   const RecentChatMonth = RecentChat.getMonth();

@@ -163,6 +163,8 @@ const BottomBar = styled.div`
   @media screen and (max-width: 480px) {
     height: 8%;
     padding: 1rem 1rem;
+    position: sticky;
+    bottom: 0;
   }
 `;
 

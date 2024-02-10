@@ -171,8 +171,14 @@ const DayChangeDiv = styled.div`
   margin-right: auto;
   padding: 0.5rem 1.2rem;
   font-size: 1.2rem;
+  font-weight: 600;
   border-radius: 8px;
   margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  width: 10rem;
+  text-align: center;
+  text-transform: capitalize;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1rem;
     margin-bottom: 0.5rem;
