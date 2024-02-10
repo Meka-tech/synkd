@@ -11,7 +11,6 @@ import getChatDay from "@/utils/chat__functions/getChatDay";
 import { RootState } from "@/Redux/app/store";
 import { useSelector } from "react-redux";
 import { useSocket } from "@/context/SocketContext";
-// import { socket } from "@/service/socket";
 
 interface IProps {
   user: IUserType | null;
@@ -155,13 +154,11 @@ const Chats = styled.div<IChat>`
   padding-top: 1rem;
   padding-bottom: 5rem;
   transition: ease-in all 0.1s;
-
   @media screen and (max-width: 480px) {
-    height: 92%;
-    margin-top: ${(props) => `-${props.offset}px`};
+    height: 84%;
     padding: 0 1rem;
     padding-top: 2rem;
-    padding-bottom: 6rem;
+    padding-bottom: 2rem;
   }
 `;
 

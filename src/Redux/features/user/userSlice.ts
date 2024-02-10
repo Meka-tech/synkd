@@ -31,7 +31,9 @@ export const userSlice = createSlice({
     updateNotifications: (state, action) => {
       if (state.notifications !== action.payload) {
         state.notifications = [...action.payload];
-        state.readNotification = false;
+        if (state.notifications.length !== 0) {
+          state.readNotification = false;
+        }
       }
     },
     updateReadNotifications: (state, action) => {

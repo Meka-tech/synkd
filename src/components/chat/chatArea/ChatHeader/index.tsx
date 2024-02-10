@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import useClickOutside from "@/hooks/useClickOutside";
 import { RootState } from "@/Redux/app/store";
 import { getActiveChatPartner } from "@/Redux/features/friends/friendsSlice";
+import { InfoCircle } from "@emotion-icons/boxicons-regular";
 
 interface Iprops {}
 const ChatHeader = ({}: Iprops) => {
@@ -50,16 +51,20 @@ const ChatHeader = ({}: Iprops) => {
         >
           <ArrowIosBack size={30} />
         </BackArrow>
-        <PartnerDetails
-          ref={profileRef}
-          onClick={() => {
-            setProfileOpen(true);
-          }}
-        >
+        <PartnerDetails>
           <PartnerImage />
           <PartnerName>{Partner?.username}</PartnerName>
         </PartnerDetails>
       </TopLeft>
+
+      <Info
+        ref={profileRef}
+        onClick={() => {
+          setProfileOpen(true);
+        }}
+      >
+        <InfoCircle size={25} />
+      </Info>
     </TopBar>
   );
 };
@@ -77,12 +82,10 @@ const TopBar = styled.div`
   position: relative;
   justify-content: space-between;
   display: flex;
-  z-index: 100;
+  z-index: 200;
   @media screen and (max-width: 480px) {
-    height: 6rem;
+    height: 8%;
     padding: 0.5rem 0.5rem;
-    position: sticky;
-    top: 0;
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     height: 8%;
@@ -95,9 +98,16 @@ interface IStyleProfile {
 const ProfileDiv = styled.div<IStyleProfile>`
   position: absolute;
   top: 0;
+  left: 1rem;
   margin-top: 1rem;
   transform: ${(props) => (props.open ? "translateY(0)" : "translateY(-110%)")};
   transition: 0.3s ease-in-out all;
+  @media screen and (max-width: 480px) {
+    margin-top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+  }
 `;
 
 const TopLeft = styled.div`
@@ -126,7 +136,12 @@ const PartnerImage = styled.div`
 `;
 const PartnerName = styled.h2`
   color: white;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 500;
   margin-left: 1.5rem;
+`;
+
+const Info = styled.div`
+  color: ${(props) => props.theme.colors.dusty};
+  cursor: pointer;
 `;

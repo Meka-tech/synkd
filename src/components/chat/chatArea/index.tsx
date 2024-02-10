@@ -153,18 +153,15 @@ const Body = styled.div`
 `;
 
 const BottomBar = styled.div`
-  z-index: 100;
-  position: absolute;
   height: fit-content;
   width: 100%;
-  bottom: 0;
   padding: 1.5rem 2rem;
   background-color: ${(props) => props.theme.colors.void};
   display: flex;
   align-items: center;
   justify-content: center;
   @media screen and (max-width: 480px) {
-    height: fit-content;
+    height: 8%;
     padding: 1rem 1rem;
   }
 `;

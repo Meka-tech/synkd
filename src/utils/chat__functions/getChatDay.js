@@ -1,13 +1,5 @@
 export default function getChatDay(date1, date2) {
-  let dayNames = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
-  ];
+  let dayNames = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const RecentChat = new Date(date1);
   const RecentChatDay = RecentChat.getDate();
   const RecentChatMonth = RecentChat.getMonth();
@@ -42,7 +34,8 @@ export default function getChatDay(date1, date2) {
       RecentChatYear === todaysYear) ||
     todaysDay === 1;
 
-  const IsWithinTheWeek = PreviousChatDay > RecentChatDay - 8 && !IsToday;
+  const IsWithinTheWeek =
+    PreviousChatDay < RecentChatDay - 7 && !IsToday && todaysMonth;
 
   const IsFirstMessage = date1 === date2;
 
@@ -77,49 +70,26 @@ export default function getChatDay(date1, date2) {
 }
 
 function formatDate(inputDate) {
-  // Array of month names
   var monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
     "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec"
   ];
 
-  // Extract the day, month, and year components from the input date
   var day = inputDate.getDate();
   var month = monthNames[inputDate.getMonth()];
   var year = inputDate.getFullYear();
 
-  // Add the suffix to the day
-  var suffix = getDaySuffix(day);
-  var formattedDate = day + suffix + " " + month + ", " + year;
+  var formattedDate = day + " " + month + " " + year;
 
   return formattedDate;
-}
-
-// Helper function to get the day suffix (st, nd, rd, or th)
-function getDaySuffix(day) {
-  if (day >= 11 && day <= 13) {
-    return "th";
-  }
-
-  var lastDigit = day % 10;
-  switch (lastDigit) {
-    case 1:
-      return "st";
-    case 2:
-      return "nd";
-    case 3:
-      return "rd";
-    default:
-      return "th";
-  }
 }

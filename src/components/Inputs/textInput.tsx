@@ -115,6 +115,10 @@ export const StyledInput = styled.input`
   color: white;
   font-weight: 600;
 
+  @media screen and (max-width: 480px) {
+    font-size: 1.6rem;
+  }
+
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1.2rem;
   }

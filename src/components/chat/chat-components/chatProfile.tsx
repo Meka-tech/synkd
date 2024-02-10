@@ -44,6 +44,9 @@ const Main = styled.div`
   padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 480px) {
+    width: 100%;
+  }
 `;
 
 const ProfileImage = styled.div`

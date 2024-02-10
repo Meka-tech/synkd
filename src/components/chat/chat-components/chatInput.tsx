@@ -52,6 +52,12 @@ const ChatInput = ({
   }, []);
 
   useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "30px";
+    }
+  }, []);
+
+  useEffect(() => {
     if (scrollingUp) {
       textareaRef.current?.blur();
     }
@@ -64,7 +70,9 @@ const ChatInput = ({
     const target = e.target as HTMLTextAreaElement;
     if (textareaRef.current) {
       textareaRef.current.style.height = "30px";
-      textareaRef.current.style.height = `${target.scrollHeight}px`;
+      textareaRef.current.style.height = `${
+        target.scrollHeight < 500 && target.scrollHeight
+      }px`;
     }
 
     socket?.emit("is-typing", {
@@ -90,7 +98,7 @@ export default ChatInput;
 
 const Body = styled.div`
   width: 95%;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   background-color: 1px solid ${(props) => props.theme.colors.danger};
   border: 1px solid rgba(255, 255, 255, 0.4);
   height: fit-content;
@@ -118,13 +126,16 @@ const Input = styled.textarea`
   font-size: 1.6rem;
   font-weight: 400;
   overflow-wrap: break-word;
+
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1.6rem;
     min-height: 2rem;
+    max-height: 15rem;
   }
   @media screen and (max-width: 480px) {
     font-size: 1.6rem;
     min-height: 1rem;
+    max-height: 10rem;
   }
   ::placeholder {
     color: #d9d9d971;
