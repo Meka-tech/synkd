@@ -3,7 +3,7 @@ import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useDispatch, useSelector } from "react-redux";
 import ShortenText from "@/utils/ShortenText";
-import { Envelope } from "@emotion-icons/boxicons-solid";
+import { Envelope } from "@emotion-icons/boxicons-regular";
 import {
   updateActiveChatId,
   updateLaunch,
@@ -55,7 +55,7 @@ const ChatBox = ({
             <RecentText>
               {unReadMsg > 0 ? (
                 <NewMessage>
-                  <Envelope size={20} /> New Message
+                  <Envelope size={20} /> New
                 </NewMessage>
               ) : (
                 <>
@@ -161,7 +161,9 @@ const RecentText = styled.h2`
 `;
 
 const NewMessage = styled.h2`
-  font-weight: 400;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
   font-size: 1.4rem;
   color: ${(props) => props.theme.colors.primary};
   @media screen and (min-width: 1300px) and (max-width: 1600px) {

@@ -6,11 +6,8 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { ReadDBMessage } from "@/utils/indexedDb_Functions/readDBMessage";
-import {
-  Check,
-  CheckDouble,
-  DotsHorizontalRounded
-} from "@emotion-icons/boxicons-regular";
+import { Time as Clock } from "@emotion-icons/boxicons-regular";
+
 import { Circle, CheckCircle } from "@emotion-icons/boxicons-solid";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
@@ -98,7 +95,7 @@ const ChatBubble = ({
               </CheckIcon>
             ) : !partner && sent ? (
               <CheckIcon>
-                <Circle size={14} />
+                <Clock size={14} />
               </CheckIcon>
             ) : null}
             {!sent && <Loading size={15} />}

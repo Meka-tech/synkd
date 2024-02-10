@@ -103,17 +103,14 @@ const Body = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.4);
   height: fit-content;
   border-radius: 15px;
-  max-height: 15rem;
   display: flex;
   align-items: center;
   position: relative;
   margin-right: 1rem;
   @media screen and (max-width: 480px) {
-    height: fit-content;
     width: 99%;
     padding: 0.5rem 1rem;
     margin-right: 0.5rem;
-    max-height: 10rem;
   }
 `;
 const Input = styled.textarea`

@@ -179,6 +179,7 @@ const DayChangeDiv = styled.div`
   width: 10rem;
   text-align: center;
   text-transform: capitalize;
+  z-index: 200;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1rem;
     margin-bottom: 0.5rem;
