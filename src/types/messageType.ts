@@ -9,4 +9,5 @@ export interface ImsgType {
   createdAt: Date;
   updatedAt: Date;
   _id: string;
+  uuid: string;
 }

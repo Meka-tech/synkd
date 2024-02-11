@@ -6,7 +6,7 @@ async function handler(req, res, next) {
   await mongooseConnect();
   let userId = authenticateJWT(req, res, next);
 
-  const { partnerId, text, room } = req.body;
+  const { partnerId, text, room, uuid } = req.body;
 
   if (!userId) {
     return res.status(401).json({ message: "unauthorized" });
@@ -17,7 +17,8 @@ async function handler(req, res, next) {
       user: userId,
       partner: partnerId,
       text: text,
-      room: room
+      room: room,
+      uuid: uuid
     });
 
     const NewMessage = await message.save();

@@ -6,7 +6,8 @@ const MessageSchema = new Schema(
     partner: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     room: String,
     text: String,
-    readStatus: { type: Boolean, default: false }
+    readStatus: { type: Boolean, default: false },
+    uuid: String
   },
   {
     timestamps: true

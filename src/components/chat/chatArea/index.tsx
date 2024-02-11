@@ -17,13 +17,17 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
 import { useSocket } from "@/context/SocketContext";
+import { v4 as uuidv4 } from "uuid";
+import { UnSentMessageDexie, UnsentMessageDb } from "@/dexieDb/UnsentMessageDb";
+import { IUmsgType } from "@/types/unsentMessageType";
 
 interface IProps {
   user: IUserType | null;
   messages: ImsgType[];
+  unsentMessages: IUmsgType[];
 }
 
-const ChatArea = ({ user, messages }: IProps) => {
+const ChatArea = ({ user, messages, unsentMessages }: IProps) => {
   const socket = useSocket();
   const activeChatId = useSelector(
     (state: RootState) => state.openChat.activeChatId
@@ -32,11 +36,6 @@ const ChatArea = ({ user, messages }: IProps) => {
     sessionStorage.getItem(`${activeChatId}-chat`) || ""
   );
   const [room, setRoom] = useState("");
-  let authToken = Cookies.get("authToken") || "";
-
-  const [unSentMessages, setUnsentMessages] = useState<
-    { text: string; id: number }[]
-  >([]);
 
   useEffect(() => {
     if (activeChatId) {
@@ -51,39 +50,17 @@ const ChatArea = ({ user, messages }: IProps) => {
       setNewMessage("");
       sessionStorage.setItem(`${activeChatId}-chat`, "");
 
-      const UMessage = { text: Message, id: Math.random() };
-      setUnsentMessages((prev) => [...prev, UMessage]);
+      const MessageId = uuidv4();
 
-      const response = await axios.post(
-        "/api/chat/post-message",
-        {
-          partnerId: activeChatId,
-          text: Message,
-          room: room
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
-        }
-      );
+      const NewMessage = {
+        userId: user?._id || "",
+        partnerId: activeChatId,
+        room: room,
+        text: Message,
+        uuid: MessageId
+      };
 
-      const ResponseMessage = response.data.message;
-
-      socket?.emit("post-message", {
-        userId: activeChatId,
-        message: ResponseMessage
-      });
-
-      await MessageDb.messages.add(ResponseMessage);
-
-      //get id if message has sent from socket.io, /(uuid would be create for each text)
-      //compare uuid and delete from unsent array
-
-      const filteredArray = unSentMessages.filter(
-        (obj) => obj.id === UMessage.id
-      );
-      setUnsentMessages(filteredArray);
+      await UnsentMessageDb.unsentmessages.add(NewMessage);
     }
   };
 
@@ -119,7 +96,7 @@ const ChatArea = ({ user, messages }: IProps) => {
     <Body>
       <ChatHeader />
       <ChatTextArea
-        unSentMessages={unSentMessages}
+        unSentMessages={unsentMessages}
         user={user}
         messages={messages}
         keyboardHeight={keyboardHeight}

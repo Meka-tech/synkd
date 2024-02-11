@@ -10,9 +10,12 @@ import { ImsgType } from "@/types/messageType";
 
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
+import { UnsentMessageDb } from "@/dexieDb/UnsentMessageDb";
+import { IUmsgType } from "@/types/unsentMessageType";
 
 const ChatLayout = () => {
   const [userMessages, setUserMessages] = useState<ImsgType[]>([]);
+  const [unsentMessages, setUnsentMessages] = useState<IUmsgType[]>([]);
   const launch = useSelector((state: RootState) => state.openChat.launch);
   const activeChatId = useSelector(
     (state: RootState) => state.openChat.activeChatId
@@ -27,6 +30,11 @@ const ChatLayout = () => {
     setUserMessages(messages);
   }, []);
 
+  useLiveQuery(async () => {
+    const messages = await UnsentMessageDb.unsentmessages.toArray();
+    setUnsentMessages(messages);
+  }, []);
+
   return (
     <Body>
       {" "}
@@ -34,7 +42,11 @@ const ChatLayout = () => {
       {launch || !activeChatId ? (
         <DefaultChatArea />
       ) : (
-        <ChatArea user={user} messages={userMessages} />
+        <ChatArea
+          user={user}
+          messages={userMessages}
+          unsentMessages={unsentMessages}
+        />
       )}
     </Body>
   );

@@ -6,13 +6,12 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { MessageDb } from "@/dexieDb/MessageLocalDb";
 import { ReadDBMessage } from "@/utils/indexedDb_Functions/readDBMessage";
-import { Time as Clock } from "@emotion-icons/boxicons-regular";
+import { Check } from "@emotion-icons/boxicons-regular";
 
-import { Circle, CheckCircle } from "@emotion-icons/boxicons-solid";
-import { useSelector } from "react-redux";
-import { RootState } from "@/Redux/app/store";
+import { CheckCircle } from "@emotion-icons/boxicons-solid";
 import { TypingLottie } from "../../../../../animation/typingLottie";
 import { useSocket } from "@/context/SocketContext";
+import { UnsentMessageDb } from "@/dexieDb/UnsentMessageDb";
 
 interface IProps {
   text: string;
@@ -24,6 +23,8 @@ interface IProps {
   partnerId?: string;
   userSndNxtMsg: boolean;
   isTyping?: boolean;
+  room?: string;
+  uuid: string;
 }
 
 const ChatBubble = ({
@@ -34,8 +35,10 @@ const ChatBubble = ({
   id,
   readStatus,
   partnerId,
+  room,
   userSndNxtMsg = false,
-  isTyping = false
+  isTyping = false,
+  uuid
 }: IProps) => {
   let authToken = Cookies.get("authToken") || "";
   let inputDate;
@@ -45,13 +48,14 @@ const ChatBubble = ({
   }
 
   const socket = useSocket();
+
   const formattedTime = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "numeric",
     hour12: false // Use 24-hour format
   }).format(inputDate);
 
-  const ReadMessage = useCallback(async () => {
+  const ReadMessage = async () => {
     if (!readStatus && id && partner) {
       try {
         const response = await axios.post(
@@ -75,11 +79,48 @@ const ChatBubble = ({
         await ReadDBMessage(ResponseMessage._id);
       } catch (e) {}
     }
-  }, []);
+  };
+
+  // useEffect(() => {
+  //   ReadMessage();
+  // }, []);
+
+  const SendMessage = async () => {
+    if (!sent) {
+      try {
+        const response = await axios.post(
+          "/api/chat/post-message",
+          {
+            partnerId: partnerId,
+            text: text,
+            room: room,
+            uuid: uuid
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            }
+          }
+        );
+        const ResponseMessage = response.data.message;
+        socket?.emit("post-message", {
+          userId: partnerId,
+          message: ResponseMessage
+        });
+        await UnsentMessageDb.unsentmessages
+          .where("uuid")
+          .equals(uuid)
+          .delete();
+        await MessageDb.messages.add(ResponseMessage);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
 
   useEffect(() => {
-    ReadMessage();
-  }, []);
+    SendMessage();
+  });
 
   return (
     <Main>
@@ -95,7 +136,7 @@ const ChatBubble = ({
               </CheckIcon>
             ) : !partner && sent ? (
               <CheckIcon>
-                <Clock size={14} />
+                <Check size={14} />
               </CheckIcon>
             ) : null}
             {!sent && <Loading size={15} />}

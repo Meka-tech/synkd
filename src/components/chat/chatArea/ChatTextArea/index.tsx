@@ -11,10 +11,11 @@ import getChatDay from "@/utils/chat__functions/getChatDay";
 import { RootState } from "@/Redux/app/store";
 import { useSelector } from "react-redux";
 import { useSocket } from "@/context/SocketContext";
+import { IUmsgType } from "@/types/unsentMessageType";
 
 interface IProps {
   user: IUserType | null;
-  unSentMessages: { text: string; id: number }[];
+  unSentMessages: IUmsgType[];
   messages: ImsgType[];
   keyboardHeight: number;
 }
@@ -47,6 +48,10 @@ const ChatTextArea = ({
   }, [messages]);
 
   const RoomMessages = messages.filter((message) => {
+    return message.room === room;
+  });
+
+  const RoomUnsentMessages = unSentMessages.filter((message) => {
     return message.room === room;
   });
 
@@ -112,18 +117,22 @@ const ChatTextArea = ({
               readStatus={msg.readStatus}
               partnerId={partnerId}
               userSndNxtMsg={SenderMsgNxtId}
+              uuid={msg.uuid}
             />
           </React.Fragment>
         );
       })}
-      {unSentMessages?.map((msg, i) => {
+      {RoomUnsentMessages?.map((msg, i) => {
         return (
           <ChatBubble
             text={msg.text}
             key={i}
             partner={false}
+            partnerId={msg.partnerId}
             sent={false}
             userSndNxtMsg={false}
+            uuid={msg.uuid}
+            room={msg.room}
           />
         );
       })}
@@ -134,6 +143,7 @@ const ChatTextArea = ({
           partner={true}
           sent={true}
           userSndNxtMsg={false}
+          uuid={""}
         />
       )}
       <ScrollPoint ref={scrollRef} />
