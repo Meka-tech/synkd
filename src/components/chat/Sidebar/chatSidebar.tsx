@@ -179,14 +179,6 @@ const UserImage = styled.div`
     width: 4rem;
     height: 4rem;
   }
-  @media screen and (max-width: 480px) {
-    height: 3rem;
-    width: 3rem;
-    img {
-      width: 3rem;
-      height: 3rem;
-    }
-  }
 `;
 
 const Utitilites = styled.div`

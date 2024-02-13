@@ -21,10 +21,14 @@ const SocketHandler = async (req, res) => {
 
     const socketIdMap = {};
     io.on("connection", (socket) => {
+      //to avoid two connections with the same user id
       socket.on("user-online", (userId) => {
-        socketIdMap[userId] = socket.id;
+        if (!socketIdMap.hasOwn(`${userId}`)) {
+          socketIdMap[userId] = socket.id;
+        }
       });
 
+      //messages
       socket.on("post-message", ({ userId, message }) => {
         const targetSocketId = socketIdMap[userId];
 
@@ -48,6 +52,8 @@ const SocketHandler = async (req, res) => {
           io.to(targetSocketId).emit("userTyping", from);
         }
       });
+
+      //notifications
 
       socket.on("send-notification", ({ from, to }) => {
         const targetSocketId = socketIdMap[to];
