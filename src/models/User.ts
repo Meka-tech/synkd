@@ -10,6 +10,7 @@ const UserSchema = new Schema({
     required: true,
     default: "Available"
   },
+  avatar: { type: String, required: true, default: "default" },
   password: {
     type: String
   },

@@ -20,8 +20,6 @@ const NewChat = ({ close }: INewChat) => {
     (state: RootState) => state.friends.friends
   );
 
-
-
   const FriendsList = Friends.slice().sort((a, b) =>
     a.username.localeCompare(b.username)
   );
@@ -41,7 +39,7 @@ const NewChat = ({ close }: INewChat) => {
           return <FriendBox user={item} key={i} close={close} />;
         })}
         <NewFriendDiv>
-          <NewFriendText> SYNK WITH MORE USERS</NewFriendText>
+          <NewFriendText> Synk with more users</NewFriendText>
           <Link href={"/sync/match"}>
             {" "}
             <SyncButton>Synk</SyncButton>
@@ -55,14 +53,14 @@ const NewChat = ({ close }: INewChat) => {
 export default NewChat;
 
 const NewFriendDiv = styled.div`
-  margin-top: 2rem;
+  margin-top: 4rem;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
-const NewFriendText = styled.h3`
-  font-size: 1.4rem;
+const NewFriendText = styled.h2`
+  font-size: 1.6rem;
 `;
 
 const SyncButton = styled.div`

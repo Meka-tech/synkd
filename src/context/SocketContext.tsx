@@ -13,6 +13,7 @@ const SocketContext = createContext<Socket | null>(null);
 
 export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
   const socketUrl: string = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+  const devMode = process.env.NODE_ENV === "development";
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
@@ -22,7 +23,13 @@ export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
       // const res = await fetch("/api/socket");
       // const res = await fetch(socketUrl);
 
-      newSocket = io(socketUrl);
+      if (devMode) {
+        await fetch("/api/socket");
+        newSocket = io();
+      } else {
+        newSocket = io(socketUrl);
+      }
+
       setSocket(newSocket);
 
       socket?.on("disconnect", () => {

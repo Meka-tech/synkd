@@ -186,7 +186,7 @@ const UpdateMusic = () => {
           <Grid>
             {genreList.map((genre, i) => (
               <GenreItem
-                size="80"
+                size="79"
                 name={genre.name}
                 bgImage={genre.image}
                 key={i}

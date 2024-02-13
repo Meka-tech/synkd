@@ -4,21 +4,23 @@ import {
   Bell,
   Plus
 } from "@emotion-icons/boxicons-regular";
-import ChatBox from "./components/chatBox";
-import { IUserType } from "@/types/userType";
+
 import { useEffect, useRef, useState } from "react";
 import Notification from "./slides/notification";
 import useClickOutside from "@/hooks/useClickOutside";
-import axios from "axios";
-import Cookies from "js-cookie";
+
 import SearchInput from "./components/searchInput";
 import { User, Filter } from "@emotion-icons/boxicons-regular";
 
 import NewChat from "./slides/newChat";
 import ActiveChats from "./components/activeChats";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/Redux/app/store";
 import Profile from "./slides/profile";
+import { removeSlide, updateSlide } from "@/Redux/features/slides/slide";
+import Avatar from "./slides/avatar";
+import { GetProfileImage } from "@/utils/GetProfileImage";
+import Image from "next/image";
 
 interface IProps {}
 
@@ -27,15 +29,18 @@ type SlideType = {
 };
 const ChatSideBar = ({}: IProps) => {
   const [slideInActive, setSlideInActive] = useState(false);
-  const [activeSlide, setActiveSlide] = useState(""); //options //notifications //profile
   const SlideRef = useRef(null);
   const ReadNotification = useSelector(
     (state: RootState) => state.user.readNotification
   );
+  const { activeSlide, slideOpen } = useSelector(
+    (state: RootState) => state.slide
+  );
+
+  const dispatch = useDispatch();
 
   const RemoveSlide = () => {
-    setSlideInActive(false);
-    setActiveSlide("");
+    dispatch(removeSlide());
   };
 
   useClickOutside(SlideRef, () => RemoveSlide());
@@ -43,33 +48,47 @@ const ChatSideBar = ({}: IProps) => {
   const Slides: SlideType = {
     notifications: <Notification close={RemoveSlide} />,
     newChat: <NewChat close={RemoveSlide} />,
-    profile: <Profile close={RemoveSlide} />
+    profile: <Profile close={RemoveSlide} />,
+    avatar: <Avatar close={RemoveSlide} />
   };
 
-  const ActivativeSlide = (slide: string) => {
-    setActiveSlide(slide);
-    setSlideInActive(true);
+  const StartNewChat = () => {
+    dispatch(updateSlide("newChat"));
+  };
+
+  const ShowProfile = () => {
+    dispatch(updateSlide("profile"));
+  };
+  const ShowNotification = () => {
+    dispatch(updateSlide("notifications"));
   };
 
   const openChat: boolean = useSelector(
     (state: RootState) => state.openChat.openChat
   );
+
+  const userAvatar = useSelector((state: RootState) => state.user.user?.avatar);
+
+  const ProfileImage = GetProfileImage(userAvatar);
+
+  const [searchValue, setSearchValue] = useState("");
+  const [filterChat, setFilterChat] = useState(false);
   return (
     <Body openChat={openChat}>
-      <SlideInDiv active={slideInActive} ref={SlideRef}>
-        {slideInActive && Slides[activeSlide]}
+      <SlideInDiv active={slideOpen} ref={SlideRef}>
+        {slideOpen && Slides[activeSlide]}
       </SlideInDiv>
       <TopBar>
         <UserDetails>
-          <UserImage onClick={() => ActivativeSlide("profile")}>
-            <User size={30} />
+          <UserImage onClick={() => ShowProfile()}>
+            <Image alt="pfp" src={ProfileImage} />
           </UserImage>
         </UserDetails>
         <Utitilites>
-          <AddIcon onClick={() => ActivativeSlide("newChat")}>
+          <AddIcon onClick={() => StartNewChat()}>
             <Plus size={20} />
           </AddIcon>
-          <BellIcon onClick={() => ActivativeSlide("notifications")}>
+          <BellIcon onClick={() => ShowNotification()}>
             <Bell size={25} />
             {!ReadNotification && <BlueCheck />}
           </BellIcon>
@@ -79,11 +98,21 @@ const ChatSideBar = ({}: IProps) => {
         </Utitilites>
       </TopBar>
       <SearchArea>
-        <SearchInput />
-        <Filter size={20} />
+        <SearchInput
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+        <FilterContainer
+          onClick={() => {
+            setFilterChat(!filterChat);
+          }}
+          activeFilter={filterChat}
+        >
+          <Filter size={20} />
+        </FilterContainer>
       </SearchArea>
       <Texts>
-        <ActiveChats />
+        <ActiveChats searchValue={searchValue} filter={filterChat} />
       </Texts>
     </Body>
   );
@@ -135,13 +164,22 @@ const UserImage = styled.div`
   height: 4rem;
   border-radius: 50%;
   background-color: white;
+  overflow: hidden;
   color: black;
   display: flex;
   align-items: center;
   justify-content: center;
+  img {
+    width: 4rem;
+    height: 4rem;
+  }
   @media screen and (max-width: 480px) {
     height: 3rem;
     width: 3rem;
+    img {
+      width: 3rem;
+      height: 3rem;
+    }
   }
 `;
 
@@ -195,6 +233,17 @@ const SearchArea = styled.div`
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     padding: 0.5rem 1rem;
   }
+`;
+const FilterContainer = styled.div<{ activeFilter: Boolean }>`
+  color: ${(props) => (props.activeFilter ? "white" : props.theme.colors.snow)};
+  cursor: pointer;
+  transition: all ease-in 0.2s;
+  background-color: ${(props) =>
+    props.activeFilter
+      ? props.theme.colors.primary
+      : props.theme.colors.gluton};
+  border-radius: 50%;
+  padding: 0.5rem;
 `;
 const Texts = styled.div`
   padding-top: 1rem;

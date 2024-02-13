@@ -19,7 +19,7 @@ const SearchInput = ({ handleKeyPress, ...rest }: IProps) => {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         {...rest}
-        placeholder="Search"
+        placeholder="Search by username"
         // onKeyDown={handleKeyPress}
       />
     </Body>
@@ -57,10 +57,10 @@ const Input = styled.input`
   width: 95%;
   height: 100%;
   background-color: transparent;
-  font-size: 1.2rem;
-  font-weight: 500;
+  font-size: 1.6rem;
+  font-weight: 400;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
   }
   @media screen and (max-width: 480px) {
     font-size: 1.6rem;
@@ -68,7 +68,7 @@ const Input = styled.input`
 
   ::placeholder {
     color: #d9d9d971;
-    font-weight: 600;
+    font-weight: 400;
   }
 
   &:-webkit-autofill {

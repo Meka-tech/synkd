@@ -8,6 +8,8 @@ import styled from "@emotion/styled";
 import { useDispatch, useSelector } from "react-redux";
 import ShortenText from "@/utils/ShortenText";
 import { RootState } from "@/Redux/app/store";
+import { GetProfileImage } from "@/utils/GetProfileImage";
+import Image from "next/image";
 
 interface IProps {
   user: IUserType;
@@ -26,13 +28,17 @@ const FriendBox = ({ user, close }: IProps) => {
     dispatch(updateActiveChatId(user._id));
   };
 
+  const ProfileImage = GetProfileImage(user.avatar);
+
   return (
     <Body
       onClick={() => {
         OpenUserChat();
       }}
     >
-      <PictureImage />
+      <PictureImage>
+        <Image src={ProfileImage} alt="pfp" />
+      </PictureImage>
       <TextContainer>
         <Name>{user.username}</Name>
         <Bio> {ShortenText(user.bio, 30)}</Bio>
@@ -72,13 +78,27 @@ const PictureImage = styled.div`
   height: 3.5rem;
   border-radius: 50%;
   background-color: white;
+  position: relative;
+  overflow: hidden;
+  img {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
   @media screen and (max-width: 480px) {
     width: 2.5rem;
     height: 2.5rem;
+    img {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     width: 3rem;
     height: 3rem;
+    img {
+      width: 3rem;
+      height: 3rem;
+    }
   }
 `;
 

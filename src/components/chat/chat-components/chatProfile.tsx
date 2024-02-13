@@ -1,7 +1,9 @@
 import { RootState } from "@/Redux/app/store";
 import { getActiveChatPartner } from "@/Redux/features/friends/friendsSlice";
 import { IUserType } from "@/types/userType";
+import { GetProfileImage } from "@/utils/GetProfileImage";
 import styled from "@emotion/styled";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -14,9 +16,13 @@ const ChatProfile = () => {
   useEffect(() => {
     setPartner(chatPartner);
   }, [chatPartner]);
+
+  const PartnerImage = GetProfileImage(Partner?.avatar);
   return (
     <Main>
-      <ProfileImage />
+      <ProfileImage>
+        <Image src={PartnerImage} alt="pfp" />
+      </ProfileImage>
       <Name>{Partner?.username}</Name>
       <Email>
         <h2>Email</h2>
@@ -55,6 +61,11 @@ const ProfileImage = styled.div`
   background-color: white;
   border-radius: 50%;
   margin-bottom: 1.5rem;
+  overflow: hidden;
+  img {
+    width: 8rem;
+    height: 8rem;
+  }
 `;
 const Name = styled.h3`
   font-size: 1.8rem;

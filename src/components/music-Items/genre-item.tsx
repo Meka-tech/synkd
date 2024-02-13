@@ -25,7 +25,7 @@ const GenreItem = ({ name, onClick, bgImage, size = "100" }: IProps) => {
         src={bgImage}
         alt="background"
       />
-      <Text>{name}</Text>
+      <Text size={size}>{name}</Text>
     </Body>
   );
 };
@@ -38,8 +38,8 @@ interface IButtonProps {
 
 const Body = styled.div<IButtonProps>`
   position: relative;
-  height: ${(props) => `calc( ${props.size} / 100 * 15rem)`};
-  width: ${(props) => `calc( ${props.size} / 100 * 15rem)`};
+  height: ${(props) => `calc( ${props.size} / 100 * 12.5rem)`};
+  width: ${(props) => `calc( ${props.size} / 100 * 12.5rem)`};
   border-radius: 50%;
   cursor: pointer;
   transition: all ease-in 0.1s;
@@ -51,6 +51,7 @@ const Body = styled.div<IButtonProps>`
   background-position: center;
   transition: transform 0.3s ease;
   overflow: hidden;
+  padding: 1rem;
 
   img {
     position: absolute;
@@ -69,8 +70,8 @@ const Body = styled.div<IButtonProps>`
   margin-right: auto;
 
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
-    height: ${(props) => `calc( ${props.size} / 100 * 12rem)`};
-    width: ${(props) => `calc( ${props.size} / 100 * 12rem)`};
+    height: ${(props) => `calc( ${props.size} / 100 * 10rem)`};
+    width: ${(props) => `calc( ${props.size} / 100 * 10rem)`};
   }
 
   @media screen and (max-width: 480px) {
@@ -82,15 +83,19 @@ const Body = styled.div<IButtonProps>`
   }
 `;
 
-const Text = styled.h2`
+const Text = styled.h2<IButtonProps>`
   @media screen and (max-width: 480px) {
     font-size: 1rem;
   }
-  font-size: 1.8rem;
+  font-size: ${(props) => `calc( ${props.size} / 100 * 1.7rem)`};
   font-weight: 800;
+  text-align: center;
   text-transform: capitalize;
   z-index: 10;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
-    font-size: 1.6rem;
+    font-size: ${(props) => `calc( ${props.size} / 100 * 1.4rem)`};
+  }
+  @media screen and (max-width: 480px) {
+    font-size: ${(props) => `calc( ${props.size} / 100 * 1.1rem)`};
   }
 `;

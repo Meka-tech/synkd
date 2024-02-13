@@ -40,11 +40,10 @@ const Body = styled.div`
 const Text = styled.h2`
   font-size: 2rem;
   margin-bottom: 1rem;
-  text-transform: capitalize;
+  font-weight: 700;
   b {
     color: ${(props) => props.theme.colors.primary};
     font-size: 2rem;
-    font-weight: 700;
   }
   @media screen and (max-width: 480px) {
     font-size: 1.6rem;
@@ -55,15 +54,15 @@ const Text = styled.h2`
 `;
 
 const Button = styled.div`
-  width: 5rem;
-  height: 5rem;
+  width: 5.5rem;
+  height: 5.5rem;
   border-radius: 50%;
   cursor: pointer;
   background-color: ${(props) => props.theme.colors.primary};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 800;
   transition: all ease-in 0.2s;
   :hover {

@@ -13,7 +13,9 @@ import { updateUser } from "@/Redux/features/user/userSlice";
 import { Crown } from "@emotion-icons/boxicons-solid";
 import { useRouter } from "next/router";
 import { useSocket } from "@/context/SocketContext";
-// import { socket } from "@/service/socket";
+import { updateSlide } from "@/Redux/features/slides/slide";
+import { GetProfileImage } from "@/utils/GetProfileImage";
+import Image from "next/image";
 
 interface IProfile {
   close: Function;
@@ -151,6 +153,15 @@ const Profile = ({ close }: IProfile) => {
       router.push(link);
     }
   };
+
+  const ChooseAvatar = () => {
+    dispatch(updateSlide("avatar"));
+  };
+
+  const userAvatar = useSelector((state: RootState) => state.user.user?.avatar);
+
+  const ProfileAvatar = GetProfileImage(userAvatar);
+
   return (
     <Main>
       <TopBar>
@@ -177,7 +188,12 @@ const Profile = ({ close }: IProfile) => {
         <Item>
           <Info>
             <ImageArea>
-              <ProfileImage></ProfileImage>
+              <ProfileImage>
+                <Image src={ProfileAvatar} alt="pfp" />
+              </ProfileImage>
+              <AvatarText onClick={() => ChooseAvatar()}>
+                <h2>Change Avatar</h2>
+              </AvatarText>
             </ImageArea>
             <UsernameInput>
               <Input
@@ -309,12 +325,32 @@ const Info = styled.div`
 
 const ImageArea = styled.div`
   margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
 `;
 const ProfileImage = styled.div`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
   background-color: white;
+  margin-right: 2rem;
+  position: relative;
+  overflow: hidden;
+
+  img {
+    height: 3.5rem;
+    width: 3.5rem;
+  }
+`;
+const AvatarText = styled.div`
+  background-color: ${(props) => props.theme.bgColors.primaryFade};
+  padding: 0.2rem 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  h2 {
+    font-weight: 700;
+    color: ${(props) => props.theme.colors.primary};
+  }
 `;
 const UsernameInput = styled.div`
   width: 100%;

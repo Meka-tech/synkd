@@ -81,9 +81,9 @@ const ChatBubble = ({
     }
   };
 
-  // useEffect(() => {
-  //   ReadMessage();
-  // }, []);
+  useEffect(() => {
+    ReadMessage();
+  }, []);
 
   const SendMessage = async () => {
     if (!sent) {

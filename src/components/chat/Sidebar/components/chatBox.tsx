@@ -3,12 +3,17 @@ import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useDispatch, useSelector } from "react-redux";
 import ShortenText from "@/utils/ShortenText";
-import { Envelope } from "@emotion-icons/boxicons-regular";
+import { Envelope, EnvelopeOpen } from "@emotion-icons/boxicons-solid";
+import { ArrowIosBack, ArrowIosForward } from "@emotion-icons/evaicons-solid";
+
 import {
   updateActiveChatId,
   updateLaunch,
   updateOpenChat
 } from "@/Redux/features/openChat/openChatSlice";
+import { GetProfileImage } from "@/utils/GetProfileImage";
+import Image from "next/image";
+import { useState } from "react";
 
 interface IProps {
   recentMsg?: string;
@@ -36,18 +41,28 @@ const ChatBox = ({
     dispatch(updateActiveChatId(partner?._id));
   };
 
+  const ProfileImage = GetProfileImage(partner?.avatar);
+  const [hover, setHover] = useState(false);
+
   return (
     <Body
       onClick={() => {
         OpenUserChat();
       }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
     >
-      <PictureImage />
+      <PictureImage>
+        <Image src={ProfileImage} alt="pfp" />
+      </PictureImage>
       <TextContainer>
         <Top>
           <Name>{partner?.username}</Name>
           <TimeDiv>
-            <Time unRead={unReadMsg > 0}>{recentMsgTime}</Time>{" "}
+            <Time unRead={unReadMsg > 0}>{recentMsgTime}</Time>
+            <Arrow Hover={hover}>
+              <ArrowIosForward size={20} />
+            </Arrow>
           </TimeDiv>
         </Top>
         <Bottom>
@@ -55,8 +70,18 @@ const ChatBox = ({
             <RecentText>
               {unReadMsg > 0 ? (
                 <NewMessage>
-                  <Envelope size={20} /> New
+                  <EnvelopeDiv>
+                    <Envelope size={20} />{" "}
+                  </EnvelopeDiv>
+                  New
                 </NewMessage>
+              ) : unReadMsg < 1 && !userSent ? (
+                <ReadMessage>
+                  <EnvelopeDiv>
+                    <EnvelopeOpen size={20} />{" "}
+                  </EnvelopeDiv>
+                  {ShortenText(recentMsg, 30)}
+                </ReadMessage>
               ) : (
                 <>
                   {" "}
@@ -94,18 +119,30 @@ const Body = styled.div`
 `;
 
 const PictureImage = styled.div`
-  width: 4rem;
-  height: 4rem;
+  width: 4.5rem;
+  height: 4.5rem;
   border-radius: 50%;
   background-color: white;
+  overflow: hidden;
+  img {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     width: 3rem;
     height: 3rem;
+    img {
+      width: 3rem;
+      height: 3rem;
+    }
   }
 `;
 
 const TextContainer = styled.div`
-  width: 85%;
+  width: 87%;
+  @media screen and (max-width: 480px) {
+    width: 84%;
+  }
 `;
 
 const Top = styled.div`
@@ -139,6 +176,11 @@ const Time = styled.h3<BlueText>`
     font-size: 1rem;
   }
 `;
+const Arrow = styled.div<{ Hover: Boolean }>`
+  width: ${(props) => (props.Hover ? "2rem" : "0rem")};
+  transition: ease-in-out 0.1s all;
+  overflow: hidden;
+`;
 
 const Bottom = styled.div`
   display: flex;
@@ -171,19 +213,10 @@ const NewMessage = styled.h2`
   }
 `;
 
-const UnReadMsgDiv = styled.div`
-  margin-left: 0.5rem;
-  min-width: 1rem;
-  height: 1rem;
-  border-radius: 50%;
-  width: fit-content;
-  padding: 0.5rem;
-  background-color: ${(props) => props.theme.colors.primary};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  h3 {
-    font-weight: 600;
-    font-size: 1rem;
-  }
+const ReadMessage = styled(NewMessage)`
+  color: ${(props) => props.theme.colors.dusty};
+`;
+
+const EnvelopeDiv = styled.div`
+  margin-right: 0.5rem;
 `;

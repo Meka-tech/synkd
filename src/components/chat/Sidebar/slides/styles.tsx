@@ -20,10 +20,22 @@ export const TopBar = styled.div`
 `;
 export const HeaderDiv = styled.div`
   display: flex;
+  align-items: center;
 `;
 export const BackDiv = styled.div`
   cursor: pointer;
   margin-right: 1rem;
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all ease-in-out 0.2s;
+
+  :hover {
+    background-color: ${(props) => props.theme.colors.slate};
+  }
   @media screen and (max-width: 480px) {
     margin-right: 0rem;
   }

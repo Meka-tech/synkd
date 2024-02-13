@@ -41,6 +41,7 @@ export default function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    UpdateUser();
     if (authToken === "") {
       router.push("/auth/sign-in");
     }
@@ -128,6 +129,8 @@ export default function Home() {
     try {
       let recentMessage: ImsgType | any;
       recentMessage = await getOldestUnreadMessage(user?._id);
+
+      console.log(recentMessage);
       if (recentMessage) {
         const response = await axios.post(
           "/api/chat/get-received-messages",

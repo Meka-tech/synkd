@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
-import DefaultPfp from "../../images/pfp/pfp1.jpeg";
 import React, { FC, useState } from "react";
 import { Sync, Undo } from "@emotion-icons/boxicons-regular";
 import { CheckCircle } from "@emotion-icons/boxicons-solid";
@@ -9,6 +8,7 @@ import { IUserType } from "@/types/userType";
 import Cookies from "js-cookie";
 import { css, keyframes } from "@emotion/react";
 import { useSocket } from "@/context/SocketContext";
+import { GetProfileImage } from "@/utils/GetProfileImage";
 
 interface IProps {
   user: IUserType;
@@ -76,6 +76,8 @@ const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
       setRequestSent(false);
     }
   };
+
+  const AvatarImage = GetProfileImage(user?.avatar);
   return (
     <Main
       onMouseOver={() => {
@@ -87,7 +89,7 @@ const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
     >
       <UserDetails>
         <UserImage>
-          <Image src={DefaultPfp} alt="pfp" />
+          <Image src={AvatarImage} alt="pfp" />
         </UserImage>
         <NamePercent>
           <Username>{user?.username}</Username>

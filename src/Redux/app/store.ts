@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import UserReducer from "@/Redux/features/user/userSlice";
 import FriendsReducer from "@/Redux/features/friends/friendsSlice";
 import OpenChatReducer from "@/Redux/features/openChat/openChatSlice";
+import SlideReducer from "@/Redux/features/slides/slide";
 import { persistStore, persistReducer } from "redux-persist";
 // import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
@@ -34,7 +35,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: UserReducer,
   friends: FriendsReducer,
-  openChat: OpenChatReducer
+  openChat: OpenChatReducer,
+  slide: SlideReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

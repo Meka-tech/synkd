@@ -12,6 +12,8 @@ import useClickOutside from "@/hooks/useClickOutside";
 import { RootState } from "@/Redux/app/store";
 import { getActiveChatPartner } from "@/Redux/features/friends/friendsSlice";
 import { InfoCircle } from "@emotion-icons/boxicons-regular";
+import { GetProfileImage } from "@/utils/GetProfileImage";
+import Image from "next/image";
 
 interface Iprops {}
 const ChatHeader = ({}: Iprops) => {
@@ -37,6 +39,8 @@ const ChatHeader = ({}: Iprops) => {
     setProfileOpen(false);
   });
 
+  const ProfileImage = GetProfileImage(Partner?.avatar);
+
   return (
     <TopBar>
       <ProfileDiv open={profileOpen}>
@@ -52,7 +56,9 @@ const ChatHeader = ({}: Iprops) => {
           <ArrowIosBack size={30} />
         </BackArrow>
         <PartnerDetails>
-          <PartnerImage />
+          <PartnerImage>
+            <Image src={ProfileImage} alt="pfp" />
+          </PartnerImage>
           <PartnerName>{Partner?.username}</PartnerName>
         </PartnerDetails>
       </TopLeft>
@@ -133,6 +139,11 @@ const PartnerImage = styled.div`
   height: 4rem;
   border-radius: 50%;
   background-color: white;
+  overflow: hidden;
+  img {
+    width: 4rem;
+    height: 4rem;
+  }
 `;
 const PartnerName = styled.h2`
   color: white;
