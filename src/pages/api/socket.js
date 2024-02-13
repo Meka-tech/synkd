@@ -23,7 +23,9 @@ const SocketHandler = async (req, res) => {
     io.on("connection", (socket) => {
       //to avoid two connections with the same user id
       socket.on("user-online", (userId) => {
-        if (!socketIdMap.hasOwn(`${userId}`)) {
+        if (userId in socketIdMap) {
+          return;
+        } else {
           socketIdMap[userId] = socket.id;
         }
       });
