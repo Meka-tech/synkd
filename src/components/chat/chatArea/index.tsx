@@ -156,7 +156,7 @@ const SendIcon = styled.div<ISend>`
   height: 3.5rem;
   border-radius: 50%;
   background-color: ${(props) =>
-    props.active ? props.theme.colors.primary : props.theme.colors.slate};
+    props.active ? props.theme.colors.primary : props.theme.colors.gluton};
   cursor: pointer;
   display: flex;
   align-items: center;
