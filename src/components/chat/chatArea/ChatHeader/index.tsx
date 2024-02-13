@@ -58,7 +58,7 @@ const ChatHeader = ({}: Iprops) => {
         </BackArrow>
         <PartnerDetails>
           <PartnerImage>
-            <Image src={profileImage || ""} alt="pfp" placeholder="blur" />
+            <Image src={profileImage || ""} alt="pfp" />
           </PartnerImage>
           <PartnerName>{Partner?.username}</PartnerName>
         </PartnerDetails>

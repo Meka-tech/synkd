@@ -134,6 +134,7 @@ const BottomBar = styled.div`
   width: 100%;
   padding: 1.5rem 2rem;
   background-color: ${(props) => props.theme.colors.void};
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,6 +143,7 @@ const BottomBar = styled.div`
     padding: 1rem 1rem;
     position: sticky;
     bottom: 0;
+    border-top: 1px solid ${(props) => props.theme.colors.gluton};
   }
 `;
 

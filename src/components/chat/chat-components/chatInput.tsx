@@ -99,8 +99,7 @@ export default ChatInput;
 const Body = styled.div`
   width: 95%;
   padding: 0.5rem 1rem;
-  background-color: 1px solid ${(props) => props.theme.colors.danger};
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid ${(props) => props.theme.colors.border};
   height: fit-content;
   border-radius: 15px;
   display: flex;
@@ -108,9 +107,11 @@ const Body = styled.div`
   position: relative;
   margin-right: 1rem;
   @media screen and (max-width: 480px) {
-    width: 99%;
+    border: none;
+    background-color: ${(props) => props.theme.colors.gluton};
+    width: 85%;
     padding: 0.5rem 1rem;
-    margin-right: 0.5rem;
+    margin-right: 1.5rem;
   }
 `;
 const Input = styled.textarea`
@@ -135,7 +136,7 @@ const Input = styled.textarea`
     max-height: 10rem;
   }
   ::placeholder {
-    color: #d9d9d971;
+    color: ${(props) => props.theme.colors.dusty};
     font-weight: 400;
   }
 
