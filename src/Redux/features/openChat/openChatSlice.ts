@@ -23,6 +23,9 @@ export const openChatSlice = createSlice({
     },
     updateLaunch: (state, action) => {
       state.launch = action.payload;
+      if (!state.launch) {
+        state.openChat = false;
+      }
     }
   }
 });

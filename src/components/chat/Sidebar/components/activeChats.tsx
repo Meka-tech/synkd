@@ -107,7 +107,7 @@ export default ActiveChats;
 
 const Main = styled.div`
   position: relative;
-  height: 100%;
+  height: 95%;
 `;
 
 const NoActiveChats = styled.div`

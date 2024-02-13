@@ -42,6 +42,7 @@ export default function Home() {
 
   useEffect(() => {
     UpdateUser();
+
     if (authToken === "") {
       router.push("/auth/sign-in");
     }
@@ -125,41 +126,65 @@ export default function Home() {
     }
   }, []);
 
-  const GetUserMessages = useCallback(async () => {
+  // const GetUserMessages = useCallback(async () => {
+  //   try {
+  //     let recentMessage: ImsgType | any;
+  //     recentMessage = await getOldestUnreadMessage(user?._id);
+  //     if (recentMessage) {
+  //       const response = await axios.post(
+  //         "/api/chat/get-received-messages",
+  //         {
+  //           updatedAt: recentMessage.updatedAt
+  //         },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${authToken}`
+  //           }
+  //         }
+  //       );
+  //       const messages: ImsgType[] = response.data.messages;
+
+  //       for (const message of messages) {
+  //         let existingMessage = await MessageDb.messages.get({
+  //           _id: message._id
+  //         });
+
+  //         if (existingMessage) {
+  //           existingMessage = message;
+  //           MessageDb.messages.put(existingMessage);
+  //         } else {
+  //           MessageDb.messages.put(message);
+  //         }
+  //       }
+  //     }
+  //   } catch (err) {}
+  // }, []);
+
+  const GetUserMessages = async () => {
+    const localMessages = await MessageDb.messages.toArray();
     try {
-      let recentMessage: ImsgType | any;
-      recentMessage = await getOldestUnreadMessage(user?._id);
-
-      console.log(recentMessage);
-      if (recentMessage) {
-        const response = await axios.post(
-          "/api/chat/get-received-messages",
-          {
-            updatedAt: recentMessage.updatedAt
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`
-            }
+      if (authToken) {
+        const data = await axios.get("/api/chat/get-user-messages", {
+          headers: {
+            Authorization: `Bearer ${authToken}`
           }
-        );
-        const messages: ImsgType[] = response.data.messages;
-
-        for (const message of messages) {
-          let existingMessage = await MessageDb.messages.get({
-            _id: message._id
-          });
-
-          if (existingMessage) {
-            existingMessage = message;
-            MessageDb.messages.put(existingMessage);
-          } else {
-            MessageDb.messages.put(message);
-          }
-        }
+        });
+        const UserMessages = data.data.messages;
+        await AddToLocalDb(UserMessages);
+        router.push("/");
       }
-    } catch (err) {}
-  }, []);
+    } catch (e) {}
+  };
+
+  const AddToLocalDb = async (data: []) => {
+    try {
+      await MessageDb.open();
+      // await MessageDb.messages.clear();
+      await MessageDb.messages.bulkPut(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const handleVisibilityChange = useCallback(() => {
     if (!document.hidden) {

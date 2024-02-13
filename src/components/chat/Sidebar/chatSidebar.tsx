@@ -111,9 +111,15 @@ const ChatSideBar = ({}: IProps) => {
           <Filter size={20} />
         </FilterContainer>
       </SearchArea>
-      <Texts>
+
+      <Chats>
+        {searchValue !== "" && (
+          <SearchResultText>
+            <h3>Search Results: </h3>
+          </SearchResultText>
+        )}
         <ActiveChats searchValue={searchValue} filter={filterChat} />
-      </Texts>
+      </Chats>
     </Body>
   );
 };
@@ -245,11 +251,21 @@ const FilterContainer = styled.div<{ activeFilter: Boolean }>`
   border-radius: 50%;
   padding: 0.5rem;
 `;
-const Texts = styled.div`
+
+const SearchResultText = styled.div`
+  margin-top: 1rem;
+  margin-left: 1rem;
+  h3 {
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+`;
+const Chats = styled.div`
   padding-top: 1rem;
   height: 82%;
   overflow-y: scroll;
   width: 100%;
+
   @media screen and (max-width: 480px) {
     height: 82%;
   }

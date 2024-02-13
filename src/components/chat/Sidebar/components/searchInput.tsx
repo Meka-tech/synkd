@@ -19,7 +19,7 @@ const SearchInput = ({ handleKeyPress, ...rest }: IProps) => {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         {...rest}
-        placeholder="Search by username"
+        placeholder="Search Username"
         // onKeyDown={handleKeyPress}
       />
     </Body>

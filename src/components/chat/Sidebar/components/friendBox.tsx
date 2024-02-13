@@ -50,7 +50,7 @@ const FriendBox = ({ user, close }: IProps) => {
 export default FriendBox;
 
 const Body = styled.div`
-  width: 80%;
+  width: 90%;
   margin-left: auto;
   margin-right: auto;
   display: flex;

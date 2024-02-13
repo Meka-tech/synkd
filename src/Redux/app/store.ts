@@ -29,7 +29,7 @@ const storage =
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["OpenChatReducer"]
+  blacklist: ["OpenChatReducer", "SlideReducer"]
 };
 
 const rootReducer = combineReducers({

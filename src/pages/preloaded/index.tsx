@@ -76,51 +76,52 @@ export default function Preloaded() {
     const localMessages = await MessageDb.messages.toArray();
     try {
       if (token) {
-        if (localMessages?.length === 0) {
-          // const data = await axios.get("/api/chat/get-user-messages", {
-          //   headers: {
-          //     Authorization: `Bearer ${token}`
-          //   }
-          // });
-          // const UserMessages = data.data.messages;
-          // await AddToLocalDb(UserMessages);
-          router.push("/");
-        }
-        if (localMessages?.length > 0) {
-          let recentMessage: ImsgType | any;
-
-          recentMessage = await getMostRecentReceivedMessageForUser(user?._id);
-
-          if (recentMessage) {
-            const response = await axios.post(
-              "/api/chat/get-received-messages",
-              {
-                updatedAt: recentMessage.updatedAt
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${authToken}`
-                }
-              }
-            );
-            const messages = response.data.messages;
-
-            if (messages.length > 1) {
-              await MessageDb.messages.bulkPut(messages);
-            }
-            if (messages.length === 1) {
-              await MessageDb.messages.put(messages[0]);
-            }
+        const data = await axios.get("/api/chat/get-user-messages", {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
+        });
+        const UserMessages = data.data.messages;
+        await AddToLocalDb(UserMessages);
+        router.push("/");
 
-          router.push("/");
-        }
+        // if (localMessages?.length > 0) {
+        //   let recentMessage: ImsgType | any;
+
+        //   recentMessage = await getMostRecentReceivedMessageForUser(user?._id);
+
+        //   if (recentMessage) {
+        //     const response = await axios.post(
+        //       "/api/chat/get-received-messages",
+        //       {
+        //         updatedAt: recentMessage.updatedAt
+        //       },
+        //       {
+        //         headers: {
+        //           Authorization: `Bearer ${authToken}`
+        //         }
+        //       }
+        //     );
+        //     const messages = response.data.messages;
+
+        //     if (messages.length > 1) {
+        //       await MessageDb.messages.bulkPut(messages);
+        //     }
+        //     if (messages.length === 1) {
+        //       await MessageDb.messages.put(messages[0]);
+        //     }
+        //   }
+
+        //   router.push("/");
+        // }
       }
     } catch (e) {}
   };
 
   const AddToLocalDb = async (data: []) => {
     try {
+      await MessageDb.open();
+      await MessageDb.messages.clear();
       await MessageDb.messages.bulkPut(data);
     } catch (e) {
       console.log(e);
