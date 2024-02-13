@@ -67,9 +67,9 @@ const ChatSideBar = ({}: IProps) => {
     (state: RootState) => state.openChat.openChat
   );
 
-  const userAvatar = useSelector((state: RootState) => state.user.user?.avatar);
-
-  const ProfileImage = GetProfileImage(userAvatar);
+  const ProfileImage = useSelector(
+    (state: RootState) => state.user.avatarImage
+  );
 
   const [searchValue, setSearchValue] = useState("");
   const [filterChat, setFilterChat] = useState(false);

@@ -21,7 +21,7 @@ const ChatProfile = () => {
   return (
     <Main>
       <ProfileImage>
-        <Image src={PartnerImage} alt="pfp" />
+        <Image src={PartnerImage} alt="pfp" placeholder="blur" />
       </ProfileImage>
       <Name>{Partner?.username}</Name>
       <Email>

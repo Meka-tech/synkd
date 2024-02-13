@@ -24,6 +24,7 @@ const GenreItem = ({ name, onClick, bgImage, size = "100" }: IProps) => {
         style={{ objectFit: "cover", objectPosition: "center" }}
         src={bgImage}
         alt="background"
+        placeholder="blur"
       />
       <Text size={size}>{name}</Text>
     </Body>

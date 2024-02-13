@@ -1,5 +1,7 @@
 import { IUserType } from "@/types/userType";
+import { GetProfileImage } from "@/utils/GetProfileImage";
 import { createSlice } from "@reduxjs/toolkit";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 interface INotification {
   user: IUserType;
@@ -13,12 +15,14 @@ interface UserSliceType {
   user: IUserType | null;
   notifications: INotification[];
   readNotification: boolean;
+  avatarImage: string | StaticImport;
 }
 
 const initialState: UserSliceType = {
   user: null,
   notifications: [],
-  readNotification: true
+  readNotification: true,
+  avatarImage: ""
 };
 
 export const userSlice = createSlice({
@@ -27,6 +31,8 @@ export const userSlice = createSlice({
   reducers: {
     updateUser: (state, action) => {
       state.user = action.payload;
+      const ProfileAvatar = GetProfileImage(state.user?.avatar);
+      state.avatarImage = ProfileAvatar;
     },
     updateNotifications: (state, action) => {
       if (state.notifications !== action.payload) {

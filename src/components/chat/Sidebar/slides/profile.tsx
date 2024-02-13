@@ -158,9 +158,9 @@ const Profile = ({ close }: IProfile) => {
     dispatch(updateSlide("avatar"));
   };
 
-  const userAvatar = useSelector((state: RootState) => state.user.user?.avatar);
-
-  const ProfileAvatar = GetProfileImage(userAvatar);
+  const ProfileAvatar = useSelector(
+    (state: RootState) => state.user.avatarImage
+  );
 
   return (
     <Main>
@@ -189,7 +189,7 @@ const Profile = ({ close }: IProfile) => {
           <Info>
             <ImageArea>
               <ProfileImage>
-                <Image src={ProfileAvatar} alt="pfp" />
+                <Image src={ProfileAvatar} alt="pfp" placeholder="blur" />
               </ProfileImage>
               <AvatarText onClick={() => ChooseAvatar()}>
                 <h2>Change Avatar</h2>

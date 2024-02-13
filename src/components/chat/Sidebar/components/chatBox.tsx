@@ -53,7 +53,7 @@ const ChatBox = ({
       onMouseLeave={() => setHover(false)}
     >
       <PictureImage>
-        <Image src={ProfileImage} alt="pfp" />
+        <Image src={ProfileImage} alt="pfp" placeholder="blur" />
       </PictureImage>
       <TextContainer>
         <Top>

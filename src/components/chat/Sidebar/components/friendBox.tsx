@@ -37,7 +37,7 @@ const FriendBox = ({ user, close }: IProps) => {
       }}
     >
       <PictureImage>
-        <Image src={ProfileImage} alt="pfp" />
+        <Image src={ProfileImage} alt="pfp" placeholder="blur" />
       </PictureImage>
       <TextContainer>
         <Name>{user.username}</Name>

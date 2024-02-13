@@ -89,7 +89,7 @@ const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
     >
       <UserDetails>
         <UserImage>
-          <Image src={AvatarImage} alt="pfp" />
+          <Image src={AvatarImage} alt="pfp" placeholder="blur" />
         </UserImage>
         <NamePercent>
           <Username>{user?.username}</Username>
