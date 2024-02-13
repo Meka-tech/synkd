@@ -13,12 +13,13 @@ import { RootState } from "@/Redux/app/store";
 import { getActiveChatPartner } from "@/Redux/features/friends/friendsSlice";
 import { InfoCircle } from "@emotion-icons/boxicons-regular";
 import { GetProfileImage } from "@/utils/GetProfileImage";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 interface Iprops {}
 const ChatHeader = ({}: Iprops) => {
   const dispatch = useDispatch();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState<StaticImageData>();
   const [Partner, setPartner] = useState<IUserType>();
   const chatPartner = useSelector((state: RootState) =>
     getActiveChatPartner(state)
@@ -26,7 +27,9 @@ const ChatHeader = ({}: Iprops) => {
 
   useEffect(() => {
     setPartner(chatPartner);
-  }, [chatPartner]);
+    const Image = GetProfileImage(Partner?.avatar);
+    setProfileImage(Image);
+  }, [Partner?.avatar, chatPartner]);
   const profileRef = useRef(null);
   const GoBack = () => {
     dispatch(updateOpenChat(false));
@@ -38,8 +41,6 @@ const ChatHeader = ({}: Iprops) => {
   useClickOutside(profileRef, () => {
     setProfileOpen(false);
   });
-
-  const ProfileImage = GetProfileImage(Partner?.avatar);
 
   return (
     <TopBar>
@@ -57,7 +58,7 @@ const ChatHeader = ({}: Iprops) => {
         </BackArrow>
         <PartnerDetails>
           <PartnerImage>
-            <Image src={ProfileImage} alt="pfp" />
+            <Image src={profileImage || ""} alt="pfp" />
           </PartnerImage>
           <PartnerName>{Partner?.username}</PartnerName>
         </PartnerDetails>
@@ -88,7 +89,7 @@ const TopBar = styled.div`
   position: relative;
   justify-content: space-between;
   display: flex;
-  z-index: 200;
+  z-index: 300;
   @media screen and (max-width: 480px) {
     height: 8%;
     padding: 0.5rem 0.5rem;

@@ -197,15 +197,16 @@ const RecentText = styled.h2`
   font-weight: 400;
   font-size: 1.4rem;
   color: ${(props) => props.theme.colors.dusty};
+  font-weight: 400;
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
     font-size: 1.2rem;
   }
 `;
 
-const NewMessage = styled.h2`
+const NewMessage = styled.span`
   font-weight: 700;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   font-size: 1.4rem;
   color: ${(props) => props.theme.colors.primary};
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
@@ -215,6 +216,7 @@ const NewMessage = styled.h2`
 
 const ReadMessage = styled(NewMessage)`
   color: ${(props) => props.theme.colors.dusty};
+  font-weight: 400;
 `;
 
 const EnvelopeDiv = styled.div`
