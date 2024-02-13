@@ -14,7 +14,7 @@ import { Crown } from "@emotion-icons/boxicons-solid";
 import { useRouter } from "next/router";
 import { useSocket } from "@/context/SocketContext";
 import { updateSlide } from "@/Redux/features/slides/slide";
-import { GetProfileImage } from "@/utils/GetProfileImage";
+import { FaceMask } from "@emotion-icons/boxicons-solid";
 import Image from "next/image";
 
 interface IProfile {
@@ -193,6 +193,7 @@ const Profile = ({ close }: IProfile) => {
               </ProfileImage>
               <AvatarText onClick={() => ChooseAvatar()}>
                 <h2>Change Avatar</h2>
+                <FaceMask size={20} />
               </AvatarText>
             </ImageArea>
             <UsernameInput>
@@ -347,8 +348,12 @@ const AvatarText = styled.div`
   padding: 0.2rem 0.5rem;
   border-radius: 8px;
   cursor: pointer;
+  color: ${(props) => props.theme.colors.primary};
+  display: flex;
+  align-items: center;
   h2 {
     font-weight: 700;
+    margin-right: 0.5rem;
     color: ${(props) => props.theme.colors.primary};
   }
 `;

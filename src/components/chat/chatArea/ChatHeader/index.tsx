@@ -19,12 +19,10 @@ interface Iprops {}
 const ChatHeader = ({}: Iprops) => {
   const dispatch = useDispatch();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState<StaticImageData>();
   const [Partner, setPartner] = useState<IUserType>();
   const chatPartner = useSelector((state: RootState) =>
     getActiveChatPartner(state)
-  );
-  const [profileImage, setProfileImage] = useState<StaticImageData>(
-    GetProfileImage(Partner?.avatar)
   );
 
   useEffect(() => {
@@ -60,7 +58,7 @@ const ChatHeader = ({}: Iprops) => {
         </BackArrow>
         <PartnerDetails>
           <PartnerImage>
-            <Image src={profileImage} alt="pfp" placeholder="blur" />
+            <Image src={profileImage || ""} alt="pfp" />
           </PartnerImage>
           <PartnerName>{Partner?.username}</PartnerName>
         </PartnerDetails>

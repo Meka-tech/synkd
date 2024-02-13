@@ -179,11 +179,11 @@ const UserImage = styled.div`
     }
   }
   @media screen and (max-width: 480px) {
-    width: 3rem;
-    height: 3rem;
+    width: 4rem;
+    height: 4rem;
     img {
-      width: 3rem;
-      height: 3rem;
+      width: 4rem;
+      height: 4rem;
     }
   }
 `;

@@ -85,11 +85,11 @@ const PictureImage = styled.div`
     height: 3.5rem;
   }
   @media screen and (max-width: 480px) {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
     img {
-      width: 2.5rem;
-      height: 2.5rem;
+      width: 3.5rem;
+      height: 3.5rem;
     }
   }
   @media screen and (min-width: 1300px) and (max-width: 1600px) {
@@ -104,6 +104,9 @@ const PictureImage = styled.div`
 
 const TextContainer = styled.div`
   width: 87%;
+  @media screen and (max-width: 480px) {
+    width: 85%;
+  }
 `;
 
 const Name = styled.h2`
