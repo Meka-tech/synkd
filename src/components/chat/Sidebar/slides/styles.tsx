@@ -37,7 +37,7 @@ export const BackDiv = styled.div`
     background-color: ${(props) => props.theme.colors.slate};
   }
   @media screen and (max-width: 480px) {
-    margin-right: 0rem;
+    margin-right: 0.5rem;
   }
 `;
 export const Title = styled.h2`

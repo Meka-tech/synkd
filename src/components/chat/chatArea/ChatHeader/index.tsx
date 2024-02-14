@@ -133,7 +133,6 @@ const BackArrow = styled.div`
 const PartnerDetails = styled.div`
   display: flex;
   align-items: center;
-  cursor: pointer;
 `;
 const PartnerImage = styled.div`
   width: 4rem;
