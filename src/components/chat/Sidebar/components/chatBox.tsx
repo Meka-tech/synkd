@@ -3,7 +3,11 @@ import { IUserType } from "@/types/userType";
 import styled from "@emotion/styled";
 import { useDispatch, useSelector } from "react-redux";
 import ShortenText from "@/utils/ShortenText";
-import { Envelope, EnvelopeOpen } from "@emotion-icons/boxicons-solid";
+import {
+  Envelope,
+  EnvelopeOpen,
+  PaperPlane
+} from "@emotion-icons/boxicons-solid";
 import { ArrowIosBack, ArrowIosForward } from "@emotion-icons/evaicons-solid";
 
 import {
@@ -21,13 +25,15 @@ interface IProps {
   recentMsgTime?: string;
   partner: IUserType | null | undefined;
   userSent: boolean;
+  unSent: boolean;
 }
 const ChatBox = ({
   partner,
   recentMsg,
   recentMsgTime,
   userSent,
-  unReadMsg
+  unReadMsg,
+  unSent
 }: IProps) => {
   const dispatch = useDispatch();
 
@@ -68,7 +74,14 @@ const ChatBox = ({
         <Bottom>
           <Message>
             <RecentText>
-              {unReadMsg > 0 ? (
+              {unSent ? (
+                <ReadMessage>
+                  <EnvelopeDiv>
+                    <PaperPlane size={20} />{" "}
+                  </EnvelopeDiv>
+                  Sending
+                </ReadMessage>
+              ) : unReadMsg > 0 ? (
                 <NewMessage>
                   <EnvelopeDiv>
                     <Envelope size={20} />{" "}
