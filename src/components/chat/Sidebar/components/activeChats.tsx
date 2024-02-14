@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMostRecentMessagesAndUnreadCount } from "@/utils/indexedDb_Functions/getMostRecentMessages";
 import { Plus } from "@emotion-icons/boxicons-regular";
 import { updateSlide } from "@/Redux/features/slides/slide";
+import { IUmsgType } from "@/types/unsentMessageType";
+import { date } from "yup";
 
 interface INewChat {
   searchValue: string;
@@ -20,7 +22,7 @@ interface INewChat {
 const ActiveChats = ({ searchValue, filter }: INewChat) => {
   const dispatch = useDispatch();
   const [activeChats, setActiveChats] =
-    useState<{ recentMessage: ImsgType; unreadCount: number }[]>();
+    useState<{ recentMessage: IUmsgType | ImsgType; unreadCount: number }[]>();
 
   const ReduxFriends: IUserType[] | [] = useSelector(
     (state: RootState) => state.friends.friends
@@ -44,38 +46,71 @@ const ActiveChats = ({ searchValue, filter }: INewChat) => {
     setActiveChats(Data);
   });
 
+  function isImsgType(message: IUmsgType | ImsgType): message is ImsgType {
+    return (message as ImsgType).partner !== undefined;
+  }
+
   return (
     <Main>
       {activeChats && activeChats?.length > 0 ? (
         activeChats?.map((item, i) => {
           const chat = item.recentMessage;
+
           let partner;
-          let user;
           let userSent = false;
+          let user;
+          let msgTime;
+          let unSent = false;
 
-          if (chat.partner._id === userDetails?._id) {
-            for (let friend of Friends) {
-              if (friend._id === chat.user._id) {
-                partner = friend;
+          if (!isImsgType(chat)) {
+            //unsent message
+            unSent = true;
+            if (chat.partnerId === userDetails?._id) {
+              for (let friend of Friends) {
+                if (friend._id === chat.userId) {
+                  partner = friend;
+                }
+              }
+
+              user = userDetails;
+            } else {
+              for (let friend of Friends) {
+                if (friend._id === chat.partnerId) {
+                  partner = friend;
+                }
+                userSent = true;
               }
             }
-
-            user = userDetails;
+            msgTime = getChatTime(new Date());
           } else {
-            for (let friend of Friends) {
-              if (friend._id === chat.partner._id) {
-                partner = friend;
+            if (chat.partner._id === userDetails?._id) {
+              for (let friend of Friends) {
+                if (friend._id === chat.user._id) {
+                  partner = friend;
+                }
               }
-              userSent = true;
+
+              user = userDetails;
+            } else {
+              for (let friend of Friends) {
+                if (friend._id === chat.partner._id) {
+                  partner = friend;
+                }
+                userSent = true;
+              }
             }
+            msgTime = getChatTime(chat.createdAt);
           }
-          const msgTime = getChatTime(chat.createdAt);
+
+          ///////////////////////////////
+
           if (
             searchValue !== "" &&
             !partner?.username.toLowerCase().includes(searchValue.toLowerCase())
           ) {
             return;
           }
+
           if (filter && item.unreadCount < 1) {
             return;
           }
@@ -86,6 +121,7 @@ const ActiveChats = ({ searchValue, filter }: INewChat) => {
               recentMsg={chat.text}
               recentMsgTime={msgTime}
               unReadMsg={item.unreadCount}
+              unSent={unSent}
               key={i}
             />
           );

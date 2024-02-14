@@ -21,6 +21,7 @@ import { removeSlide, updateSlide } from "@/Redux/features/slides/slide";
 import Avatar from "./slides/avatar";
 import { GetProfileImage } from "@/utils/GetProfileImage";
 import Image from "next/image";
+import Settings from "./slides/settings";
 
 interface IProps {}
 
@@ -49,7 +50,8 @@ const ChatSideBar = ({}: IProps) => {
     notifications: <Notification close={RemoveSlide} />,
     newChat: <NewChat close={RemoveSlide} />,
     profile: <Profile close={RemoveSlide} />,
-    avatar: <Avatar close={RemoveSlide} />
+    avatar: <Avatar close={RemoveSlide} />,
+    settings: <Settings close={RemoveSlide} />
   };
 
   const StartNewChat = () => {
@@ -61,6 +63,9 @@ const ChatSideBar = ({}: IProps) => {
   };
   const ShowNotification = () => {
     dispatch(updateSlide("notifications"));
+  };
+  const OpenSettings = () => {
+    dispatch(updateSlide("settings"));
   };
 
   const openChat: boolean = useSelector(
@@ -92,7 +97,7 @@ const ChatSideBar = ({}: IProps) => {
             <Bell size={25} />
             {!ReadNotification && <BlueCheck />}
           </BellIcon>
-          <OptionIcon>
+          <OptionIcon onClick={() => OpenSettings()}>
             <DotsVerticalRounded size={25} />
           </OptionIcon>
         </Utitilites>

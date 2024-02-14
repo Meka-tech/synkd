@@ -16,7 +16,7 @@ const MessageSchema = new Schema(
 
 MessageSchema.index(
   { updatedAt: 1 },
-  { expireAfterSeconds: 86400, partialFilterExpression: { readStatus: true } }
+  { expireAfterSeconds: 604800, partialFilterExpression: { readStatus: true } }
 );
 
 const Message = models.message || model("message", MessageSchema);
