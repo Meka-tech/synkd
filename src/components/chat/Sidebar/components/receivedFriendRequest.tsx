@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import { DotsVerticalRounded } from "@emotion-icons/boxicons-regular";
 import ShortenText from "@/utils/ShortenText";
 import useClickOutside from "@/hooks/useClickOutside";
+import { GetProfileImage } from "@/utils/GetProfileImage";
+import Image from "next/image";
 
 interface IProps {
   user: IUserType;
@@ -87,11 +89,16 @@ export const ReceivedFriendRequest = ({
   useClickOutside(BodyRef, () => {
     setSeeMore(false);
   });
+
+  const AvatarImage = GetProfileImage(user?.avatar);
+
   return (
     <Main show={seeMore} ref={BodyRef}>
       <Body>
         <ProfileDiv>
-          <ProfileImage />
+          <ProfileImage>
+            <Image src={AvatarImage} alt="pfp" placeholder="blur" />{" "}
+          </ProfileImage>
           <NameText>
             <b>{ShortenText(user.username, 12)}</b> wants to synk with you
           </NameText>
@@ -155,11 +162,22 @@ const ProfileImage = styled.div`
   height: 3rem;
   border-radius: 50%;
   background-color: white;
+  position: relative;
   margin-right: 1rem;
+  overflow: hidden;
+  img {
+    width: 3rem;
+    height: 3rem;
+  }
   @media screen and (max-width: 480px) {
     width: 2rem;
     height: 2rem;
     margin-right: 0.5rem;
+
+    img {
+      width: 2rem;
+      height: 2rem;
+    }
   }
 `;
 const NameText = styled.h2`

@@ -42,6 +42,7 @@ export default function Home() {
 
   useEffect(() => {
     UpdateUser();
+    GetUserMessages();
 
     if (authToken === "") {
       router.push("/auth/sign-in");
@@ -119,7 +120,7 @@ export default function Home() {
         let resFriends = data.data.friends;
 
         dispatch(updateFriends(resFriends));
-        await GetUserMessages();
+        // await GetUserMessages();
       }
     } catch (e) {
       router.push("/auth/sign-in");
@@ -189,6 +190,7 @@ export default function Home() {
   const handleVisibilityChange = useCallback(() => {
     if (!document.hidden) {
       UpdateUser();
+      GetUserMessages();
     }
   }, []);
 
@@ -202,6 +204,7 @@ export default function Home() {
 
   if (document.hidden) {
     UpdateUser();
+    GetUserMessages();
   }
   return (
     <Body>

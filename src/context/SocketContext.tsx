@@ -23,12 +23,7 @@ export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
       // const res = await fetch("/api/socket");
       // const res = await fetch(socketUrl);
 
-      if (devMode) {
-        await fetch("/api/socket");
-        newSocket = io();
-      } else {
-        newSocket = io(socketUrl);
-      }
+      newSocket = io(socketUrl);
 
       setSocket(newSocket);
 

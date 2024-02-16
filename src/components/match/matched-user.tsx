@@ -115,12 +115,10 @@ const MatchedUser = ({ user, percent, interest, sender }: IProps) => {
 
         <SyncTextDiv hover={hover}>
           {requestSent ? (
-            <h4>
-              un-synk{loading ? "ing" : ""} with {user?.username}
-            </h4>
+            <h4>un-synk{loading ? "ing" : ""}</h4>
           ) : (
             <h3>
-              <span>Synk{loading ? "ing" : ""}</span> with {user?.username}
+              <span>Synk{loading ? "ing" : ""}</span>
             </h3>
           )}
         </SyncTextDiv>
@@ -237,21 +235,21 @@ const Right = styled.div<HoverPlane>`
 
   span,
   h3 {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     color: white;
-    font-weight: 400;
+    font-weight: 600;
 
     @media screen and (max-width: 480px) {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
   }
   h4 {
-    font-size: 1.4rem;
-    font-weight: 400;
+    font-size: 1.6rem;
+    font-weight: 600;
     color: ${(props) => props.theme.colors.danger};
 
     @media screen and (max-width: 480px) {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
   }
   span {

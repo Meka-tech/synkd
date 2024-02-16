@@ -7,6 +7,8 @@ import Cookies from "js-cookie";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { DotsVerticalRounded } from "@emotion-icons/boxicons-regular";
+import { GetProfileImage } from "@/utils/GetProfileImage";
+import Image from "next/image";
 
 interface IProps {
   user: IUserType;
@@ -57,12 +59,15 @@ export const SentFriendRequest = ({
     }
     setLoadAccept(false);
   };
-
+  const AvatarImage = GetProfileImage(user?.avatar);
   return (
     <Main>
       <Body>
         <ProfileDiv>
-          <ProfileImage />
+          <ProfileImage>
+            {" "}
+            <Image src={AvatarImage} alt="pfp" placeholder="blur" />{" "}
+          </ProfileImage>
           <NameText>
             You requested to synk with <b>{user.username}</b>
           </NameText>
@@ -106,6 +111,11 @@ const ProfileImage = styled.div`
   border-radius: 50%;
   background-color: white;
   margin-right: 1.2rem;
+  overflow: hidden;
+  img {
+    width: 3rem;
+    height: 3rem;
+  }
 `;
 const NameText = styled.h2`
   font-size: 1.4rem;

@@ -65,39 +65,50 @@ const ActiveChats = ({ searchValue, filter }: INewChat) => {
           if (!isImsgType(chat)) {
             //unsent message
             unSent = true;
-            if (chat.partnerId === userDetails?._id) {
-              for (let friend of Friends) {
-                if (friend._id === chat.userId) {
-                  partner = friend;
-                }
-              }
 
+            if (chat.partnerId === userDetails?._id) {
+              const friend = Friends.find(
+                (friend) => friend._id === chat.userId
+              );
+              if (friend) {
+                return;
+              }
+              partner = friend;
               user = userDetails;
             } else {
-              for (let friend of Friends) {
-                if (friend._id === chat.partnerId) {
-                  partner = friend;
-                }
-                userSent = true;
+              const friend = Friends.find(
+                (friend) => friend._id === chat.partnerId
+              );
+
+              if (!friend) {
+                return;
               }
+              partner = friend;
+              userSent = true;
             }
             msgTime = getChatTime(new Date());
           } else {
+            //sentmessage
             if (chat.partner._id === userDetails?._id) {
-              for (let friend of Friends) {
-                if (friend._id === chat.user._id) {
-                  partner = friend;
-                }
-              }
+              const friend = Friends.find(
+                (friend) => friend._id === chat.user._id
+              );
 
+              if (!friend) {
+                return;
+              }
+              partner = friend;
               user = userDetails;
             } else {
-              for (let friend of Friends) {
-                if (friend._id === chat.partner._id) {
-                  partner = friend;
-                }
-                userSent = true;
+              const friend = Friends.find(
+                (friend) => friend._id === chat.partner._id
+              );
+
+              if (!friend) {
+                return;
               }
+              partner = friend;
+              userSent = true;
             }
             msgTime = getChatTime(chat.createdAt);
           }
