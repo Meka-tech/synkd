@@ -4,7 +4,7 @@ import { lazy, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import DropdownInput from "@/components/Inputs/dropdownInput";
-import { SyncLottie } from "../../../../animation/syncLottie";
+
 import MatchedUser from "@/components/match/matched-user";
 import { IUserType } from "@/types/userType";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import { updateUser } from "@/Redux/features/user/userSlice";
 import { PrimaryButton } from "@/components/buttons/primaryButton";
 import { Sad } from "@emotion-icons/boxicons-solid";
 import Link from "next/link";
+import { SyncLottie } from "@/animation/syncLottie";
 
 interface coord {
   longitude: number;

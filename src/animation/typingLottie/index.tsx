@@ -1,7 +1,7 @@
 import React from "react";
 import Lottie from "lottie-react";
 
-import Typing from "../../src/lottie/typing.json.json";
+import Typing from "@/lottie/typing.json.json";
 import styled from "@emotion/styled";
 
 export const TypingLottie = () => (

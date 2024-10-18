@@ -5,7 +5,7 @@ import axios from "axios";
 import { GetSpotifyToken } from "@/utils/spotifyApi";
 import ArtistItem from "./artist-item";
 import useClickOutside from "@/hooks/useClickOutside";
-import { LoadingLottie, LoadingVariantLottie } from "../../../animation";
+import { LoadingVariantLottie } from "@/animation";
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   chosenArtists: string[];

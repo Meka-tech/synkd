@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import styled from "@emotion/styled";
 import { ButtonContainer, ButtonText } from "./primaryButton";
-import { LoadingLottie, LoadingVariantLottie } from "../../../animation";
+
 import Loading from "../loading";
 
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

@@ -9,9 +9,10 @@ import { ReadDBMessage } from "@/utils/indexedDb_Functions/readDBMessage";
 import { Check } from "@emotion-icons/boxicons-regular";
 
 import { CheckCircle, PaperPlane } from "@emotion-icons/boxicons-solid";
-import { TypingLottie } from "../../../../../animation/typingLottie";
+
 import { useSocket } from "@/context/SocketContext";
 import { UnsentMessageDb } from "@/dexieDb/UnsentMessageDb";
+import { TypingLottie } from "@/animation/typingLottie";
 
 interface IProps {
   text: string;
