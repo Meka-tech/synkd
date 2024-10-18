@@ -9,10 +9,9 @@ import { RootState } from "@/Redux/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import io, { Socket } from "socket.io-client";
 import Cookies from "js-cookie";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { ReadDBMessage } from "@/utils/indexedDb_Functions/readDBMessage";
 import { getOldestUnreadMessage } from "@/utils/indexedDb_Functions/getOldestUnreadMessage";
-import { updateSocket } from "@/Redux/features/socket/socketSlice";
+
 import { useRouter } from "next/router";
 import {
   updateFriend,

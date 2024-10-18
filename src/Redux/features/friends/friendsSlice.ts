@@ -29,8 +29,6 @@ export const friendsSlice = createSlice({
           ...state.friends.slice(friendIndex + 1)
         ];
 
-        console.log(updatedFriends);
-
         return {
           ...state,
           friends: updatedFriends
