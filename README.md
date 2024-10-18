@@ -1,40 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a personal project [Synkd](https://synkd.netlify.app/) , a web app to chat with people of similar interests in music , movies, etc around you.
 
-## Getting Started
+Stacks - Typescript ,Javascript, Next js, node js,Mongo DB.
 
-First, run the development server:
+Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+\*Music
+Using @Spotify developers API you can
+-login and all the artists you follow would be recorded
+Or
+-Search Manually for artists
+Or
+-Choose artists from genres
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+\*Matching
+Users are matched using the Jaccard similarity algorithm.A list of users a user matches with comes up in descending order of the percentage at which they matched with. There will be other categories and there are preferences such as proximity or worldwide.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+\*Real time communication using [Socket.io](Socket.io)
+There's instant transmission of data using sockets. Data such as when a user sends a message, a user receives a message, a user is typing ,a user receives a notification and when a user updates their profile
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+\*Dexie database
+Using Dexie for local storage for storin data such as messages ‚un sent messages , user data and user friends data.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+\*Redux for state management and caching temporary data
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+\*Context Api for socket management
 
-## Learn More
+\*Requests and notifications
+Notifications are sent in real time when a user sends a request to another. A request can be sent , unsent, accepted or rejected.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+\*Update profile
+Usernames, bios, Avatars and also interest categories can be updated and the changes would be reflected in real-time across all devices using sockets
