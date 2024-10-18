@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { BackDiv, Body, HeaderDiv, Main, Title, TopBar } from "./styles";
 import { ArrowIosBack } from "@emotion-icons/evaicons-solid";
 import AvatarItem from "@/components/avatar";
-import { avatarList } from "../../../../../lib/avatarData";
+import { avatarList } from "@/lib/avatarData";
 import { useState } from "react";
 import { RootState } from "@/Redux/app/store";
 import { useDispatch, useSelector } from "react-redux";

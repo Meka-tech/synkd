@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import User from "@/models/User";
-import { mongooseConnect } from "../../../../lib/mongoose";
+import { mongooseConnect } from "@/lib/mongoose";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 

@@ -1,4 +1,4 @@
-import { avatarList } from "../../lib/avatarData";
+import { avatarList } from "@/lib/avatarData";
 
 export const GetProfileImage = (name) => {
   let image;

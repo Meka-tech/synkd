@@ -1,4 +1,4 @@
-import { mongooseConnect } from "../../../../lib/mongoose";
+import { mongooseConnect } from "@/lib/mongoose";
 import User from "@/models/User";
 import bcrypt from "bcrypt";
 

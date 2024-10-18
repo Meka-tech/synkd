@@ -11,7 +11,7 @@ import {
 } from "@/utils/spotifyApi";
 import axios from "axios";
 import GenreItem from "@/components/music-Items/genre-item";
-import { genreList } from "../../../../lib/genreData";
+import { genreList } from "@/lib/genreData";
 import { PrimaryButton } from "@/components/buttons/primaryButton";
 import ArtistItem from "@/components/music-Items/artist-item";
 import useClickOutside from "@/hooks/useClickOutside";

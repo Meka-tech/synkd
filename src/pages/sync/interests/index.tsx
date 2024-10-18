@@ -11,7 +11,7 @@ import { Music, InfoCircle } from "@emotion-icons/boxicons-regular";
 import ArtistItem from "@/components/music-Items/artist-item";
 import { PrimaryButton } from "@/components/buttons/primaryButton";
 import useClickOutside from "../../../hooks/useClickOutside";
-import { genreList } from "../../../../lib/genreData";
+import { genreList } from "@/lib/genreData";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { Spotify } from "@emotion-icons/boxicons-logos";

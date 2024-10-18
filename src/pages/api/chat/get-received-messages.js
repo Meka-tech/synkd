@@ -1,6 +1,6 @@
 import { authenticateJWT } from "@/utils/middleware/authJwt";
 import Message from "@/models/Message";
-import { mongooseConnect } from "../../../../lib/mongoose";
+import { mongooseConnect } from "@/lib/mongoose";
 
 async function handler(req, res, next) {
   await mongooseConnect();
