@@ -19,7 +19,7 @@ Users are matched using the Jaccard similarity algorithm.A list of users a user 
 There's instant transmission of data using sockets. Data such as when a user sends a message, a user receives a message, a user is typing ,a user receives a notification and when a user updates their profile
 
 \*Dexie database
-Using Dexie for local storage for storin data such as messages ‚un sent messages , user data and user friends data.
+Using Dexie for local storage for storing data such as messages ‚un sent messages , profile data of user and user friends.
 
 \*Redux for state management and caching temporary data
 
