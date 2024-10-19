@@ -23,6 +23,7 @@ import {
 } from "@/Redux/features/user/userSlice";
 import { useSocket } from "@/context/SocketContext";
 import { updateLaunch } from "@/Redux/features/openChat/openChatSlice";
+import { isMobile } from "@/utils/isMobile";
 
 export default function Home() {
   let authToken = Cookies.get("authToken") || "";
@@ -32,10 +33,6 @@ export default function Home() {
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
   );
-  const isMobile =
-    /iPhone|iPad|iPod|Android|webOS|BlackBerry|Windows Phone/i.test(
-      navigator.userAgent
-    );
 
   const dispatch = useDispatch();
 
