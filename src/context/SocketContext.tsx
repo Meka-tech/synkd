@@ -20,9 +20,6 @@ export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
     let newSocket: Socket;
 
     const socketInitializer = async (): Promise<void> => {
-      // const res = await fetch("/api/socket");
-      // const res = await fetch(socketUrl);
-
       newSocket = io(socketUrl);
 
       setSocket(newSocket);

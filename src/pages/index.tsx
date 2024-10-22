@@ -28,6 +28,7 @@ export default function Home() {
   let authToken = Cookies.get("authToken") || "";
   const router = useRouter();
   const socket = useSocket();
+  const dispatch = useDispatch();
 
   const user: IUserType | null = useSelector(
     (state: RootState) => state.user.user
@@ -38,53 +39,48 @@ export default function Home() {
       navigator.userAgent
     );
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    UpdateUser();
-    GetUserMessages();
-
-    if (authToken === "") {
-      router.push("/auth/sign-in");
-    }
-    if (isMobile) {
-      dispatch(updateLaunch(false));
-    } else {
-      dispatch(updateLaunch(true));
-    }
-  }, []);
-
-  useEffect(() => {
-    socket?.on("connect", () => {
-      if (user?._id) {
-        socket.emit("user-online", user?._id);
-      }
-    });
-    socket?.on("get-message", async (message) => {
-      let existingMessage = await MessageDb.messages.get({
-        _id: message._id
-      });
+  const handleGetMessage = useCallback(async (message: ImsgType) => {
+    try {
+      let existingMessage = await MessageDb.messages.get({ _id: message._id });
       if (!existingMessage) {
         await MessageDb.messages.put(message);
       }
-    });
+    } catch (error) {
+      console.error("Error handling message:", error);
+    }
+  }, []);
 
-    socket?.on("message-was-read", async (messageId) => {
+  const handleMessageWasRead = useCallback(async (messageId: string) => {
+    try {
       await ReadDBMessage(messageId);
-    });
+    } catch (error) {
+      console.error("Error marking message as read:", error);
+    }
+  }, []);
 
-    socket?.on("update-profile", async (id) => {
+  const handleUpdateProfile = useCallback(async (id: string) => {
+    try {
       await UpdateFriendProfile(id);
-    });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  }, []);
 
-    socket?.on("receive-notification", async (id) => {
+  const handleReceiveNotification = useCallback(async () => {
+    try {
       await GetNotifications();
-    });
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  }, []);
 
-    socket?.on("request-accepted", async (id) => {
+  const handleRequestAccepted = useCallback(async () => {
+    try {
       await UpdateUser();
-    });
-  }, [socket]);
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  }, []);
 
   const UpdateFriendProfile = async (id: string) => {
     try {
@@ -120,46 +116,11 @@ export default function Home() {
         let resFriends = data.data.friends;
 
         dispatch(updateFriends(resFriends));
-        // await GetUserMessages();
       }
     } catch (e) {
       router.push("/auth/sign-in");
     }
   }, []);
-
-  // const GetUserMessages = useCallback(async () => {
-  //   try {
-  //     let recentMessage: ImsgType | any;
-  //     recentMessage = await getOldestUnreadMessage(user?._id);
-  //     if (recentMessage) {
-  //       const response = await axios.post(
-  //         "/api/chat/get-received-messages",
-  //         {
-  //           updatedAt: recentMessage.updatedAt
-  //         },
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${authToken}`
-  //           }
-  //         }
-  //       );
-  //       const messages: ImsgType[] = response.data.messages;
-
-  //       for (const message of messages) {
-  //         let existingMessage = await MessageDb.messages.get({
-  //           _id: message._id
-  //         });
-
-  //         if (existingMessage) {
-  //           existingMessage = message;
-  //           MessageDb.messages.put(existingMessage);
-  //         } else {
-  //           MessageDb.messages.put(message);
-  //         }
-  //       }
-  //     }
-  //   } catch (err) {}
-  // }, []);
 
   const GetUserMessages = async () => {
     const localMessages = await MessageDb.messages.toArray();
@@ -201,6 +162,55 @@ export default function Home() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [handleVisibilityChange]);
+
+  useEffect(() => {
+    UpdateUser();
+    GetUserMessages();
+
+    if (authToken === "") {
+      router.push("/auth/sign-in");
+    }
+    if (isMobile) {
+      dispatch(updateLaunch(false));
+    } else {
+      dispatch(updateLaunch(true));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    // Connect user if online
+    socket.on("connect", () => {
+      if (user?._id) {
+        socket.emit("user-online", user._id);
+      }
+    });
+
+    // Set up listeners
+    socket.on("get-message", handleGetMessage);
+    socket.on("message-was-read", handleMessageWasRead);
+    socket.on("update-profile", handleUpdateProfile);
+    socket.on("receive-notification", handleReceiveNotification);
+    socket.on("request-accepted", handleRequestAccepted);
+
+    // Cleanup listeners on unmount or socket change
+    return () => {
+      socket.off("get-message", handleGetMessage);
+      socket.off("message-was-read", handleMessageWasRead);
+      socket.off("update-profile", handleUpdateProfile);
+      socket.off("receive-notification", handleReceiveNotification);
+      socket.off("request-accepted", handleRequestAccepted);
+    };
+  }, [
+    socket,
+    user?._id,
+    handleGetMessage,
+    handleMessageWasRead,
+    handleUpdateProfile,
+    handleReceiveNotification,
+    handleRequestAccepted
+  ]);
 
   if (document.hidden) {
     UpdateUser();
